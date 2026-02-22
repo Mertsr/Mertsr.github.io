@@ -1,0 +1,766 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Generated Page</title>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Chester Robotics</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="global.css">
+  <style id="sections-styles">
+/* CSS for section section:Header */
+.sticky-header {
+    position: sticky;
+    top: 0;
+    z-index: 100;
+    background-color: rgba(5, 5, 5, 0.95);
+    border-bottom: 1px solid var(--border-color);
+    backdrop-filter: blur(4px);
+    padding: 16px 0;
+  }
+
+  .header-content {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+  }
+
+  .logo img {
+    height: 32px; /* Approximate based on bounding box */
+    width: auto;
+  }
+
+  .main-nav {
+    display: none; /* Hidden on mobile */
+    gap: 32px;
+    align-items: center;
+  }
+
+  .nav-link {
+    color: var(--text-white);
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-link:hover {
+    color: var(--text-light-gray);
+  }
+
+  .nav-link.text-red {
+    color: var(--primary-red);
+  }
+
+  .btn-primary {
+    background-color: var(--primary-red);
+    color: white;
+    border: none;
+    padding: 10px 24px;
+    border-radius: 8px;
+    font-weight: 600;
+    font-size: 14px;
+    box-shadow: 0px 0px 20px rgba(230, 0, 0, 0.3);
+    transition: transform 0.1s, box-shadow 0.2s;
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-1px);
+    box-shadow: 0px 0px 25px rgba(230, 0, 0, 0.5);
+  }
+
+  .mobile-menu-toggle {
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    cursor: pointer;
+  }
+
+  .mobile-menu-toggle span {
+    display: block;
+    width: 24px;
+    height: 2px;
+    background-color: white;
+  }
+
+  @media (min-width: 1024px) {
+    .main-nav {
+      display: flex;
+    }
+    .mobile-menu-toggle {
+      display: none;
+    }
+  }
+
+/* CSS for section section:MainContent */
+#main-content {
+    padding: 48px 0;
+  }
+
+  .main-grid {
+    display: flex;
+    flex-direction: column;
+    gap: 64px;
+  }
+
+  /* Left Column Styles */
+  .left-column {
+    display: flex;
+    flex-direction: column;
+    gap: 40px;
+    width: 100%;
+  }
+
+  .status-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    background-color: rgba(139, 0, 0, 0.1);
+    border: 1px solid rgba(139, 0, 0, 0.2);
+    padding: 4px 12px;
+    border-radius: 9999px;
+    width: fit-content;
+  }
+
+  .status-dot {
+    width: 8px;
+    height: 8px;
+    background-color: var(--dark-red);
+    border-radius: 50%;
+  }
+
+  .status-text {
+    color: var(--dark-red);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .main-title {
+    font-size: 48px; /* text-4xl approx */
+    font-weight: 700;
+    line-height: 1.1;
+    color: var(--text-white);
+  }
+
+  .main-description {
+    color: var(--text-gray);
+    font-size: 18px;
+    max-width: 500px;
+  }
+
+  .contact-cards {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .info-card {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    background-color: #121212;
+    border: 1px solid var(--border-color);
+    padding: 16px;
+    border-radius: 12px;
+  }
+
+  .icon-box {
+    background-color: #000;
+    border-radius: 8px;
+    padding: 6px 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .info-content h3 {
+    color: var(--text-gray);
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+  }
+
+  .info-content p {
+    color: var(--text-white);
+    font-size: 16px;
+  }
+
+  .map-widget {
+    position: relative;
+    border-radius: 12px;
+    overflow: hidden;
+    border: 1px solid var(--border-color);
+    height: 248px;
+  }
+
+  .map-image {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .map-overlay {
+    position: absolute;
+    inset: 0;
+    background-color: rgba(0, 0, 0, 0.4);
+  }
+
+  .locate-btn {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    background-color: rgba(10, 10, 10, 0.8);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    color: var(--text-white);
+    padding: 4px 12px;
+    border-radius: 4px;
+    backdrop-filter: blur(4px);
+    font-size: 14px;
+  }
+
+  /* Right Column Styles */
+  .right-column {
+    width: 100%;
+  }
+
+  .form-container {
+    background-color: var(--bg-card);
+    border: 1px solid var(--border-color);
+    border-radius: 16px;
+    padding: 40px;
+    box-shadow: 0px 25px 50px -12px rgba(139, 0, 0, 0.05);
+  }
+
+  .form-header {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 40px;
+    border-left: 4px solid var(--dark-red);
+    padding-left: 16px;
+  }
+
+  .form-title-group h2 {
+    font-size: 24px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+
+  .form-title-group p {
+    color: var(--text-gray);
+    font-size: 14px;
+  }
+
+  .form-icon-top {
+    background-color: rgba(255, 255, 255, 0.05);
+    border-radius: 50%;
+    width: 48px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .inquiry-form {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .form-label {
+    display: block;
+    color: var(--text-gray);
+    font-size: 12px;
+    margin-bottom: 8px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .reason-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 12px;
+  }
+
+  .reason-option {
+    background-color: #0a0a0a;
+    border: 2px solid transparent;
+    border-radius: 12px;
+    padding: 12px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    cursor: pointer;
+    position: relative;
+    transition: all 0.2s;
+  }
+
+  .reason-option.selected {
+    background-color: rgba(139, 0, 0, 0.05);
+    border-color: var(--dark-red);
+  }
+
+  .option-icon {
+    padding: 6px 8px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .option-icon.red-bg { background-color: var(--dark-red); }
+  .option-icon.dark-bg { background-color: #232f48; }
+
+  .option-text {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .opt-title {
+    font-size: 14px;
+    color: var(--text-light-gray);
+    font-weight: 500;
+  }
+
+  .opt-desc {
+    font-size: 12px;
+    color: var(--text-gray);
+  }
+
+  .selected-indicator {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    width: 8px;
+    height: 8px;
+    background-color: var(--dark-red);
+    border-radius: 50%;
+  }
+
+  .form-row {
+    display: flex;
+    flex-direction: column;
+    gap: 24px;
+  }
+
+  .input-wrapper {
+    position: relative;
+    display: flex;
+    align-items: center;
+  }
+
+  .input-icon {
+    position: absolute;
+    left: 12px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+  }
+
+  .form-input {
+    width: 100%;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 12px 16px 12px 40px;
+    color: var(--text-white);
+    font-size: 14px;
+    font-family: inherit;
+  }
+
+  .form-input::placeholder {
+    color: var(--text-gray);
+  }
+
+  .form-textarea {
+    width: 100%;
+    background-color: var(--bg-input);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 16px;
+    color: var(--text-white);
+    font-size: 14px;
+    font-family: inherit;
+    min-height: 114px;
+    resize: vertical;
+  }
+
+  .submit-btn {
+    width: 100%;
+    background-color: var(--dark-red);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    height: 48px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    font-weight: 600;
+    font-size: 16px;
+    margin-bottom: 16px;
+    box-shadow: 0px 4px 6px rgba(139, 0, 0, 0.25);
+    transition: background-color 0.2s;
+  }
+
+  .submit-btn:hover {
+    background-color: #a50000;
+  }
+
+  .disclaimer {
+    text-align: center;
+    color: var(--text-gray);
+    font-size: 12px;
+  }
+
+  /* Desktop Layout */
+  @media (min-width: 1024px) {
+    .main-grid {
+      flex-direction: row;
+      align-items: flex-start;
+    }
+
+    .left-column {
+      width: 40%;
+      position: sticky;
+      top: 100px;
+    }
+
+    .right-column {
+      width: 60%;
+    }
+
+    .reason-grid {
+      grid-template-columns: 1fr 1fr;
+    }
+
+    .form-row {
+      flex-direction: row;
+    }
+
+    .form-group.half {
+      width: 50%;
+    }
+  }
+
+/* CSS for section section:Partners */
+#partners-section {
+    padding: 64px 0;
+    border-top: 1px solid var(--border-color);
+    background-color: var(--bg-dark);
+  }
+
+  .partners-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 24px;
+  }
+
+  .partners-title {
+    color: #64748b;
+    font-size: 14px;
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .partners-logos {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 32px;
+    opacity: 0.5;
+  }
+
+  .partner-item {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    color: var(--text-white);
+    font-weight: 600;
+    font-size: 16px;
+  }
+
+  @media (min-width: 768px) {
+    .partners-logos {
+      gap: 64px;
+    }
+  }
+  </style>
+  <script src="global.js" defer></script>
+</head>
+<body>
+<section id="header-section">
+  <header class="sticky-header">
+    <div class="container header-content">
+      <!-- Logo -->
+      <div class="logo">
+        <img src="images/3d6415eb35f0c102aa98658343488423acbf4c6c.png" alt="Chester Robotics Logo">
+      </div>
+
+      <!-- Navigation -->
+      <nav class="main-nav">
+        <a href="#" class="nav-link active">Chester V1</a>
+        <div class="nav-item-group">
+          <a href="#" class="nav-link">Solutions</a>
+        </div>
+        <div class="nav-item-group">
+          <a href="#" class="nav-link">Use Cases</a>
+        </div>
+        <div class="nav-item-group">
+          <a href="#" class="nav-link">About</a>
+        </div>
+        <div class="nav-item-group">
+          <a href="#" class="nav-link text-red">Contact</a>
+        </div>
+      </nav>
+
+      <!-- CTA Button -->
+      <div class="header-cta">
+        <button class="btn-primary">Contact Sales</button>
+      </div>
+      
+      <!-- Mobile Menu Toggle (Visual placeholder) -->
+      <div class="mobile-menu-toggle">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
+    </div>
+  </header>
+</section>
+<section id="main-content">
+  <div class="container main-grid">
+    
+    <!-- Left Column: Info & Map -->
+    <div class="left-column">
+      <!-- Status Badge -->
+      <div class="status-badge">
+        <span class="status-dot"></span>
+        <span class="status-text">Status: Operational</span>
+      </div>
+
+      <!-- Heading -->
+      <h1 class="main-title">CONTACT<br>CHESTER ROBOTICS</h1>
+      
+      <!-- Description -->
+      <p class="main-description">
+        Ready to integrate the Chester V1 into your workflow?
+        Speak with our robotics specialists about deployment,
+        custom modules, or schedule a live demonstration.
+      </p>
+
+      <!-- Contact Info Cards -->
+      <div class="contact-cards">
+        <!-- Card 1 -->
+        <div class="info-card">
+          <div class="icon-box">
+            <img src="images/3311_133.svg" alt="Innovation Hub Icon">
+          </div>
+          <div class="info-content">
+            <h3>Innovation Hub</h3>
+            <p>88 Robotics Way, Suite 100<br>Automation City, MA 02139</p>
+          </div>
+        </div>
+
+        <!-- Card 2 -->
+        <div class="info-card">
+          <div class="icon-box">
+            <img src="images/3311_144.svg" alt="Sales Icon">
+          </div>
+          <div class="info-content">
+            <h3>Sales & Info</h3>
+            <p>info@chester-robotics.com</p>
+          </div>
+        </div>
+
+        <!-- Card 3 -->
+        <div class="info-card">
+          <div class="icon-box">
+            <img src="images/3311_155.svg" alt="Support Icon">
+          </div>
+          <div class="info-content">
+            <h3>Technical Support</h3>
+            <p>+1 (555) 123-4567</p>
+          </div>
+        </div>
+      </div>
+
+      <!-- Map Widget -->
+      <div class="map-widget">
+        <img src="images/dd2ccb33e0b3158ea54fae8b31853f8887ca26e1.png" alt="Map Location" class="map-image">
+        <div class="map-overlay"></div>
+        <button class="locate-btn">
+          <img src="images/3311_168.svg" alt="Locate Icon">
+          <span>Locate HQ</span>
+        </button>
+      </div>
+    </div>
+
+    <!-- Right Column: Form -->
+    <div class="right-column">
+      <div class="form-container">
+        <div class="form-header">
+          <div class="form-title-group">
+            <h2>Inquiry Form</h2>
+            <p>Select an option to direct your request to the right team.</p>
+          </div>
+          <div class="form-icon-top">
+            <img src="images/3311_179.svg" alt="Form Icon">
+          </div>
+        </div>
+
+        <form class="inquiry-form">
+          <!-- Reason Selection Grid -->
+          <div class="form-group">
+            <label class="form-label">Reason for Contact</label>
+            <div class="reason-grid">
+              <!-- Option 1 (Selected) -->
+              <div class="reason-option selected">
+                <div class="option-icon red-bg">
+                  <img src="images/3311_189.svg" alt="Demo Icon">
+                </div>
+                <div class="option-text">
+                  <span class="opt-title">Chester V1 Demo</span>
+                  <span class="opt-desc">Request a live showing</span>
+                </div>
+                <div class="selected-indicator"></div>
+              </div>
+
+              <!-- Option 2 -->
+              <div class="reason-option">
+                <div class="option-icon dark-bg">
+                  <img src="images/3311_200.svg" alt="Quote Icon">
+                </div>
+                <div class="option-text">
+                  <span class="opt-title">Get a Quote</span>
+                  <span class="opt-desc">Pricing & availability</span>
+                </div>
+              </div>
+
+              <!-- Option 3 -->
+              <div class="reason-option">
+                <div class="option-icon dark-bg">
+                  <img src="images/3311_210.svg" alt="Support Icon">
+                </div>
+                <div class="option-text">
+                  <span class="opt-title">Support</span>
+                  <span class="opt-desc">Technical assistance</span>
+                </div>
+              </div>
+
+              <!-- Option 4 -->
+              <div class="reason-option">
+                <div class="option-icon dark-bg">
+                  <img src="images/3311_220.svg" alt="Partnership Icon">
+                </div>
+                <div class="option-text">
+                  <span class="opt-title">Chester V1 Partnership</span>
+                  <span class="opt-desc">Strategic Collaboration</span>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Input Fields Row 1 -->
+          <div class="form-row">
+            <div class="form-group half">
+              <label class="form-label">Full Name</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <img src="images/3311_237.svg" alt="User Icon">
+                </div>
+                <input type="text" placeholder="Mert SARAÇ" class="form-input">
+              </div>
+            </div>
+            <div class="form-group half">
+              <label class="form-label">Email Address</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <img src="images/3311_248.svg" alt="Email Icon">
+                </div>
+                <input type="email" placeholder="srcmert12@gmail.com" class="form-input">
+              </div>
+            </div>
+          </div>
+
+          <!-- Input Fields Row 2 -->
+          <div class="form-row">
+            <div class="form-group half">
+              <label class="form-label">Company / Organization</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <img src="images/3311_260.svg" alt="Company Icon">
+                </div>
+                <input type="text" placeholder="Chester Robotics" class="form-input">
+              </div>
+            </div>
+            <div class="form-group half">
+              <label class="form-label">Phone Number</label>
+              <div class="input-wrapper">
+                <div class="input-icon">
+                  <img src="images/3311_271.svg" alt="Phone Icon">
+                </div>
+                <input type="tel" placeholder="+90 (552) 261-68-01" class="form-input">
+              </div>
+            </div>
+          </div>
+
+          <!-- Textarea -->
+          <div class="form-group">
+            <label class="form-label">How can we help?</label>
+            <textarea class="form-textarea" placeholder="Tell us about your project or questions regarding Chester V1..."></textarea>
+          </div>
+
+          <!-- Submit Area -->
+          <div class="form-footer">
+            <button type="submit" class="submit-btn">
+              <span>Send Message</span>
+              <img src="images/3311_284.svg" alt="Arrow Icon">
+            </button>
+            <p class="disclaimer">Protected by Chester Secure. Your data is never sold.</p>
+          </div>
+        </form>
+      </div>
+    </div>
+  </div>
+</section>
+<section id="partners-section">
+  <div class="container">
+    <div class="partners-wrapper">
+      <p class="partners-title">Chester Robotics Partners</p>
+      <div class="partners-logos">
+        <!-- Partner 1 -->
+        <div class="partner-item">
+          <img src="images/3311_295.svg" alt="Auto MFG Icon">
+          <span>AUTO-MFG</span>
+        </div>
+        <!-- Partner 2 -->
+        <div class="partner-item">
+          <img src="images/3311_300.svg" alt="Bio Labs Icon">
+          <span>BIO-LABS</span>
+        </div>
+        <!-- Partner 3 -->
+        <div class="partner-item">
+          <img src="images/3311_305.svg" alt="Warehouse X Icon">
+          <span>WAREHOUSE-X</span>
+        </div>
+        <!-- Partner 4 -->
+        <div class="partner-item">
+          <img src="images/3311_310.svg" alt="Edu Tech Icon">
+          <span>EDU-TECH</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+</body>
+</html>
