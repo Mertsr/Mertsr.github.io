@@ -1,0 +1,148 @@
+:root {
+  --primary-red: #8b0000;
+  --primary-red-hover: #a50000;
+  --bg-dark: #0a0a0a;
+  --bg-card: #121212;
+  --text-white: #ffffff;
+  --text-gray: #a3a3a3;
+  --text-light-gray: #d4d4d4;
+  --border-color: #262626;
+}
+
+body {
+  font-family: 'Inter', sans-serif;
+  margin: 0;
+  padding: 0;
+  background-color: var(--bg-dark);
+  color: var(--text-white);
+  line-height: 1.5;
+}
+
+* {
+  box-sizing: border-box;
+}
+
+h1, h2, h3, h4, h5, h6, p {
+  margin: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+  transition: opacity 0.2s;
+}
+
+a:hover {
+  opacity: 0.8;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+  display: block;
+}
+
+.container {
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 24px;
+  width: 100%;
+}
+
+.flex {
+  display: flex;
+}
+
+.flex-col {
+  display: flex;
+  flex-direction: column;
+}
+
+.items-center {
+  align-items: center;
+}
+
+.justify-between {
+  justify-content: space-between;
+}
+
+.justify-center {
+  justify-content: center;
+}
+
+.gap-2 { gap: 8px; }
+.gap-4 { gap: 16px; }
+.gap-6 { gap: 24px; }
+.gap-8 { gap: 32px; }
+
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  height: 48px;
+  padding: 0 24px;
+  border-radius: 8px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s;
+  border: none;
+  font-size: 16px;
+}
+
+.btn-primary {
+  background-color: var(--primary-red);
+  color: white;
+  box-shadow: 0px 0px 20px 0px rgba(139, 0, 0, 0.4);
+}
+
+.btn-primary:hover {
+  background-color: var(--primary-red-hover);
+}
+
+.btn-outline {
+  background-color: rgba(255, 255, 255, 0.05);
+  border: 1px solid rgba(255, 255, 255, 0.2);
+  color: white;
+  backdrop-filter: blur(4px);
+}
+
+.btn-outline:hover {
+  background-color: rgba(255, 255, 255, 0.1);
+}
+
+.btn-sm {
+  height: 36px;
+  padding: 0 20px;
+  font-size: 14px;
+  border-radius: 9999px;
+}
+
+.tag {
+  display: inline-flex;
+  align-items: center;
+  padding: 4px 12px;
+  border-radius: 9999px;
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.tag-red {
+  background-color: rgba(139, 0, 0, 0.1);
+  color: #ef4444;
+  box-shadow: inset 0px 0px 0px 1px rgba(139, 0, 0, 0.4);
+}
+
+.text-sm { font-size: 14px; }
+.text-base { font-size: 16px; }
+.text-lg { font-size: 18px; }
+.text-xl { font-size: 20px; }
+.text-gray { color: var(--text-gray); }
+.text-light-gray { color: var(--text-light-gray); }
+.text-red { color: var(--primary-red); }
+
+/* Utility for material symbols alignment */
+.icon-wrapper {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
