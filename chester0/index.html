@@ -13,7 +13,9 @@
       !window.location.pathname.endsWith('/') &&
       !window.location.pathname.endsWith('.html')
     ) {
-      window.location.replace(`${window.location.pathname}/`);
+      window.location.replace(
+        window.location.pathname + '/' + window.location.search + window.location.hash
+      );
     }
   </script>
 <link rel="preconnect" href="https://fonts.googleapis.com">
