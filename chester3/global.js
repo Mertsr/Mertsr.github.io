@@ -59,12 +59,6 @@
         node.removeAttribute(attr.name);
       });
 
-      if (node.tagName === 'SPAN') {
-        const className = node.getAttribute('class');
-        if (className !== 'text-red') {
-          node.removeAttribute('class');
-        }
-      }
     });
 
     return template.innerHTML;
