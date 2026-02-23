@@ -63,7 +63,6 @@
         }
         node.removeAttribute(attr.name);
       });
-
     });
 
     const wrapper = document.createElement('div');
