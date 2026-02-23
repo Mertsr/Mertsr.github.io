@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generated Page</title>
+  <title>chester2</title>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chester Robotics</title>
+<title>chester2</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -41,6 +41,12 @@
 .main-nav {
   display: flex;
   gap: 32px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .nav-link {
@@ -510,15 +516,16 @@
       </div>
       
       <nav class="main-nav">
-        <a href="../index.html" class="nav-link">Chester V1</a>
-        <a href="../chester2/" class="nav-link active">Solutions</a>
-        <a href="../chester3/" class="nav-link">Use Cases</a>
-        <a href="../chester4/" class="nav-link">About</a>
-        <a href="../chester5/" class="nav-link">Contact</a>
+        <a href="../index.html" class="nav-link" data-tr="Chester V1">Chester V1</a>
+        <a href="../chester2/" class="nav-link active" data-tr="Çözümler">Solutions</a>
+        <a href="../chester3/" class="nav-link" data-tr="Kullanım Senaryoları">Use Cases</a>
+        <a href="../chester4/" class="nav-link" data-tr="Hakkımızda">About</a>
+        <a href="../chester5/" class="nav-link" data-tr="İletişim">Contact</a>
       </nav>
       
       <div class="header-actions">
-        <button class="btn-primary">Contact Sales</button>
+        <button class="btn-primary" data-tr="Satışla İletişim">Contact Sales</button>
+        <button class="btn-primary lang-toggle" type="button" data-lang-toggle>TR</button>
       </div>
     </div>
   </header>
@@ -526,30 +533,30 @@
 <section id="hero-section">
   <div class="container">
     <div class="breadcrumbs">
-      <span class="text-secondary">Home</span>
+      <span class="text-secondary" data-tr="Ana Sayfa">Home</span>
       <span class="separator">/</span>
-      <span class="text-white">Models</span>
+      <span class="text-white" data-tr="Modeller">Models</span>
     </div>
 
     <div class="hero-content">
-      <h1 class="hero-title">Industry-Specific <span class="text-red">Solutions</span></h1>
-      <p class="hero-subtitle">
+      <h1 class="hero-title" data-tr="Sektöre Özel <span class='text-red'>Çözümler</span>">Industry-Specific <span class="text-red">Solutions</span></h1>
+      <p class="hero-subtitle" data-tr="Zarafetle tasarlanmış akıllı robotikler. Amiral gemimiz Chester V1'den uzmanlaşmış endüstriyel birimlere kadar.">
         Intelligent robotics designed with sophistication. From our flagship Chester V1 to specialized industrial units.
       </p>
     </div>
 
     <div class="filter-tabs">
       <button class="tab-btn active">
-        <span>All Series</span>
+        <span data-tr="Tüm Seriler">All Series</span>
       </button>
       <button class="tab-btn">
-        <span>Domestic</span>
+        <span data-tr="Ev Tipi">Domestic</span>
       </button>
       <button class="tab-btn">
-        <span>Medical</span>
+        <span data-tr="Medikal">Medical</span>
       </button>
       <button class="tab-btn">
-        <span>Industrial</span>
+        <span data-tr="Endüstriyel">Industrial</span>
       </button>
     </div>
   </div>
@@ -566,29 +573,29 @@
         </div>
         <div class="card-content featured-content">
           <div class="card-header">
-            <h3 class="card-title">Chester V1</h3>
-            <p class="card-subtitle">AUTONOMOUS Q-COMMERCE ASSISTANT</p>
+            <h3 class="card-title" data-tr="Chester V1">Chester V1</h3>
+            <p class="card-subtitle" data-tr="OTONOM Q-COMMERCE ASİSTANI">AUTONOMOUS Q-COMMERCE ASSISTANT</p>
           </div>
-          <p class="card-description">
+          <p class="card-description" data-tr="E-ticaretin geleceği burada. Chester V1, dinamik ortamlara sorunsuz uyum sağlayan kompakt endüstriyel tasarımıyla lojistiği yeniden tanımlar. 7/24 çalışan bu çözüm, iş gücü verimliliğini önemli ölçüde artırır ve operasyonel maliyetleri düşürürken, dost canlısı arayüzü insanların iş birliğini kolaylaştırır.">
             The future of e-commerce is here. Chester V1 redefines logistics with its compact industrial design that seamlessly adapts to dynamic environments. Operating 24/7, it significantly boosts workforce efficiency and reduces operational costs, while its friendly and approachable interface ensures seamless collaboration with humans.
           </p>
           <ul class="feature-list">
             <li>
               <img src="images/4_582.svg" alt="icon" class="icon">
-              <span>6-Axis Articulated Arm</span>
+              <span data-tr="6 Eksenli Mafsallı Kol">6-Axis Articulated Arm</span>
             </li>
             <li>
               <img src="images/4_587.svg" alt="icon" class="icon">
-              <span>Emotional Interface</span>
+              <span data-tr="Duygusal Arayüz">Emotional Interface</span>
             </li>
             <li>
               <img src="images/4_592.svg" alt="icon" class="icon">
-              <span>Level 4 AI Navigation</span>
+              <span data-tr="Seviye 4 Yapay Zekâ Navigasyonu">Level 4 AI Navigation</span>
             </li>
           </ul>
           <div class="card-actions">
             <button class="btn-white">
-              Explore Chester V1
+              <span data-tr="Chester V1'i Keşfet">Explore Chester V1</span>
               <span class="material-symbols-outlined">arrow_forward</span>
             </button>
           </div>
@@ -600,15 +607,15 @@
         <div class="card-image-wrapper">
           <img src="images/f768a3702b3bb1211c8c2cf28b9ab7267536ff21.png" alt="Chester V1 Head Unit" class="card-img">
           <div class="badge-container top-right">
-            <span class="badge badge-red">New Release</span>
+            <span class="badge badge-red" data-tr="Yeni Çıkış">New Release</span>
           </div>
         </div>
         <div class="card-content">
           <div class="card-header">
-            <h3 class="card-title">CHESTER V1 HEAD UNIT</h3>
-            <p class="card-subtitle text-primary">EMPATHIC INTERACTION MODULE</p>
+            <h3 class="card-title" data-tr="CHESTER V1 BAŞ ÜNİTESİ">CHESTER V1 HEAD UNIT</h3>
+            <p class="card-subtitle text-primary" data-tr="EMPATİK ETKİLEŞİM MODÜLÜ">EMPATHIC INTERACTION MODULE</p>
           </div>
-          <p class="card-description">
+          <p class="card-description" data-tr="Chester V1'in ifade gücü yüksek OLED yüzünü barındıran bu modül, sezgisel etkileşim sağlar. Niyetini doğal dijital ifadelerle aktararak ortak çalışma alanlarında dostane ve öngörülebilir iş birliğini mümkün kılar.">
             Featuring Chester V1's expressive OLED face, this module enables intuitive interaction. It communicates intent through natural digital expressions, ensuring friendly and predictable collaboration in shared workspaces.
           </p>
         </div>
@@ -619,15 +626,15 @@
         <div class="card-image-wrapper">
           <img src="images/350574f198d7d9f1eba68d7c2326dea5e02ddafc.png" alt="Industrial Robot" class="card-img fit-contain">
           <div class="badge-container top-left">
-            <span class="badge badge-dark">Industrial</span>
+            <span class="badge badge-dark" data-tr="Endüstriyel">Industrial</span>
           </div>
         </div>
         <div class="card-content">
           <div class="card-header">
-            <h3 class="card-title">CHESTER V1</h3>
-            <p class="card-subtitle text-primary">FLEXIBLE AUTOMATION PLATFORM</p>
+            <h3 class="card-title" data-tr="CHESTER V1">CHESTER V1</h3>
+            <p class="card-subtitle text-primary" data-tr="ESNEK OTOMASYON PLATFORMU">FLEXIBLE AUTOMATION PLATFORM</p>
           </div>
-          <p class="card-description">
+          <p class="card-description" data-tr="Hızlı hareket kabiliyeti ile 50 kg hafif şasiyi birleştiren son derece çok yönlü bir platform. Entegre tasarımındaki hassas vakum tutucu, kompakt ortamlarda çeşitli otomasyon görevleri için narin ürün taşıma ve esnek manipülasyon sağlar.">
             A highly versatile platform combining agile movement with a 50kg lightweight chassis. Its integrated design features a precision vacuum gripper, enabling delicate product handling and flexible manipulation for diverse automation tasks in compact environments.
           </p>
         </div>
@@ -638,15 +645,15 @@
         <div class="card-image-wrapper">
           <img src="images/c4532df1a5164c3c1d0d46839619ee2e2ef6acf2.png" alt="Retail Assistant" class="card-img">
           <div class="badge-container top-left">
-            <span class="badge badge-dark">Healthcare</span>
+            <span class="badge badge-dark" data-tr="Sağlık">Healthcare</span>
           </div>
         </div>
         <div class="card-content">
           <div class="card-header">
-            <h3 class="card-title">RETAIL & DARK STORE ASSISTANT</h3>
-            <p class="card-subtitle text-primary">Q-COMMERCE OPTIMIZATION</p>
+            <h3 class="card-title" data-tr="PERAKENDE VE KARANLIK MAĞAZA ASİSTANI">RETAIL & DARK STORE ASSISTANT</h3>
+            <p class="card-subtitle text-primary" data-tr="Q-COMMERCE OPTİMİZASYONU">Q-COMMERCE OPTIMIZATION</p>
           </div>
-          <p class="card-description">
+          <p class="card-description" data-tr="Dinamik pazar ve karanlık mağaza lojistiği için özel olarak tasarlandı. Seviye 4 otonomi ve pekiştirmeli öğrenme ile güçlenen Chester V1, kalabalık koridorlarda otonom gezinir, ürünleri doğru şekilde seçip sepete yerleştirerek sipariş hazırlamayı hızlandırır.">
             Engineered specifically for dynamic market and dark store logistics. Powered by Level 4 autonomy and Reinforcement Learning, Chester V1 autonomously navigates crowded aisles, accurately picking and placing products into the basket to accelerate order fulfillment.
           </p>
         </div>
@@ -657,15 +664,15 @@
         <div class="card-image-wrapper">
           <img src="images/a6c2dc76c30184c4d17ca4ee03ddfc38a50c67b1.png" alt="Prototype" class="card-img">
           <div class="badge-container top-left">
-            <span class="badge badge-dark">Logistics</span>
+            <span class="badge badge-dark" data-tr="Lojistik">Logistics</span>
           </div>
         </div>
         <div class="card-content">
           <div class="card-header">
-            <h3 class="card-title">CHESTER V1 PROTOTYPE</h3>
-            <p class="card-subtitle text-primary">ENGINEERING MILESTONE</p>
+            <h3 class="card-title" data-tr="CHESTER V1 PROTOTİP">CHESTER V1 PROTOTYPE</h3>
+            <p class="card-subtitle text-primary" data-tr="MÜHENDİSLİK DÖNÜM NOKTASI">ENGINEERING MILESTONE</p>
           </div>
-          <p class="card-description">
+          <p class="card-description" data-tr="İlk çalışan prototipimiz, üst düzey hareket kabiliyetini başarıyla kanıtladı. Özel Lidar-Vizyon paketini kullanarak uygun maliyetli donanımda kararlı otonom navigasyonu gösterdi ve temel mühendislik vizyonumuzu doğruladı.">
             Our first functional prototype successfully proved high-level mobility. Utilizing a custom Lidar-Vision stack, it demonstrated stable autonomous navigation on affordable hardware, validating our core engineering vision.
           </p>
         </div>
@@ -681,7 +688,7 @@
         <div class="footer-brand">
           <img src="images/3d6415eb35f0c102aa98658343488423acbf4c6c.png" alt="Chester Robotics" class="footer-logo">
           <div class="brand-text">
-            <p>Pioneering the next generation of intelligent machines. We build robots that enhance human potential through precision engineering and empathetic design.</p>
+            <p data-tr="Akıllı makinelerin yeni nesline öncülük ediyoruz. Hassas mühendislik ve empatik tasarımla insan potansiyelini artıran robotlar geliştiriyoruz.">Pioneering the next generation of intelligent machines. We build robots that enhance human potential through precision engineering and empathetic design.</p>
           </div>
           <div class="social-links">
             <a href="#" class="social-icon"><img src="images/4_700.svg" alt="Social"></a>
@@ -692,30 +699,30 @@
 
         <div class="footer-nav">
           <div class="nav-column">
-            <h4>Company</h4>
-            <a href="#">About Us</a>
-            <a href="#">Careers</a>
-            <a href="#">Press</a>
+            <h4 data-tr="Şirket">Company</h4>
+            <a href="#" data-tr="Hakkımızda">About Us</a>
+            <a href="#" data-tr="Kariyer">Careers</a>
+            <a href="#" data-tr="Basın">Press</a>
           </div>
           <div class="nav-column">
-            <h4>Support</h4>
-            <a href="#">Help Center</a>
-            <a href="#">Documentation</a>
-            <a href="#">Warranty</a>
+            <h4 data-tr="Destek">Support</h4>
+            <a href="#" data-tr="Yardım Merkezi">Help Center</a>
+            <a href="#" data-tr="Dokümantasyon">Documentation</a>
+            <a href="#" data-tr="Garanti">Warranty</a>
           </div>
           <div class="nav-column">
-            <h4>Legal</h4>
-            <a href="#">Privacy</a>
-            <a href="#">Terms</a>
+            <h4 data-tr="Yasal">Legal</h4>
+            <a href="#" data-tr="Gizlilik">Privacy</a>
+            <a href="#" data-tr="Şartlar">Terms</a>
           </div>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <p class="copyright">© 2024 Chester Robotics. All rights reserved.</p>
+        <p class="copyright" data-tr="© 2024 Chester Robotics. Tüm hakları saklıdır.">© 2024 Chester Robotics. All rights reserved.</p>
         <div class="system-status">
           <span class="status-dot"></span>
-          <span class="status-text">Systems Operational</span>
+          <span class="status-text" data-tr="Sistemler Çalışıyor">Systems Operational</span>
         </div>
       </div>
     </div>

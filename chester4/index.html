@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generated Page</title>
+  <title>chester4</title>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -26,6 +26,12 @@
   align-items: center;
   height: 87px;
   padding: 0 320px;
+}
+
+.header-cta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .logo img {
@@ -762,14 +768,15 @@
         <img src="images/3d6415eb35f0c102aa98658343488423acbf4c6c.png" alt="Chester Robotics">
       </div>
       <nav class="main-nav">
-        <a href="../index.html" class="nav-link">Chester V1</a>
-        <a href="../chester2/" class="nav-link">Solutions</a>
-        <a href="../chester3/" class="nav-link">Use Cases</a>
-        <a href="../chester4/" class="nav-link active">About</a>
-        <a href="../chester5/" class="nav-link">Contact</a>
+        <a href="../index.html" class="nav-link" data-tr="Chester V1">Chester V1</a>
+        <a href="../chester2/" class="nav-link" data-tr="Çözümler">Solutions</a>
+        <a href="../chester3/" class="nav-link" data-tr="Kullanım Senaryoları">Use Cases</a>
+        <a href="../chester4/" class="nav-link active" data-tr="Hakkımızda">About</a>
+        <a href="../chester5/" class="nav-link" data-tr="İletişim">Contact</a>
       </nav>
       <div class="header-cta">
-        <button class="btn-contact">Contact Sales</button>
+        <button class="btn-contact" data-tr="Satışla İletişim">Contact Sales</button>
+        <button class="btn-contact lang-toggle" type="button" data-lang-toggle>TR</button>
       </div>
     </div>
   </header>
@@ -785,21 +792,21 @@
     <div class="hero-content">
       <div class="badge">
         <span class="dot"></span>
-        <span>Introducing Chester V1</span>
+        <span data-tr="Chester V1 ile Tanışın">Introducing Chester V1</span>
       </div>
       
       <div class="hero-text">
-        <h1>Redefining Autonomous Logistics</h1>
-        <h2 class="subtitle">Affordable. Intelligent. Compact.</h2>
+        <h1 data-tr="Otonom Lojistiği Yeniden Tanımlıyoruz">Redefining Autonomous Logistics</h1>
+        <h2 class="subtitle" data-tr="Uygun Fiyatlı. Akıllı. Kompakt.">Affordable. Intelligent. Compact.</h2>
       </div>
 
       <div class="hero-description">
-        <p>We are Chester Robotics. We engineer high-performance, autonomous, and intelligent service platforms designed to seamlessly integrate into dynamic human environments. Leading the future of precision-driven assistance.</p>
+        <p data-tr="Biz Chester Robotics'iz. Dinamik insan ortamlarına sorunsuz entegre olacak şekilde tasarlanmış yüksek performanslı, otonom ve akıllı hizmet platformları geliştiriyoruz. Hassasiyet odaklı yardımın geleceğine liderlik ediyoruz.">We are Chester Robotics. We engineer high-performance, autonomous, and intelligent service platforms designed to seamlessly integrate into dynamic human environments. Leading the future of precision-driven assistance.</p>
       </div>
 
       <div class="hero-actions">
-        <button class="btn-primary">Meet Chester V1</button>
-        <button class="btn-secondary">Our Story</button>
+        <button class="btn-primary" data-tr="Chester V1 ile Tanış">Meet Chester V1</button>
+        <button class="btn-secondary" data-tr="Hikayemiz">Our Story</button>
       </div>
     </div>
   </div>
@@ -814,12 +821,12 @@
             <img src="images/2_95.svg" alt="Industrial Frame">
           </div>
           <div class="stat-label">
-            <span class="label-title">Industrial Frame</span>
-            <span class="label-desc">p.text-slate-500</span>
+            <span class="label-title" data-tr="Endüstriyel Şasi">Industrial Frame</span>
+            <span class="label-desc" data-tr="p.text-slate-500">p.text-slate-500</span>
           </div>
         </div>
         <div class="stat-value">50 KG</div>
-        <div class="stat-sub">p.text-xs:margin</div>
+          <div class="stat-sub" data-tr="p.text-xs:margin">p.text-xs:margin</div>
       </div>
 
       <!-- Stat 2 -->
@@ -829,12 +836,12 @@
             <img src="images/2_106.svg" alt="Battery Life">
           </div>
           <div class="stat-label">
-            <span class="label-title">Battery Life</span>
-            <span class="label-desc">p.text-slate-500</span>
+            <span class="label-title" data-tr="Pil Ömrü">Battery Life</span>
+            <span class="label-desc" data-tr="p.text-slate-500">p.text-slate-500</span>
           </div>
         </div>
         <div class="stat-value">24h</div>
-        <div class="stat-sub">p.text-xs:margin</div>
+          <div class="stat-sub" data-tr="p.text-xs:margin">p.text-xs:margin</div>
       </div>
 
       <!-- Stat 3 -->
@@ -844,12 +851,12 @@
             <img src="images/2_116.svg" alt="Flexible Leasing">
           </div>
           <div class="stat-label">
-            <span class="label-title">Flexible Leasing Model</span>
-            <span class="label-desc">p.text-slate-500</span>
+            <span class="label-title" data-tr="Esnek Kiralama Modeli">Flexible Leasing Model</span>
+            <span class="label-desc" data-tr="p.text-slate-500">p.text-slate-500</span>
           </div>
         </div>
         <div class="stat-value">RaaS</div>
-        <div class="stat-sub">p.text-xs:margin</div>
+          <div class="stat-sub" data-tr="p.text-xs:margin">p.text-xs:margin</div>
       </div>
 
       <!-- Stat 4 -->
@@ -859,12 +866,12 @@
             <img src="images/2_127.svg" alt="Autonomy Stack">
           </div>
           <div class="stat-label">
-            <span class="label-title">Autonomy Stack</span>
-            <span class="label-desc">p.text-slate-500</span>
+            <span class="label-title" data-tr="Otonomi Yığını">Autonomy Stack</span>
+            <span class="label-desc" data-tr="p.text-slate-500">p.text-slate-500</span>
           </div>
         </div>
         <div class="stat-value">LEVEL 4</div>
-        <div class="stat-sub">p.text-xs:margin</div>
+          <div class="stat-sub" data-tr="p.text-xs:margin">p.text-xs:margin</div>
       </div>
     </div>
   </div>
@@ -872,8 +879,8 @@
 <section id="section-timeline">
   <div class="container timeline-wrapper">
     <div class="timeline-header">
-      <h2>Building Chester V1</h2>
-      <p>The journey to create a truly helpful humanoid service robot wasn't easy.<br>Here is how Chester evolved from a concept to reality.</p>
+      <h2 data-tr="Chester V1'i İnşa Ediyoruz">Building Chester V1</h2>
+      <p data-tr="Gerçekten yardımcı bir insansı hizmet robotu geliştirmek kolay olmadı.<br>İşte Chester'ın bir fikirden gerçeğe nasıl evrildiği.">The journey to create a truly helpful humanoid service robot wasn't easy.<br>Here is how Chester evolved from a concept to reality.</p>
     </div>
 
     <div class="timeline-content">
@@ -884,9 +891,9 @@
       <div class="timeline-row">
         <div class="spacer"></div>
         <div class="timeline-item right">
-          <h3>Concept & Design</h3>
+          <h3 data-tr="Konsept ve Tasarım">Concept & Design</h3>
           <p class="date">2024-2025</p>
-          <p class="desc">The "friendly face" philosophy is born. Early sketches focused on a non-threatening, square-headed design that emphasizes digital eyes for clear communication.</p>
+          <p class="desc" data-tr="“Dost yüz” felsefesi doğdu. İlk eskizler, net iletişim için dijital gözleri vurgulayan, tehditkâr olmayan kare başlı bir tasarıma odaklandı.">The "friendly face" philosophy is born. Early sketches focused on a non-threatening, square-headed design that emphasizes digital eyes for clear communication.</p>
         </div>
         <div class="timeline-icon-wrapper">
           <div class="icon-circle">
@@ -898,9 +905,9 @@
       <!-- Item 2: Left -->
       <div class="timeline-row">
         <div class="timeline-item left">
-          <h3>The "Chester" Prototype</h3>
+          <h3 data-tr="&quot;Chester&quot; Prototipi">The "Chester" Prototype</h3>
           <p class="date">2025</p>
-          <p class="desc">Chester V1 Development: Successfully engineered the first functional prototype utilizing a custom Lidar-Vision stack. This milestone proved high-level autonomous mobility on affordable hardware, validating our core technology.</p>
+          <p class="desc" data-tr="Chester V1 Geliştirme: Özel Lidar-Vizyon paketini kullanan ilk çalışan prototip başarıyla geliştirildi. Bu kilometre taşı, uygun maliyetli donanımda üst düzey otonom hareket kabiliyetini kanıtlayarak temel teknolojimizi doğruladı.">Chester V1 Development: Successfully engineered the first functional prototype utilizing a custom Lidar-Vision stack. This milestone proved high-level autonomous mobility on affordable hardware, validating our core technology.</p>
         </div>
         <div class="spacer"></div>
         <div class="timeline-icon-wrapper">
@@ -914,9 +921,9 @@
       <div class="timeline-row">
         <div class="spacer"></div>
         <div class="timeline-item right">
-          <h3>FIELD TESTING & PILOT PROGRAMS</h3>
+          <h3 data-tr="SAHA TESTLERİ VE PİLOT PROGRAMLAR">FIELD TESTING & PILOT PROGRAMS</h3>
           <p class="date">2026</p>
-          <p class="desc">Real-world deployment and validation. Launch of pilot programs with industry partners to test Chester V1 in live warehouse and retail environments, refining the autonomous navigation stack for unpredictable scenarios.</p>
+          <p class="desc" data-tr="Gerçek dünya konuşlandırması ve doğrulama. Endüstri ortaklarıyla başlatılan pilot programlar, Chester V1'i canlı depo ve perakende ortamlarında test ederek öngörülemeyen senaryolar için otonom navigasyon yığınını iyileştirdi.">Real-world deployment and validation. Launch of pilot programs with industry partners to test Chester V1 in live warehouse and retail environments, refining the autonomous navigation stack for unpredictable scenarios.</p>
         </div>
         <div class="timeline-icon-wrapper">
           <div class="icon-circle">
@@ -928,9 +935,9 @@
       <!-- Item 4: Left -->
       <div class="timeline-row">
         <div class="timeline-item left">
-          <h3>SCALE & GLOBAL REACH</h3>
+          <h3 data-tr="ÖLÇEKLENME VE KÜRESEL ERİŞİM">SCALE & GLOBAL REACH</h3>
           <p class="date">2027</p>
-          <p class="desc">Commercial launch and European market expansion. Scaling operations from initial sales to full deployment in major international distribution centers.</p>
+          <p class="desc" data-tr="Ticari lansman ve Avrupa pazarına genişleme. İlk satışlardan büyük uluslararası dağıtım merkezlerinde tam konuşlandırmaya kadar operasyonları ölçeklemek.">Commercial launch and European market expansion. Scaling operations from initial sales to full deployment in major international distribution centers.</p>
         </div>
         <div class="spacer"></div>
         <div class="timeline-icon-wrapper">
@@ -945,8 +952,8 @@
 <section id="section-team">
   <div class="container team-container">
     <div class="team-header">
-      <h2>The Minds Behind Chester</h2>
-      <p>Meet the visionaries, engineers, and creators bringing personality to metal and plastic.</p>
+      <h2 data-tr="Chester'ın Arkasındaki Zihinler">The Minds Behind Chester</h2>
+      <p data-tr="Metale ve plastiğe kişilik kazandıran vizyonerlerle, mühendislerle ve yaratıcılarla tanışın.">Meet the visionaries, engineers, and creators bringing personality to metal and plastic.</p>
     </div>
 
     <div class="team-grid">
@@ -957,11 +964,11 @@
           <div class="card-gradient"></div>
           <div class="card-overlay-info">
             <h3>Mert Saraç</h3>
-            <p class="role">FOUNDER & CTO</p>
+            <p class="role" data-tr="KURUCUSU ve CTO">FOUNDER & CTO</p>
           </div>
         </div>
         <div class="card-content">
-          <p class="bio">Leverages a broad background in autonomous systems—from humanoids to self-driving vehicles—to develop intelligent navigation solutions for dynamic industrial environments.</p>
+          <p class="bio" data-tr="İnsansı robotlardan otonom araçlara uzanan geniş otonom sistem deneyimini, dinamik endüstriyel ortamlar için akıllı navigasyon çözümleri geliştirmek adına kullanır.">Leverages a broad background in autonomous systems—from humanoids to self-driving vehicles—to develop intelligent navigation solutions for dynamic industrial environments.</p>
           <div class="social-links">
             <a href="#"><img src="images/2_226.svg" alt="LinkedIn"></a>
             <a href="#"><img src="images/2_230.svg" alt="Twitter"></a>
@@ -976,11 +983,11 @@
           <div class="card-gradient"></div>
           <div class="card-overlay-info">
             <h3>Banu Sayfullayeva</h3>
-            <p class="role">PRODUCT DESIGNER</p>
+            <p class="role" data-tr="ÜRÜN TASARIMCISI">PRODUCT DESIGNER</p>
           </div>
         </div>
         <div class="card-content">
-          <p class="bio">Architects Chester’s industrial and visual identity. Responsible for the V1’s compact form factor and global brand strategy, ensuring seamless integration between hardware aesthetics and user experience.</p>
+          <p class="bio" data-tr="Chester'ın endüstriyel ve görsel kimliğini tasarlar. V1’in kompakt form faktörü ve küresel marka stratejisinden sorumlu olup donanım estetiği ile kullanıcı deneyimi arasında sorunsuz bir bağ kurar.">Architects Chester’s industrial and visual identity. Responsible for the V1’s compact form factor and global brand strategy, ensuring seamless integration between hardware aesthetics and user experience.</p>
           <div class="social-links">
             <a href="#"><img src="images/2_247.svg" alt="LinkedIn"></a>
             <a href="#"><img src="images/2_251.svg" alt="Twitter"></a>
@@ -1002,11 +1009,11 @@
           <img src="images/2_261.svg" alt="Icon">
         </div>
       </div>
-      <h2>Ready to deploy Chester?</h2>
-      <p>We are currently accepting pre-orders for the Chester V1. Join the waitlist or apply for a position to help us build the next generation.</p>
+      <h2 data-tr="Chester'ı Devreye Almaya Hazır mısınız?">Ready to deploy Chester?</h2>
+      <p data-tr="Chester V1 için şu anda ön sipariş kabul ediyoruz. Bekleme listesine katılın veya bir pozisyona başvurun ve bir sonraki nesli birlikte inşa edelim.">We are currently accepting pre-orders for the Chester V1. Join the waitlist or apply for a position to help us build the next generation.</p>
       <div class="cta-buttons">
-        <button class="btn-preorder">Pre-Order Now</button>
-        <button class="btn-careers">View Careers</button>
+        <button class="btn-preorder" data-tr="Şimdi Ön Sipariş Ver">Pre-Order Now</button>
+        <button class="btn-careers" data-tr="Kariyerleri Görüntüle">View Careers</button>
       </div>
     </div>
   </div>
@@ -1018,43 +1025,43 @@
         <!-- Column 1: Brand -->
         <div class="footer-brand">
           <img src="images/3d6415eb35f0c102aa98658343488423acbf4c6c.png" alt="Chester Robotics" class="footer-logo">
-          <p class="footer-slogan">Robotics for the real world. Designed with purpose, built for service.</p>
+          <p class="footer-slogan" data-tr="Gerçek dünya için robotik. Amaçla tasarlandı, hizmet için üretildi.">Robotics for the real world. Designed with purpose, built for service.</p>
         </div>
 
         <!-- Column 2: Company -->
         <div class="footer-links">
-          <h4>Company</h4>
+          <h4 data-tr="Şirket">Company</h4>
           <ul>
-            <li><a href="#">About Chester</a></li>
-            <li><a href="#">The V1 Story</a></li>
-            <li><a href="#">Team</a></li>
-            <li><a href="#">Careers</a></li>
+            <li><a href="#" data-tr="Chester Hakkında">About Chester</a></li>
+            <li><a href="#" data-tr="V1 Hikayesi">The V1 Story</a></li>
+            <li><a href="#" data-tr="Ekip">Team</a></li>
+            <li><a href="#" data-tr="Kariyer">Careers</a></li>
           </ul>
         </div>
 
         <!-- Column 3: Product -->
         <div class="footer-links">
-          <h4>Product</h4>
+          <h4 data-tr="Ürün">Product</h4>
           <ul>
-            <li><a href="#">Chester V1 Specs</a></li>
-            <li><a href="#">Integrations</a></li>
-            <li><a href="#">Support</a></li>
-            <li><a href="#">Developer API</a></li>
+            <li><a href="#" data-tr="Chester V1 Teknikleri">Chester V1 Specs</a></li>
+            <li><a href="#" data-tr="Entegrasyonlar">Integrations</a></li>
+            <li><a href="#" data-tr="Destek">Support</a></li>
+            <li><a href="#" data-tr="Geliştirici API">Developer API</a></li>
           </ul>
         </div>
 
         <!-- Column 4: Newsletter -->
         <div class="footer-newsletter">
-          <h4>Stay Updated</h4>
+          <h4 data-tr="Güncel Kalın">Stay Updated</h4>
           <div class="newsletter-form">
-            <input type="email" placeholder="Enter your email" class="email-input">
-            <button class="btn-subscribe">Subscribe</button>
+            <input type="email" placeholder="Enter your email" class="email-input" data-tr-placeholder="E-posta adresinizi girin">
+            <button class="btn-subscribe" data-tr="Abone Ol">Subscribe</button>
           </div>
         </div>
       </div>
 
       <div class="footer-bottom">
-        <p class="copyright">© 2024 Chester Robotics Inc. All rights reserved.</p>
+        <p class="copyright" data-tr="© 2024 Chester Robotics Inc. Tüm hakları saklıdır.">© 2024 Chester Robotics Inc. All rights reserved.</p>
         <div class="footer-social">
           <a href="#"><img src="images/2_326.svg" alt="Social"></a>
         </div>

@@ -1,1 +1,83 @@
-// No specific JS required for layout
+(() => {
+  const LANGUAGE_KEY = 'preferredLanguage';
+  const toggleButton = document.querySelector('[data-lang-toggle]');
+  const translatableElements = Array.from(document.querySelectorAll('[data-tr]'));
+  const placeholderElements = Array.from(document.querySelectorAll('[data-tr-placeholder]'));
+
+  const getPageTitle = () => {
+    const segments = window.location.pathname.split('/').filter(Boolean);
+    if (segments.length === 0) {
+      return 'index';
+    }
+    const lastSegment = segments[segments.length - 1];
+    if (lastSegment.toLowerCase() === 'index.html') {
+      return segments.length > 1 ? segments[segments.length - 2] : 'index';
+    }
+    if (lastSegment.endsWith('.html')) {
+      return lastSegment.slice(0, -5);
+    }
+    return lastSegment;
+  };
+
+  const normalizeLanguage = (language) => (language === 'tr' ? 'tr' : 'en');
+
+  const readStoredLanguage = () => {
+    try {
+      return localStorage.getItem(LANGUAGE_KEY);
+    } catch (error) {
+      return null;
+    }
+  };
+
+  const storeLanguage = (language) => {
+    try {
+      localStorage.setItem(LANGUAGE_KEY, language);
+    } catch (error) {
+      return;
+    }
+  };
+
+  const applyLanguage = (language) => {
+    const normalized = normalizeLanguage(language);
+    document.documentElement.setAttribute('lang', normalized);
+
+    translatableElements.forEach((element) => {
+      if (!element.dataset.en) {
+        element.dataset.en = element.innerHTML;
+      }
+      element.innerHTML = normalized === 'tr' ? element.dataset.tr : element.dataset.en;
+    });
+
+    placeholderElements.forEach((element) => {
+      if (!element.dataset.enPlaceholder) {
+        element.dataset.enPlaceholder = element.getAttribute('placeholder') || '';
+      }
+      element.setAttribute(
+        'placeholder',
+        normalized === 'tr' ? element.dataset.trPlaceholder : element.dataset.enPlaceholder
+      );
+    });
+
+    if (toggleButton) {
+      toggleButton.textContent = normalized === 'tr' ? 'EN' : 'TR';
+      toggleButton.setAttribute(
+        'aria-label',
+        normalized === 'tr' ? 'Switch to English' : 'Türkçeye geç'
+      );
+    }
+
+    storeLanguage(normalized);
+  };
+
+  document.title = getPageTitle();
+
+  const storedLanguage = readStoredLanguage();
+  applyLanguage(storedLanguage || 'en');
+
+  if (toggleButton) {
+    toggleButton.addEventListener('click', () => {
+      const current = document.documentElement.getAttribute('lang');
+      applyLanguage(current === 'tr' ? 'en' : 'tr');
+    });
+  }
+})();

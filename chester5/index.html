@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generated Page</title>
+  <title>chester5</title>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chester Robotics</title>
+<title>chester5</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -27,6 +27,12 @@
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+
+  .header-cta {
+    display: flex;
+    align-items: center;
+    gap: 12px;
   }
 
   .logo img {
@@ -508,24 +514,25 @@
 
       <!-- Navigation -->
       <nav class="main-nav">
-        <a href="../index.html" class="nav-link">Chester V1</a>
+        <a href="../index.html" class="nav-link" data-tr="Chester V1">Chester V1</a>
         <div class="nav-item-group">
-          <a href="../chester2/" class="nav-link">Solutions</a>
+          <a href="../chester2/" class="nav-link" data-tr="Çözümler">Solutions</a>
         </div>
         <div class="nav-item-group">
-          <a href="../chester3/" class="nav-link">Use Cases</a>
+          <a href="../chester3/" class="nav-link" data-tr="Kullanım Senaryoları">Use Cases</a>
         </div>
         <div class="nav-item-group">
-          <a href="../chester4/" class="nav-link">About</a>
+          <a href="../chester4/" class="nav-link" data-tr="Hakkımızda">About</a>
         </div>
         <div class="nav-item-group">
-          <a href="../chester5/" class="nav-link text-red active">Contact</a>
+          <a href="../chester5/" class="nav-link text-red active" data-tr="İletişim">Contact</a>
         </div>
       </nav>
 
       <!-- CTA Button -->
       <div class="header-cta">
-        <button class="btn-primary">Contact Sales</button>
+        <button class="btn-primary" data-tr="Satışla İletişim">Contact Sales</button>
+        <button class="btn-primary lang-toggle" type="button" data-lang-toggle>TR</button>
       </div>
       
       <!-- Mobile Menu Toggle (Visual placeholder) -->
@@ -545,14 +552,14 @@
       <!-- Status Badge -->
       <div class="status-badge">
         <span class="status-dot"></span>
-        <span class="status-text">Status: Operational</span>
+        <span class="status-text" data-tr="Durum: Çalışıyor">Status: Operational</span>
       </div>
 
       <!-- Heading -->
-      <h1 class="main-title">CONTACT<br>CHESTER ROBOTICS</h1>
+      <h1 class="main-title" data-tr="CHESTER ROBOTICS<br>İLE İLETİŞİM">CONTACT<br>CHESTER ROBOTICS</h1>
       
       <!-- Description -->
-      <p class="main-description">
+      <p class="main-description" data-tr="Chester V1'i iş akışınıza entegre etmeye hazır mısınız? Robotik uzmanlarımızla konuşun; konuşlandırma, özel modüller veya canlı bir demo planlayın.">
         Ready to integrate the Chester V1 into your workflow?
         Speak with our robotics specialists about deployment,
         custom modules, or schedule a live demonstration.
@@ -566,7 +573,7 @@
             <img src="images/3311_133.svg" alt="Innovation Hub Icon">
           </div>
           <div class="info-content">
-            <h3>Innovation Hub</h3>
+            <h3 data-tr="İnovasyon Merkezi">Innovation Hub</h3>
             <p>88 Robotics Way, Suite 100<br>Automation City, MA 02139</p>
           </div>
         </div>
@@ -577,7 +584,7 @@
             <img src="images/3311_144.svg" alt="Sales Icon">
           </div>
           <div class="info-content">
-            <h3>Sales & Info</h3>
+            <h3 data-tr="Satış ve Bilgi">Sales & Info</h3>
             <p>info@chester-robotics.com</p>
           </div>
         </div>
@@ -588,7 +595,7 @@
             <img src="images/3311_155.svg" alt="Support Icon">
           </div>
           <div class="info-content">
-            <h3>Technical Support</h3>
+            <h3 data-tr="Teknik Destek">Technical Support</h3>
             <p>+1 (555) 123-4567</p>
           </div>
         </div>
@@ -600,7 +607,7 @@
         <div class="map-overlay"></div>
         <button class="locate-btn">
           <img src="images/3311_168.svg" alt="Locate Icon">
-          <span>Locate HQ</span>
+          <span data-tr="Merkezi Bul">Locate HQ</span>
         </button>
       </div>
     </div>
@@ -610,8 +617,8 @@
       <div class="form-container">
         <div class="form-header">
           <div class="form-title-group">
-            <h2>Inquiry Form</h2>
-            <p>Select an option to direct your request to the right team.</p>
+            <h2 data-tr="İletişim Formu">Inquiry Form</h2>
+            <p data-tr="Talebinizi doğru ekibe yönlendirmek için bir seçenek seçin.">Select an option to direct your request to the right team.</p>
           </div>
           <div class="form-icon-top">
             <img src="images/3311_179.svg" alt="Form Icon">
@@ -621,7 +628,7 @@
         <form class="inquiry-form">
           <!-- Reason Selection Grid -->
           <div class="form-group">
-            <label class="form-label">Reason for Contact</label>
+            <label class="form-label" data-tr="İletişim Sebebi">Reason for Contact</label>
             <div class="reason-grid">
               <!-- Option 1 (Selected) -->
               <div class="reason-option selected">
@@ -629,8 +636,8 @@
                   <img src="images/3311_189.svg" alt="Demo Icon">
                 </div>
                 <div class="option-text">
-                  <span class="opt-title">Chester V1 Demo</span>
-                  <span class="opt-desc">Request a live showing</span>
+                  <span class="opt-title" data-tr="Chester V1 Demosu">Chester V1 Demo</span>
+                  <span class="opt-desc" data-tr="Canlı gösterim talebi">Request a live showing</span>
                 </div>
                 <div class="selected-indicator"></div>
               </div>
@@ -641,8 +648,8 @@
                   <img src="images/3311_200.svg" alt="Quote Icon">
                 </div>
                 <div class="option-text">
-                  <span class="opt-title">Get a Quote</span>
-                  <span class="opt-desc">Pricing & availability</span>
+                  <span class="opt-title" data-tr="Teklif Al">Get a Quote</span>
+                  <span class="opt-desc" data-tr="Fiyatlandırma ve uygunluk">Pricing & availability</span>
                 </div>
               </div>
 
@@ -652,8 +659,8 @@
                   <img src="images/3311_210.svg" alt="Support Icon">
                 </div>
                 <div class="option-text">
-                  <span class="opt-title">Support</span>
-                  <span class="opt-desc">Technical assistance</span>
+                  <span class="opt-title" data-tr="Destek">Support</span>
+                  <span class="opt-desc" data-tr="Teknik yardım">Technical assistance</span>
                 </div>
               </div>
 
@@ -663,8 +670,8 @@
                   <img src="images/3311_220.svg" alt="Partnership Icon">
                 </div>
                 <div class="option-text">
-                  <span class="opt-title">Chester V1 Partnership</span>
-                  <span class="opt-desc">Strategic Collaboration</span>
+                  <span class="opt-title" data-tr="Chester V1 Ortaklığı">Chester V1 Partnership</span>
+                  <span class="opt-desc" data-tr="Stratejik İş Birliği">Strategic Collaboration</span>
                 </div>
               </div>
             </div>
@@ -673,7 +680,7 @@
           <!-- Input Fields Row 1 -->
           <div class="form-row">
             <div class="form-group half">
-              <label class="form-label">Full Name</label>
+              <label class="form-label" data-tr="Ad Soyad">Full Name</label>
               <div class="input-wrapper">
                 <div class="input-icon">
                   <img src="images/3311_237.svg" alt="User Icon">
@@ -682,7 +689,7 @@
               </div>
             </div>
             <div class="form-group half">
-              <label class="form-label">Email Address</label>
+              <label class="form-label" data-tr="E-posta Adresi">Email Address</label>
               <div class="input-wrapper">
                 <div class="input-icon">
                   <img src="images/3311_248.svg" alt="Email Icon">
@@ -695,7 +702,7 @@
           <!-- Input Fields Row 2 -->
           <div class="form-row">
             <div class="form-group half">
-              <label class="form-label">Company / Organization</label>
+              <label class="form-label" data-tr="Şirket / Organizasyon">Company / Organization</label>
               <div class="input-wrapper">
                 <div class="input-icon">
                   <img src="images/3311_260.svg" alt="Company Icon">
@@ -704,7 +711,7 @@
               </div>
             </div>
             <div class="form-group half">
-              <label class="form-label">Phone Number</label>
+              <label class="form-label" data-tr="Telefon Numarası">Phone Number</label>
               <div class="input-wrapper">
                 <div class="input-icon">
                   <img src="images/3311_271.svg" alt="Phone Icon">
@@ -716,17 +723,17 @@
 
           <!-- Textarea -->
           <div class="form-group">
-            <label class="form-label">How can we help?</label>
-            <textarea class="form-textarea" placeholder="Tell us about your project or questions regarding Chester V1..."></textarea>
+            <label class="form-label" data-tr="Nasıl yardımcı olabiliriz?">How can we help?</label>
+            <textarea class="form-textarea" placeholder="Tell us about your project or questions regarding Chester V1..." data-tr-placeholder="Projenizden veya Chester V1 ile ilgili sorularınızdan bahsedin..."></textarea>
           </div>
 
           <!-- Submit Area -->
           <div class="form-footer">
             <button type="submit" class="submit-btn">
-              <span>Send Message</span>
+              <span data-tr="Mesaj Gönder">Send Message</span>
               <img src="images/3311_284.svg" alt="Arrow Icon">
             </button>
-            <p class="disclaimer">Protected by Chester Secure. Your data is never sold.</p>
+            <p class="disclaimer" data-tr="Chester Secure tarafından korunur. Verileriniz asla satılmaz.">Protected by Chester Secure. Your data is never sold.</p>
           </div>
         </form>
       </div>
@@ -736,7 +743,7 @@
 <section id="partners-section">
   <div class="container">
     <div class="partners-wrapper">
-      <p class="partners-title">Chester Robotics Partners</p>
+      <p class="partners-title" data-tr="Chester Robotics İş Ortakları">Chester Robotics Partners</p>
       <div class="partners-logos">
         <!-- Partner 1 -->
         <div class="partner-item">

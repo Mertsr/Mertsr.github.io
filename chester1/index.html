@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generated Page</title>
+  <title>chester1</title>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -37,6 +37,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.header-cta {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .logo img {
@@ -740,6 +746,7 @@
   font-size: 14px;
 }
   </style>
+  <script src="global.js" defer></script>
 </head>
 <body>
 <section id="header-section">
@@ -752,16 +759,17 @@
 
       <!-- Navigation -->
       <nav class="main-nav">
-        <a href="../index.html" class="nav-link active">Chester V1</a>
-        <a href="../chester2/" class="nav-link">Solutions</a>
-        <a href="../chester3/" class="nav-link">Use Cases</a>
-        <a href="../chester4/" class="nav-link">About</a>
-        <a href="../chester5/" class="nav-link">Contact</a>
+        <a href="../index.html" class="nav-link active" data-tr="Chester V1">Chester V1</a>
+        <a href="../chester2/" class="nav-link" data-tr="Çözümler">Solutions</a>
+        <a href="../chester3/" class="nav-link" data-tr="Kullanım Senaryoları">Use Cases</a>
+        <a href="../chester4/" class="nav-link" data-tr="Hakkımızda">About</a>
+        <a href="../chester5/" class="nav-link" data-tr="İletişim">Contact</a>
       </nav>
 
       <!-- CTA -->
       <div class="header-cta">
-        <a href="../chester5/" class="btn-contact">Contact Sales</a>
+        <a href="../chester5/" class="btn-contact" data-tr="Satışla İletişim">Contact Sales</a>
+        <button class="btn-contact lang-toggle" type="button" data-lang-toggle>TR</button>
       </div>
     </div>
   </header>
@@ -770,11 +778,11 @@
   <div class="container">
     <!-- Breadcrumbs -->
     <div class="breadcrumbs">
-      <a href="../index.html" class="crumb">Home</a>
+      <a href="../index.html" class="crumb" data-tr="Ana Sayfa">Home</a>
       <span class="separator">/</span>
-      <a href="../chester2/" class="crumb">Service Robots</a>
+      <a href="../chester2/" class="crumb" data-tr="Hizmet Robotları">Service Robots</a>
       <span class="separator">/</span>
-      <span class="crumb active">Chester V1</span>
+      <span class="crumb active" data-tr="Chester V1">Chester V1</span>
     </div>
 
     <!-- Hero Grid -->
@@ -789,7 +797,7 @@
           <!-- Badge -->
           <div class="ai-badge">
             <span class="status-dot"></span>
-            <span class="status-text">AI Active</span>
+            <span class="status-text" data-tr="Yapay Zekâ Aktif">AI Active</span>
           </div>
           <!--merged image-->
         </div>
@@ -801,15 +809,15 @@
           <div class="icon-wrapper">
             <img src="images/4_827.svg" alt="icon">
           </div>
-          <span class="series-text">Intelligent Service Series</span>
+          <span class="series-text" data-tr="Akıllı Hizmet Serisi">Intelligent Service Series</span>
         </div>
 
         <h1 class="hero-title">
-          <span class="block-white">Chester V1</span>
-          <span class="block-gray">Intelligent Service Robot</span>
+          <span class="block-white" data-tr="Chester V1">Chester V1</span>
+          <span class="block-gray" data-tr="Akıllı Hizmet Robotu">Intelligent Service Robot</span>
         </h1>
 
-        <p class="hero-description">
+        <p class="hero-description" data-tr="Chester V1, kompakt 80 cm form faktörü ve imza niteliğindeki endüstriyel estetiğiyle otonom lojistiği yeniden tanımlar. Mikro sipariş hazırlama ve perakende otomasyonu için özel olarak tasarlanan bu çözüm, üst düzey robotik ile erişilebilir hizmet çözümleri arasındaki boşluğu kapatır.">
           Chester V1 redefines autonomous logistics with its compact 80cm form factor and signature industrial aesthetic. Specifically engineered for micro-fulfillment and retail automation, it bridges the gap between high-end robotics and accessible service solutions.
         </p>
 
@@ -818,43 +826,43 @@
           <!-- Spec 1 -->
           <div class="spec-card">
             <div class="spec-header">
-              <span>Payload</span>
+              <span data-tr="Taşıma Kapasitesi">Payload</span>
               <img src="images/4_844.svg" alt="icon">
             </div>
             <div class="spec-value">
-              <span class="val">50</span> <span class="unit">kg</span>
+              <span class="val">50</span> <span class="unit" data-tr="kg">kg</span>
             </div>
           </div>
           <!-- Spec 2 -->
           <div class="spec-card">
             <div class="spec-header">
-              <span>Battery Life</span>
+              <span data-tr="Pil Ömrü">Battery Life</span>
               <img src="images/4_853.svg" alt="icon">
             </div>
             <div class="spec-value">
-              <span class="val">24</span> <span class="unit">hours</span>
+              <span class="val">24</span> <span class="unit" data-tr="saat">hours</span>
             </div>
           </div>
           <!-- Spec 3 -->
           <div class="spec-card">
             <div class="spec-header">
-              <span>Navigation</span>
+              <span data-tr="Navigasyon">Navigation</span>
               <img src="images/4_862.svg" alt="icon">
             </div>
             <div class="spec-detail">
-              <span class="detail-title">AI-Powered</span>
-              <span class="detail-sub">SLAM + Reinforcement Learning</span>
+              <span class="detail-title" data-tr="Yapay Zekâ Destekli">AI-Powered</span>
+              <span class="detail-sub" data-tr="SLAM + Pekiştirmeli Öğrenme">SLAM + Reinforcement Learning</span>
             </div>
           </div>
           <!-- Spec 4 -->
           <div class="spec-card">
             <div class="spec-header">
-              <span>Interface</span>
+              <span data-tr="Arayüz">Interface</span>
               <img src="images/4_872.svg" alt="icon">
             </div>
             <div class="spec-detail">
-              <span class="detail-title">OLED Face</span>
-              <span class="detail-sub">Expressive UI</span>
+              <span class="detail-title" data-tr="OLED Yüz">OLED Face</span>
+              <span class="detail-sub" data-tr="İfade Edici Arayüz">Expressive UI</span>
             </div>
           </div>
         </div>
@@ -862,12 +870,12 @@
         <!-- Actions -->
         <div class="hero-actions">
           <button class="btn-primary">
-            <span>Pre-order Now</span>
+            <span data-tr="Şimdi Ön Sipariş Ver">Pre-order Now</span>
             <img src="images/4_883.svg" alt="cart">
           </button>
           <button class="btn-secondary">
             <img src="images/4_887.svg" alt="doc">
-            <span>Request Specs</span>
+            <span data-tr="Teknik Özellikleri İste">Request Specs</span>
           </button>
         </div>
       </div>
@@ -879,10 +887,10 @@
   <div class="sticky-nav-wrapper">
     <div class="container">
       <nav class="sub-nav">
-        <a href="#features" class="sub-nav-link active">Features & Analytics</a>
-        <a href="#case-studies" class="sub-nav-link">Case Studies</a>
-        <a href="#docs" class="sub-nav-link">Documentation</a>
-        <a href="#software" class="sub-nav-link">Software</a>
+        <a href="#features" class="sub-nav-link active" data-tr="Özellikler ve Analitik">Features & Analytics</a>
+        <a href="#case-studies" class="sub-nav-link" data-tr="Vaka Çalışmaları">Case Studies</a>
+        <a href="#docs" class="sub-nav-link" data-tr="Dokümantasyon">Documentation</a>
+        <a href="#software" class="sub-nav-link" data-tr="Yazılım">Software</a>
       </nav>
     </div>
   </div>
@@ -898,37 +906,37 @@
           <div class="icon-box red-bg">
             <img src="images/4_897.svg" alt="AI">
           </div>
-          <h3>AI Interaction</h3>
-          <p>The OLED screen-face displays real-time expressions, making human-robot collaboration intuitive and friendly.</p>
+          <h3 data-tr="Yapay Zekâ Etkileşimi">AI Interaction</h3>
+          <p data-tr="OLED ekran yüzü, gerçek zamanlı ifadeler göstererek insan-robot iş birliğini sezgisel ve sıcak hale getirir.">The OLED screen-face displays real-time expressions, making human-robot collaboration intuitive and friendly.</p>
         </div>
         <!-- Card 2 -->
         <div class="feature-card">
           <div class="icon-box red-bg">
             <img src="images/4_906.svg" alt="Nav">
           </div>
-          <h3>Autonomous Navigation</h3>
-          <p>Advanced SLAM and LiDAR sensors allow Chester to navigate dynamic environments safely without human input.</p>
+          <h3 data-tr="Otonom Navigasyon">Autonomous Navigation</h3>
+          <p data-tr="Gelişmiş SLAM ve LiDAR sensörleri, Chester'ın dinamik ortamlarda insan girdisi olmadan güvenle hareket etmesini sağlar.">Advanced SLAM and LiDAR sensors allow Chester to navigate dynamic environments safely without human input.</p>
         </div>
         <!-- Card 3 -->
         <div class="feature-card">
           <div class="icon-box red-bg">
             <img src="images/4_915.svg" alt="Design">
           </div>
-          <h3>Sleek Design</h3>
-          <p>Featuring signature red chest plating for durability and visibility, combined with a modern, approachable form factor.</p>
+          <h3 data-tr="Şık Tasarım">Sleek Design</h3>
+          <p data-tr="Dayanıklılık ve görünürlük için imza kırmızı göğüs plakasıyla, modern ve erişilebilir bir form faktörü sunar.">Featuring signature red chest plating for durability and visibility, combined with a modern, approachable form factor.</p>
         </div>
       </div>
 
       <!-- Performance Metrics -->
       <div class="metrics-section bg-card">
         <div class="section-header">
-          <h3>Performance Metrics</h3>
+          <h3 data-tr="Performans Metrikleri">Performance Metrics</h3>
         </div>
         
         <div class="metrics-content">
           <div class="chart-header">
-            <h4>Path Planning Efficiency</h4>
-            <span class="highlight-text">99.2% Success Rate</span>
+            <h4 data-tr="Rota Planlama Verimliliği">Path Planning Efficiency</h4>
+            <span class="highlight-text" data-tr="%99,2 Başarı Oranı">99.2% Success Rate</span>
           </div>
           
           <!-- Bar Chart Visualization -->
@@ -948,9 +956,9 @@
           </div>
           
           <div class="chart-labels">
-            <span>Complex Environment</span>
-            <span>Standard</span>
-            <span>Open Space</span>
+            <span data-tr="Karmaşık Ortam">Complex Environment</span>
+            <span data-tr="Standart">Standard</span>
+            <span data-tr="Açık Alan">Open Space</span>
           </div>
 
           <!-- Circular Stats Row -->
@@ -961,8 +969,8 @@
                 <span class="circle-val">99.2%</span>
               </div>
               <div class="stat-text">
-                <h4>Path Planning Efficiency</h4>
-                <p>High-precision navigation in complex industrial environments powered by Reinforcement Learning.</p>
+                <h4 data-tr="Rota Planlama Verimliliği">Path Planning Efficiency</h4>
+                <p data-tr="Pekiştirmeli öğrenme destekli, karmaşık endüstriyel ortamlarda yüksek hassasiyetli navigasyon.">High-precision navigation in complex industrial environments powered by Reinforcement Learning.</p>
               </div>
             </div>
             <div class="stat-item">
@@ -971,8 +979,8 @@
                 <span class="circle-val">12h</span>
               </div>
               <div class="stat-text">
-                <h4>Operation Time</h4>
-                <p>Optimized for full-shift autonomous performance.</p>
+                <h4 data-tr="Çalışma Süresi">Operation Time</h4>
+                <p data-tr="Tam vardiya otonom performans için optimize edilmiştir.">Optimized for full-shift autonomous performance.</p>
               </div>
             </div>
           </div>
@@ -981,33 +989,33 @@
 
       <!-- Technical Specifications -->
       <div class="specs-section">
-        <h3>Technical Specifications</h3>
+        <h3 data-tr="Teknik Özellikler">Technical Specifications</h3>
         <div class="specs-table-wrapper">
           <table class="specs-table">
             <tbody>
               <tr>
-                <td>Dimensions</td>
-                <td>450 x 800 x 1500 mm</td>
+                <td data-tr="Boyutlar">Dimensions</td>
+                <td data-tr="450 x 800 x 1500 mm">450 x 800 x 1500 mm</td>
               </tr>
               <tr>
-                <td>Weight</td>
-                <td>50 kg</td>
+                <td data-tr="Ağırlık">Weight</td>
+                <td data-tr="50 kg">50 kg</td>
               </tr>
               <tr>
-                <td>Max Speed</td>
-                <td>1.5 m/s (Safety regulated)</td>
+                <td data-tr="Azami Hız">Max Speed</td>
+                <td data-tr="1,5 m/s (Güvenlik düzenlemeli)">1.5 m/s (Safety regulated)</td>
               </tr>
               <tr>
-                <td>Sensors</td>
-                <td>Lidar, RGB-D Camera (Custom Lidar-Vision Stack)</td>
+                <td data-tr="Sensörler">Sensors</td>
+                <td data-tr="Lidar, RGB-D Kamera (Özel Lidar-Vizyon Paketi)">Lidar, RGB-D Camera (Custom Lidar-Vision Stack)</td>
               </tr>
               <tr>
-                <td>Connectivity</td>
-                <td>5G / WiFi 6 / Bluetooth 5.0</td>
+                <td data-tr="Bağlantı">Connectivity</td>
+                <td data-tr="5G / WiFi 6 / Bluetooth 5.0">5G / WiFi 6 / Bluetooth 5.0</td>
               </tr>
               <tr>
-                <td>Processor</td>
-                <td>Dual Nvidia Jetson Orin</td>
+                <td data-tr="İşlemci">Processor</td>
+                <td data-tr="Çift Nvidia Jetson Orin">Dual Nvidia Jetson Orin</td>
               </tr>
             </tbody>
           </table>
@@ -1016,21 +1024,21 @@
 
       <!-- Deployment Success -->
       <div id="case-studies" class="deployment-section">
-        <h3>Deployment Success</h3>
+        <h3 data-tr="Saha Başarısı">Deployment Success</h3>
         <div class="deployment-grid">
           <!-- Testimonial -->
           <div class="testimonial-card bg-card">
             <div class="tag-wrapper">
-              <span class="tag-red">Healthcare</span>
+              <span class="tag-red" data-tr="Sağlık">Healthcare</span>
             </div>
-            <p class="quote">"Chester V1 has revolutionized our patient intake process, handling initial screenings with remarkable empathy."</p>
+            <p class="quote" data-tr="&quot;Chester V1, hasta kabul sürecimizi devrim niteliğinde dönüştürdü ve ilk taramaları olağanüstü bir empatiyle gerçekleştiriyor.&quot;">"Chester V1 has revolutionized our patient intake process, handling initial screenings with remarkable empathy."</p>
             <div class="author">
               <div class="avatar">
                 <img src="images/e07da223b02643c6563ac11fff62cc5421723b53.png" alt="Dr. Sarah Miller">
               </div>
               <div class="author-info">
                 <span class="name">Dr. Sarah Miller</span>
-                <span class="role">Admin, Mercy General</span>
+                <span class="role" data-tr="Yönetici, Mercy General">Admin, Mercy General</span>
               </div>
             </div>
           </div>
@@ -1042,11 +1050,11 @@
                <img src="images/908ff7950c9aa02e40bfbf71e0f655df76d0771c.png" alt="Background">
             </div>
             <div class="card-content">
-              <h4>Retail Assistant</h4>
+              <h4 data-tr="Perakende Asistanı">Retail Assistant</h4>
               <div class="stat-big">30%</div>
-              <p class="stat-desc">Increase in customer engagement</p>
+              <p class="stat-desc" data-tr="Müşteri etkileşiminde artış">Increase in customer engagement</p>
               <a href="#" class="read-more">
-                Read Case Study
+                <span data-tr="Vaka Çalışmasını Oku">Read Case Study</span>
                 <span class="material-symbols-outlined">arrow_forward</span>
               </a>
             </div>
@@ -1062,7 +1070,7 @@
       <div id="docs" class="sidebar-card bg-card-light">
         <div class="sidebar-header">
           <img src="images/4_1051.svg" alt="Docs">
-          <h3>Documentation</h3>
+          <h3 data-tr="Dokümantasyon">Documentation</h3>
         </div>
         <ul class="doc-list">
           <li>
@@ -1071,8 +1079,8 @@
                 <img src="images/4_1058.svg" alt="PDF">
               </div>
               <div class="doc-info">
-                <span class="doc-title">Chester V1 User Manual</span>
-                <span class="doc-meta">PDF • 5.1 MB</span>
+                  <span class="doc-title" data-tr="Chester V1 Kullanım Kılavuzu">Chester V1 User Manual</span>
+                  <span class="doc-meta" data-tr="PDF • 5,1 MB">PDF • 5.1 MB</span>
               </div>
               <img src="images/4_1066.svg" alt="Download" class="action-icon">
             </a>
@@ -1083,8 +1091,8 @@
                 <img src="images/4_1071.svg" alt="Web">
               </div>
               <div class="doc-info">
-                <span class="doc-title">Chester SDK Docs</span>
-                <span class="doc-meta">Web • Developer Portal</span>
+                  <span class="doc-title" data-tr="Chester SDK Dokümanları">Chester SDK Docs</span>
+                  <span class="doc-meta" data-tr="Web • Geliştirici Portalı">Web • Developer Portal</span>
               </div>
               <img src="images/4_1079.svg" alt="External" class="action-icon">
             </a>
@@ -1095,8 +1103,8 @@
                 <img src="images/4_1084.svg" alt="Code">
               </div>
               <div class="doc-info">
-                <span class="doc-title">ROS 2 Packages</span>
-                <span class="doc-meta">GitHub Repository</span>
+                  <span class="doc-title" data-tr="ROS 2 Paketleri">ROS 2 Packages</span>
+                  <span class="doc-meta" data-tr="GitHub Deposu">GitHub Repository</span>
               </div>
               <img src="images/4_1092.svg" alt="Code" class="action-icon">
             </a>
@@ -1106,9 +1114,9 @@
 
       <!-- Custom Integration -->
       <div class="sidebar-card bg-card">
-        <h3>Custom Integration?</h3>
-        <p class="sidebar-text">Our robotics team can customize Chester's behavior for your specific environment.</p>
-        <button class="btn-outline-full">Contact Solutions Engineer</button>
+        <h3 data-tr="Özel Entegrasyon?">Custom Integration?</h3>
+        <p class="sidebar-text" data-tr="Robotik ekibimiz, Chester'ın davranışlarını sizin özel ortamınıza göre uyarlayabilir.">Our robotics team can customize Chester's behavior for your specific environment.</p>
+        <button class="btn-outline-full" data-tr="Çözümler Mühendisiyle İletişim">Contact Solutions Engineer</button>
       </div>
     </aside>
   </div>
@@ -1117,7 +1125,7 @@
   <footer class="site-footer">
     <div class="container">
       <div class="footer-content">
-        <p class="copyright">© 2024 Chester Robotics. All rights reserved.</p>
+        <p class="copyright" data-tr="© 2024 Chester Robotics. Tüm hakları saklıdır.">© 2024 Chester Robotics. All rights reserved.</p>
       </div>
     </div>
   </footer>

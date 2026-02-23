@@ -3,10 +3,10 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generated Page</title>
+  <title>chester0</title>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Chester Robotics</title>
+<title>chester0</title>
   <script>
     if (
       window.location.protocol !== 'file:' &&
@@ -56,6 +56,12 @@
 .main-nav {
   display: flex;
   gap: 32px;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .main-nav a {
@@ -678,15 +684,16 @@ h1 {
       </div>
       
       <nav class="main-nav">
-        <a href="./">Chester V1</a>
-        <a href="../chester2/">Solutions</a>
-        <a href="../chester3/">Use Cases</a>
-        <a href="../chester4/">About</a>
-        <a href="../chester5/">Contact</a>
+        <a href="./" data-tr="Chester V1">Chester V1</a>
+        <a href="../chester2/" data-tr="Çözümler">Solutions</a>
+        <a href="../chester3/" data-tr="Kullanım Senaryoları">Use Cases</a>
+        <a href="../chester4/" data-tr="Hakkımızda">About</a>
+        <a href="../chester5/" data-tr="İletişim">Contact</a>
       </nav>
 
       <div class="header-actions">
-        <a href="../chester5/" class="btn-small">Contact Sales</a>
+        <a href="../chester5/" class="btn-small" data-tr="Satışla İletişim">Contact Sales</a>
+        <button class="btn-small lang-toggle" type="button" data-lang-toggle>TR</button>
       </div>
     </div>
   </header>
@@ -700,17 +707,17 @@ h1 {
   
   <div class="container hero-content">
     <div class="hero-text">
-      <h1>Engineering the<br>Future of Automation</h1>
-      <p>Meet the world's most advanced autonomous mobile manipulator. Featuring our signature robust chassis and an intuitive AI interface, Chester V1 bridges the gap between industrial efficiency and human interaction.</p>
+      <h1 data-tr="Otomasyonun<br>Geleceğini Mühendislikle İnşa Ediyoruz">Engineering the<br>Future of Automation</h1>
+      <p data-tr="Dünyanın en gelişmiş otonom mobil manipülatörüyle tanışın. İmza niteliğindeki sağlam şasimiz ve sezgisel yapay zekâ arayüzümüzle Chester V1, endüstriyel verimlilik ile insan etkileşimi arasındaki boşluğu kapatır.">Meet the world's most advanced autonomous mobile manipulator. Featuring our signature robust chassis and an intuitive AI interface, Chester V1 bridges the gap between industrial efficiency and human interaction.</p>
       
       <div class="hero-buttons">
         <button class="btn btn-primary">
-          <span>Discover Chester V1</span>
+          <span data-tr="Chester V1'i Keşfet">Discover Chester V1</span>
           <img src="images/3313_93.svg" alt="arrow" class="icon">
         </button>
         <button class="btn btn-glass">
           <img src="images/3313_97.svg" alt="play" class="icon">
-          <span>Watch Demo</span>
+          <span data-tr="Demoyu İzle">Watch Demo</span>
         </button>
       </div>
     </div>
@@ -720,12 +727,12 @@ h1 {
   <div class="container">
     <div class="section-header">
       <div class="header-left">
-        <h2>Industries Served</h2>
-        <p>Empowering key sectors with Chester's autonomous efficiency and unprecedented precision.</p>
+        <h2 data-tr="Hizmet Verilen Sektörler">Industries Served</h2>
+        <p data-tr="Chester'ın otonom verimliliği ve eşi görülmemiş hassasiyetiyle kilit sektörleri güçlendiriyoruz.">Empowering key sectors with Chester's autonomous efficiency and unprecedented precision.</p>
       </div>
       <div class="header-right">
         <a href="../chester2/" class="link-arrow">
-          View all solutions
+          <span data-tr="Tüm çözümleri görüntüle">View all solutions</span>
           <img src="images/3313_112.svg" alt="arrow">
         </a>
       </div>
@@ -740,8 +747,8 @@ h1 {
           </div>
           <img src="images/e5a36a905b9b6fb12b6d5c8afd22ee327cbd9e9b.png" alt="decoration" class="card-deco">
         </div>
-        <h3>Q-Commerce</h3>
-        <p>Rapid fulfillment for dark stores.</p>
+        <h3 data-tr="Q-Commerce">Q-Commerce</h3>
+        <p data-tr="Karanlık mağazalar için hızlı sipariş karşılama.">Rapid fulfillment for dark stores.</p>
       </div>
 
       <!-- Card 2 -->
@@ -751,8 +758,8 @@ h1 {
             <img src="images/3313_128.svg" alt="Logistics">
           </div>
         </div>
-        <h3>Logistics</h3>
-        <p>Autonomous supply chain optimization.</p>
+        <h3 data-tr="Lojistik">Logistics</h3>
+        <p data-tr="Otonom tedarik zinciri optimizasyonu.">Autonomous supply chain optimization.</p>
       </div>
 
       <!-- Card 3 -->
@@ -762,8 +769,8 @@ h1 {
             <img src="images/3313_137.svg" alt="Manufacturing">
           </div>
         </div>
-        <h3>Manufacturing</h3>
-        <p>Precise material handling & assembly.</p>
+        <h3 data-tr="Üretim">Manufacturing</h3>
+        <p data-tr="Hassas malzeme taşıma ve montaj.">Precise material handling & assembly.</p>
       </div>
     </div>
   </div>
@@ -771,8 +778,8 @@ h1 {
 <section id="core-tech">
   <div class="container">
     <div class="tech-header">
-      <span class="section-label">Our Innovation</span>
-      <h2>Core Technology</h2>
+      <span class="section-label" data-tr="İnovasyonumuz">Our Innovation</span>
+      <h2 data-tr="Çekirdek Teknoloji">Core Technology</h2>
     </div>
 
     <!-- Feature 1 -->
@@ -780,23 +787,23 @@ h1 {
       <div class="feature-content">
         <div class="feature-tag">
           <img src="images/3313_154.svg" alt="icon">
-          <span>Perception & Intelligence</span>
+          <span data-tr="Algı ve Zekâ">Perception & Intelligence</span>
         </div>
-        <h3>Lidar-Vision Fusion & LLM</h3>
-        <p>Advancing beyond fixed coordinate-based navigation, Chester V-1 maps continuously changing dynamic environments in real-time through advanced Lidar-Vision Fusion. By combining industrial-grade ROS 2 architecture with LLM-based intelligence, it empowers operators to manage complex tasks using simple, natural language, redefining human-robot collaboration.</p>
+        <h3 data-tr="Lidar-Vizyon Füzyonu ve LLM">Lidar-Vision Fusion & LLM</h3>
+        <p data-tr="Sabit koordinatlı navigasyonun ötesine geçen Chester V-1, gelişmiş Lidar-Vizyon Füzyonu ile sürekli değişen dinamik ortamları gerçek zamanlı haritalar. Endüstriyel sınıf ROS 2 mimarisi ile LLM tabanlı zekâyı birleştirerek, operatörlerin karmaşık görevleri basit ve doğal dil ile yönetmesini sağlar, insan-robot iş birliğini yeniden tanımlar.">Advancing beyond fixed coordinate-based navigation, Chester V-1 maps continuously changing dynamic environments in real-time through advanced Lidar-Vision Fusion. By combining industrial-grade ROS 2 architecture with LLM-based intelligence, it empowers operators to manage complex tasks using simple, natural language, redefining human-robot collaboration.</p>
         
         <ul class="feature-list">
           <li>
             <img src="images/3313_165.svg" alt="check">
-            <span>3D Semantic Point Cloud Navigation</span>
+            <span data-tr="3B Anlamsal Nokta Bulutu Navigasyonu">3D Semantic Point Cloud Navigation</span>
           </li>
           <li>
             <img src="images/3313_170.svg" alt="check">
-            <span>Natural Language Command (LLM)</span>
+            <span data-tr="Doğal Dil Komutu (LLM)">Natural Language Command (LLM)</span>
           </li>
           <li>
             <img src="images/3313_175.svg" alt="check">
-            <span>Industrial ROS 2 Architecture</span>
+            <span data-tr="Endüstriyel ROS 2 Mimarisi">Industrial ROS 2 Architecture</span>
           </li>
         </ul>
       </div>
@@ -821,19 +828,19 @@ h1 {
       <div class="feature-content">
         <div class="feature-tag">
           <img src="images/3313_190.svg" alt="icon">
-          <span>Frugal Engineering</span>
+          <span data-tr="Verimli Mühendislik">Frugal Engineering</span>
         </div>
-        <h3>Mobile Manipulation Platform</h3>
-        <p>Chester synthesizes industrial durability with operational agility. Its high-torque, compact architecture ensures precise mobility in narrow spaces. Equipped with a specialized 3-axis system, it delivers scalable efficiency and secure handling at a disruptive cost.</p>
+        <h3 data-tr="Mobil Manipülasyon Platformu">Mobile Manipulation Platform</h3>
+        <p data-tr="Chester, endüstriyel dayanıklılığı operasyonel çeviklikle birleştirir. Yüksek torklu, kompakt mimarisi dar alanlarda hassas hareket sağlar. Özel 3 eksenli sistemi sayesinde ölçeklenebilir verimlilik ve güvenli taşıma, düşük maliyetle sunulur.">Chester synthesizes industrial durability with operational agility. Its high-torque, compact architecture ensures precise mobility in narrow spaces. Equipped with a specialized 3-axis system, it delivers scalable efficiency and secure handling at a disruptive cost.</p>
         
         <div class="stats-mini-grid">
           <div class="stat-box">
             <h4>80 cm</h4>
-            <span>COMPACT CHASSIS</span>
+            <span data-tr="KOMPAKT ŞASİ">COMPACT CHASSIS</span>
           </div>
           <div class="stat-box">
             <h4>~1 mm</h4>
-            <span>POSITION ACCURACY</span>
+            <span data-tr="KONUM HASSASİYETİ">POSITION ACCURACY</span>
           </div>
         </div>
       </div>
@@ -846,19 +853,19 @@ h1 {
     <div class="stats-grid">
       <div class="stat-item">
         <div class="stat-value">1/10</div>
-        <div class="stat-label">HARDWARE COST</div>
+        <div class="stat-label" data-tr="DONANIM MALİYETİ">HARDWARE COST</div>
       </div>
       <div class="stat-item">
         <div class="stat-value">50%</div>
-        <div class="stat-label">COST REDUCTION</div>
+        <div class="stat-label" data-tr="MALİYET AZALTMA">COST REDUCTION</div>
       </div>
       <div class="stat-item">
         <div class="stat-value">24/7</div>
-        <div class="stat-label">AUTONOMOUS OPERATION</div>
+        <div class="stat-label" data-tr="OTONOM ÇALIŞMA">AUTONOMOUS OPERATION</div>
       </div>
       <div class="stat-item">
         <div class="stat-value">Zero</div>
-        <div class="stat-label">UPFRONT CAPEX</div>
+        <div class="stat-label" data-tr="PEŞİN YATIRIM">UPFRONT CAPEX</div>
       </div>
     </div>
   </div>
@@ -868,11 +875,11 @@ h1 {
   <div class="glow-effect right"></div>
   
   <div class="container cta-content">
-    <h2>Ready to Automate Your Future?</h2>
-    <p>Pioneering accessible robotic labor for the logistics of tomorrow. Smarter, faster, and affordable.</p>
+    <h2 data-tr="Geleceğinizi Otomasyona Hazır mısınız?">Ready to Automate Your Future?</h2>
+    <p data-tr="Yarının lojistiği için erişilebilir robotik iş gücünde öncüyüz. Daha akıllı, daha hızlı ve uygun maliyetli.">Pioneering accessible robotic labor for the logistics of tomorrow. Smarter, faster, and affordable.</p>
     <div class="cta-buttons">
-      <button class="btn btn-primary">Get Started Today</button>
-      <button class="btn btn-secondary">Download Brochure</button>
+      <button class="btn btn-primary" data-tr="Bugün Başlayın">Get Started Today</button>
+      <button class="btn btn-secondary" data-tr="Broşürü İndir">Download Brochure</button>
     </div>
   </div>
 </section>
@@ -883,7 +890,7 @@ h1 {
         <div class="logo-container">
           <img src="images/3d6415eb35f0c102aa98658343488423acbf4c6c.png" alt="Chester Robotics">
         </div>
-        <p>Democratizing robotic labor with AI-driven mobile manipulators. Creating a safer and more efficient logistics ecosystem for tomorrow.</p>
+        <p data-tr="Robotik iş gücünü yapay zekâ destekli mobil manipülatörlerle demokratikleştiriyoruz. Yarın için daha güvenli ve verimli bir lojistik ekosistemi oluşturuyoruz.">Democratizing robotic labor with AI-driven mobile manipulators. Creating a safer and more efficient logistics ecosystem for tomorrow.</p>
         <div class="social-links">
           <a href="#"><img src="images/3313_16.svg" alt="Social"></a>
           <a href="#"><img src="images/3313_20.svg" alt="Social"></a>
@@ -893,30 +900,30 @@ h1 {
 
       <div class="footer-links">
         <div class="link-column">
-          <h4>Company</h4>
+          <h4 data-tr="Şirket">Company</h4>
           <ul>
-            <li><a href="#">About Us</a></li>
-            <li><a href="#">Careers</a></li>
-            <li><a href="#">Press</a></li>
-            <li><a href="#">Contact</a></li>
+            <li><a href="#" data-tr="Hakkımızda">About Us</a></li>
+            <li><a href="#" data-tr="Kariyer">Careers</a></li>
+            <li><a href="#" data-tr="Basın">Press</a></li>
+            <li><a href="#" data-tr="İletişim">Contact</a></li>
           </ul>
         </div>
         <div class="link-column">
-          <h4>Solutions</h4>
+          <h4 data-tr="Çözümler">Solutions</h4>
           <ul>
-            <li><a href="#">Healthcare Robotics</a></li>
-            <li><a href="#">Industrial Automation</a></li>
-            <li><a href="#">Warehouse Logistics</a></li>
-            <li><a href="#">Custom Development</a></li>
+            <li><a href="#" data-tr="Sağlık Robotikleri">Healthcare Robotics</a></li>
+            <li><a href="#" data-tr="Endüstriyel Otomasyon">Industrial Automation</a></li>
+            <li><a href="#" data-tr="Depo Lojistiği">Warehouse Logistics</a></li>
+            <li><a href="#" data-tr="Özel Geliştirme">Custom Development</a></li>
           </ul>
         </div>
       </div>
 
       <div class="footer-newsletter">
-        <h4>Stay Updated</h4>
-        <p>Latest robotics news sent to your inbox.</p>
+        <h4 data-tr="Güncel Kalın">Stay Updated</h4>
+        <p data-tr="En yeni robotik haberleri gelen kutunuza gelsin.">Latest robotics news sent to your inbox.</p>
         <form class="newsletter-form">
-          <input type="email" placeholder="Email address">
+          <input type="email" placeholder="Email address" data-tr-placeholder="E-posta adresi">
           <button type="submit">
             <img src="images/3313_69.svg" alt="Submit">
           </button>
@@ -925,10 +932,10 @@ h1 {
     </div>
 
     <div class="footer-bottom">
-      <p>© 2025 Chester Robotics Inc. All rights reserved.</p>
+      <p data-tr="© 2025 Chester Robotics Inc. Tüm hakları saklıdır.">© 2025 Chester Robotics Inc. All rights reserved.</p>
       <div class="legal-links">
-        <a href="#">Privacy Policy</a>
-        <a href="#">Terms of Service</a>
+        <a href="#" data-tr="Gizlilik Politikası">Privacy Policy</a>
+        <a href="#" data-tr="Kullanım Şartları">Terms of Service</a>
       </div>
     </div>
   </div>
