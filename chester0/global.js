@@ -37,6 +37,39 @@
     }
   };
 
+  const sanitizeTranslation = (html) => {
+    if (!html) {
+      return '';
+    }
+    const template = document.createElement('template');
+    template.innerHTML = html;
+    const allowedTags = new Set(['BR', 'SPAN']);
+    const nodes = Array.from(template.content.querySelectorAll('*'));
+
+    nodes.forEach((node) => {
+      if (!allowedTags.has(node.tagName)) {
+        node.replaceWith(document.createTextNode(node.textContent || ''));
+        return;
+      }
+
+      Array.from(node.attributes).forEach((attr) => {
+        if (node.tagName === 'SPAN' && attr.name === 'class' && attr.value === 'text-red') {
+          return;
+        }
+        node.removeAttribute(attr.name);
+      });
+
+      if (node.tagName === 'SPAN') {
+        const className = node.getAttribute('class');
+        if (className !== 'text-red') {
+          node.removeAttribute('class');
+        }
+      }
+    });
+
+    return template.innerHTML;
+  };
+
   const applyLanguage = (language) => {
     const normalized = normalizeLanguage(language);
     document.documentElement.setAttribute('lang', normalized);
@@ -45,7 +78,8 @@
       if (!element.dataset.en) {
         element.dataset.en = element.innerHTML;
       }
-      element.innerHTML = normalized === 'tr' ? element.dataset.tr : element.dataset.en;
+      const translation = normalized === 'tr' ? element.dataset.tr : element.dataset.en;
+      element.innerHTML = sanitizeTranslation(translation);
     });
 
     placeholderElements.forEach((element) => {
