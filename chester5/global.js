@@ -4,7 +4,8 @@
   const translatableElements = Array.from(document.querySelectorAll('[data-tr]'));
   const placeholderElements = Array.from(document.querySelectorAll('[data-tr-placeholder]'));
 
-  const sanitizeTitle = (title) => title.replace(/[^a-z0-9-_]/gi, '');
+  const sanitizeTitle = (title) =>
+    title.replace(/[<>]/g, '').replace(/[\u0000-\u001F\u007F]/g, '').trim();
 
   const getPageTitle = () => {
     const segments = window.location.pathname.split('/').filter(Boolean);
