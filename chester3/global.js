@@ -4,19 +4,23 @@
   const translatableElements = Array.from(document.querySelectorAll('[data-tr]'));
   const placeholderElements = Array.from(document.querySelectorAll('[data-tr-placeholder]'));
 
+  const sanitizeTitle = (title) => title.replace(/[^a-z0-9-_]/gi, '');
+
   const getPageTitle = () => {
     const segments = window.location.pathname.split('/').filter(Boolean);
-    if (segments.length === 0) {
-      return 'index';
+    let title = 'index';
+    if (segments.length > 0) {
+      const lastSegment = segments[segments.length - 1];
+      if (lastSegment.toLowerCase() === 'index.html') {
+        title = segments.length > 1 ? segments[segments.length - 2] : 'index';
+      } else if (lastSegment.endsWith('.html')) {
+        title = lastSegment.slice(0, -5);
+      } else {
+        title = lastSegment;
+      }
     }
-    const lastSegment = segments[segments.length - 1];
-    if (lastSegment.toLowerCase() === 'index.html') {
-      return segments.length > 1 ? segments[segments.length - 2] : 'index';
-    }
-    if (lastSegment.endsWith('.html')) {
-      return lastSegment.slice(0, -5);
-    }
-    return lastSegment;
+    const sanitized = sanitizeTitle(title);
+    return sanitized || 'index';
   };
 
   const normalizeLanguage = (language) => (language === 'tr' ? 'tr' : 'en');
@@ -61,7 +65,9 @@
 
     });
 
-    return template.innerHTML;
+    const wrapper = document.createElement('div');
+    wrapper.appendChild(template.content.cloneNode(true));
+    return wrapper.innerHTML;
   };
 
   const applyLanguage = (language) => {
