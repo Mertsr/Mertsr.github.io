@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Generated Page</title>
+  <title>chester3</title>
   <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -28,6 +28,12 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
+}
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 12px;
 }
 
 .logo-img {
@@ -548,15 +554,16 @@
       </div>
       
       <nav class="main-nav">
-        <a href="../index.html" class="nav-link">Chester V1</a>
-        <a href="../chester2/" class="nav-link">Solutions</a>
-        <a href="../chester3/" class="nav-link active">Use Cases</a>
-        <a href="../chester4/" class="nav-link">About</a>
-        <a href="../chester5/" class="nav-link">Contact</a>
+        <a href="../index.html" class="nav-link" data-tr="Chester V1">Chester V1</a>
+        <a href="../chester2/" class="nav-link" data-tr="Çözümler">Solutions</a>
+        <a href="../chester3/" class="nav-link active" data-tr="Kullanım Senaryoları">Use Cases</a>
+        <a href="../chester4/" class="nav-link" data-tr="Hakkımızda">About</a>
+        <a href="../chester5/" class="nav-link" data-tr="İletişim">Contact</a>
       </nav>
       
       <div class="header-actions">
-        <button class="btn-contact">Contact Sales</button>
+        <button class="btn-contact" data-tr="Satışla İletişim">Contact Sales</button>
+        <button class="btn-contact lang-toggle" type="button" data-lang-toggle>TR</button>
       </div>
     </div>
   </header>
@@ -565,21 +572,21 @@
   <div class="hero-bg">
     <div class="container hero-content">
       <div class="hero-tag">
-        <div class="tag tag-red">Chester V1 Use Cases</div>
+        <div class="tag tag-red" data-tr="Chester V1 Kullanım Senaryoları">Chester V1 Use Cases</div>
       </div>
       
-      <h1 class="hero-title">Service Automation & Social<br>Interaction</h1>
+      <h1 class="hero-title" data-tr="Hizmet Otomasyonu ve Sosyal<br>Etkileşim">Service Automation & Social<br>Interaction</h1>
       
       <div class="hero-subtitle">
-        <p>Chester V1 brings autonomous efficiency to logistics and intuitive<br>engagement to hospitality, redefining robotics in the real world.</p>
+        <p data-tr="Chester V1, lojistiğe otonom verimlilik, konaklamaya ise sezgisel etkileşim getirerek gerçek dünyada robotikleri yeniden tanımlar.">Chester V1 brings autonomous efficiency to logistics and intuitive<br>engagement to hospitality, redefining robotics in the real world.</p>
       </div>
       
       <div class="hero-actions">
         <button class="btn btn-primary">
-          <span class="truncate">Explore Solutions</span>
+          <span class="truncate" data-tr="Çözümleri Keşfet">Explore Solutions</span>
         </button>
         <button class="btn btn-outline">
-          <span class="truncate">Robot Specs</span>
+          <span class="truncate" data-tr="Robot Teknikleri">Robot Specs</span>
         </button>
       </div>
     </div>
@@ -593,13 +600,13 @@
       <div class="sub-nav-sticky">
         <div class="sub-nav-container">
           <button class="btn btn-sm btn-primary">
-            <span>All Use Cases</span>
+            <span data-tr="Tüm Kullanım Senaryoları">All Use Cases</span>
           </button>
           <button class="btn btn-sm btn-secondary">
-            <span>Warehouse Automation</span>
+            <span data-tr="Depo Otomasyonu">Warehouse Automation</span>
           </button>
           <button class="btn btn-sm btn-secondary">
-            <span>Smart Hospitality</span>
+            <span data-tr="Akıllı Konaklama">Smart Hospitality</span>
           </button>
         </div>
       </div>
@@ -612,14 +619,14 @@
             <div class="icon-box">
               <img src="images/1_158.svg" alt="Speed Icon">
             </div>
-            <span class="stat-label">Speed</span>
+            <span class="stat-label" data-tr="Hız">Speed</span>
           </div>
           <div class="stat-value">
             <span class="number">2.5</span>
-            <span class="unit">m/s</span>
+            <span class="unit" data-tr="m/sn">m/s</span>
           </div>
           <div class="stat-desc">
-            <span class="desc-text">Rapid navigation</span>
+            <span class="desc-text" data-tr="Hızlı navigasyon">Rapid navigation</span>
           </div>
         </div>
 
@@ -629,14 +636,14 @@
             <div class="icon-box">
               <img src="images/1_171.svg" alt="Runtime Icon">
             </div>
-            <span class="stat-label">Runtime</span>
+            <span class="stat-label" data-tr="Çalışma Süresi">Runtime</span>
           </div>
           <div class="stat-value">
             <span class="number">12</span>
-            <span class="unit">hrs</span>
+            <span class="unit" data-tr="saat">hrs</span>
           </div>
           <div class="stat-desc">
-            <span class="desc-text">Continuous service</span>
+            <span class="desc-text" data-tr="Sürekli hizmet">Continuous service</span>
           </div>
         </div>
 
@@ -646,14 +653,14 @@
             <div class="icon-box">
               <img src="images/1_184.svg" alt="Payload Icon">
             </div>
-            <span class="stat-label">Payload</span>
+            <span class="stat-label" data-tr="Taşıma Kapasitesi">Payload</span>
           </div>
           <div class="stat-value">
             <span class="number">50</span>
             <span class="unit">kg</span>
           </div>
           <div class="stat-desc">
-            <span class="desc-text">High capacity</span>
+            <span class="desc-text" data-tr="Yüksek kapasite">High capacity</span>
           </div>
         </div>
 
@@ -663,14 +670,14 @@
             <div class="icon-box">
               <img src="images/1_197.svg" alt="Interface Icon">
             </div>
-            <span class="stat-label">Interface</span>
+            <span class="stat-label" data-tr="Arayüz">Interface</span>
           </div>
           <div class="stat-value">
             <span class="number">AI</span>
-            <span class="unit">Voice</span>
+            <span class="unit" data-tr="Ses">Voice</span>
           </div>
           <div class="stat-desc">
-            <span class="desc-text">Social Interaction</span>
+            <span class="desc-text" data-tr="Sosyal Etkileşim">Social Interaction</span>
           </div>
         </div>
       </div>
@@ -682,19 +689,19 @@
             <img src="images/e7f761ace3e01970d1eec3990a398e4171ea70d1.png" alt="Warehouse Automation" class="feature-img">
             <div class="img-overlay"></div>
             <div class="img-tag">
-              <span>MODE: WAREHOUSE AUTOMATION</span>
+              <span data-tr="MOD: DEPO OTOMASYONU">MODE: WAREHOUSE AUTOMATION</span>
             </div>
           </div>
         </div>
         <div class="feature-content-col">
           <div class="feature-header">
             <div class="feature-tags">
-              <span class="tag-dark">Logistics</span>
+              <span class="tag-dark" data-tr="Lojistik">Logistics</span>
               <span class="dot-separator"></span>
-              <span class="tag-text-red">EFFICIENCY +35%</span>
+              <span class="tag-text-red" data-tr="VERİMLİLİK +%35">EFFICIENCY +35%</span>
             </div>
-            <h3 class="feature-title">Dark Store & Micro-Fulfillment</h3>
-            <p class="feature-desc">
+            <h3 class="feature-title" data-tr="Karanlık Mağaza ve Mikro Hazırlama">Dark Store & Micro-Fulfillment</h3>
+            <p class="feature-desc" data-tr="Hassas vakum tutucusunu kullanan Chester V1, ürünleri yüksek doğrulukla tanımlar, toplar ve yerleştirir; karanlık mağaza ortamlarında kurye teslimi için siparişleri hazırlar.<br><br>Hassas Vakumlu Taşıma: Dar depo koridorlarında hızlı sıralama ve hasarsız manipülasyon için tasarlandı.">
               Utilizing its precision vacuum gripper, Chester V1 identifies, picks, and places products with high accuracy, preparing orders for courier pickup in dark store environments.
               <br><br>
               Precision Vacuum Handling: Engineered for rapid sorting and damage-free manipulation within narrow warehouse aisles.
@@ -706,19 +713,19 @@
               <div class="feature-icon">
                 <img src="images/1_229.svg" alt="Icon">
               </div>
-              <span class="feature-item-text">Autonomous picking and transport</span>
+              <span class="feature-item-text" data-tr="Otonom toplama ve taşıma">Autonomous picking and transport</span>
             </div>
             <div class="feature-item">
               <div class="feature-icon">
                 <img src="images/1_236.svg" alt="Icon">
               </div>
-              <span class="feature-item-text">35% Increase in Picking Speed</span>
+              <span class="feature-item-text" data-tr="Toplama hızında %35 artış">35% Increase in Picking Speed</span>
             </div>
           </div>
 
           <div class="feature-action">
             <button class="btn-link">
-              <span>View Automation Specs</span>
+              <span data-tr="Otomasyon Tekniklerini Görüntüle">View Automation Specs</span>
               <img src="images/1_244.svg" alt="Arrow" class="arrow-icon">
             </button>
           </div>
@@ -733,12 +740,12 @@
         <div class="feature-content-col">
           <div class="feature-header">
             <div class="feature-tags">
-              <span class="tag-dark">Service</span>
+              <span class="tag-dark" data-tr="Hizmet">Service</span>
               <span class="dot-separator"></span>
-              <span class="tag-text-red">GUEST ENGAGEMENT</span>
+              <span class="tag-text-red" data-tr="MİSAFİR ETKİLEŞİMİ">GUEST ENGAGEMENT</span>
             </div>
-            <h3 class="feature-title">Smart Retail & Market Operations</h3>
-            <p class="feature-desc">
+            <h3 class="feature-title" data-tr="Akıllı Perakende ve Market Operasyonları">Smart Retail & Market Operations</h3>
+            <p class="feature-desc" data-tr="Seviye 4 otonomi ile güçlenen Chester V1, kalabalık market koridorlarında envanter yenileme ve taşıma görevlerini insan müdahalesi olmadan yönetir. Gelişmiş pekiştirmeli öğrenme, öngörülemeyen insan ortamlarında güvenli ve çarpışmasız hareket sağlar. Gerçek zamanlı görsel ve sözlü ipuçlarıyla yüksek teknoloji otomasyonu ile insan odaklı hizmeti sorunsuzca birleştirir.">
               Powered by Level 4 autonomy, Chester V1 navigates crowded supermarket aisles to manage inventory replenishment and transport tasks without human intervention. Advanced Reinforcement Learning ensures safe, zero-collision movement in unpredictable human environments. Seamlessly bridging the gap between high-tech automation and human-centric service through real-time visual and verbal cues.
             </p>
           </div>
@@ -748,19 +755,19 @@
               <div class="feature-icon">
                 <img src="images/1_265.svg" alt="Icon">
               </div>
-              <span class="feature-item-text">99.5% Intuitive Response Rate</span>
+              <span class="feature-item-text" data-tr="%99,5 Sezgisel Yanıt Oranı">99.5% Intuitive Response Rate</span>
             </div>
             <div class="feature-item">
               <div class="feature-icon">
                 <img src="images/1_271.svg" alt="Icon">
               </div>
-              <span class="feature-item-text">99.8% Path Planning Efficiency</span>
+              <span class="feature-item-text" data-tr="%99,8 Rota Planlama Verimliliği">99.8% Path Planning Efficiency</span>
             </div>
           </div>
 
           <div class="feature-action">
             <button class="btn-link">
-              <span>View Hospitality Specs</span>
+              <span data-tr="Konaklama Tekniklerini Görüntüle">View Hospitality Specs</span>
               <img src="images/1_279.svg" alt="Arrow" class="arrow-icon">
             </button>
           </div>
@@ -771,7 +778,7 @@
             <img src="images/343d953d9ac6803e29f3d16a249572ac0603ae8d.png" alt="Smart Hospitality" class="feature-img">
             <div class="img-overlay"></div>
             <div class="img-tag right-aligned">
-              <span>MODE: SMART HOSPITALITY</span>
+              <span data-tr="MOD: AKILLI KONAKLAMA">MODE: SMART HOSPITALITY</span>
             </div>
           </div>
         </div>
@@ -788,18 +795,18 @@
           <img src="images/1_291.svg" alt="Rocket Icon">
         </div>
         
-        <h2 class="cta-title">Ready to Deploy Chester V1?</h2>
+        <h2 class="cta-title" data-tr="Chester V1'i Devreye Almaya Hazır mısınız?">Ready to Deploy Chester V1?</h2>
         
         <div class="cta-desc">
-          <p>Whether you need robust Warehouse Automation or engaging Smart Hospitality solutions, Chester V1 is ready to integrate into your workflow.</p>
+          <p data-tr="İster güçlü Depo Otomasyonu ister etkileyici Akıllı Konaklama çözümlerine ihtiyaç duyun, Chester V1 iş akışınıza entegre olmaya hazır.">Whether you need robust Warehouse Automation or engaging Smart Hospitality solutions, Chester V1 is ready to integrate into your workflow.</p>
         </div>
         
         <div class="cta-actions">
           <button class="btn btn-primary">
-            <span>Schedule Demo</span>
+            <span data-tr="Demo Planla">Schedule Demo</span>
           </button>
           <button class="btn btn-outline-dark">
-            <span>Download Specs</span>
+            <span data-tr="Teknikleri İndir">Download Specs</span>
           </button>
         </div>
       </div>
@@ -813,7 +820,7 @@
         <div class="footer-logo">
           <img src="images/3d6415eb35f0c102aa98658343488423acbf4c6c.png" alt="Chester Robotics">
         </div>
-        <p class="copyright">© 2024 Chester Robotics. All rights reserved.</p>
+        <p class="copyright" data-tr="© 2024 Chester Robotics. Tüm hakları saklıdır.">© 2024 Chester Robotics. All rights reserved.</p>
       </div>
       
       <div class="footer-social">
