@@ -101,7 +101,7 @@
 <div id="hud">
   <div class="speed"><span id="spd">0</span><span> km/s</span></div>
   <div class="row"><span>Süre</span><b id="air">0.0 sn</b></div>
-  <div class="row"><span>Kontrol noktası</span><b id="jumps">1 / 5</b></div>
+  <div class="row"><span>Kontrol noktası</span><b id="jumps">1 / 10</b></div>
 </div>
 <div id="controls">
   <kbd>W</kbd>/<kbd>↑</kbd> koş &nbsp; <kbd>S</kbd>/<kbd>↓</kbd> geri &nbsp; <kbd>A</kbd><kbd>D</kbd>/<kbd>←</kbd><kbd>→</kbd> dön<br>
@@ -350,12 +350,78 @@ for (let i=0;i<5;i++){
 bz -= 10; addPlatform(bx, by, bz, 3.5, 3.5);
 bz -= 11; addPlatform(bx+3, by+0.8, bz, 3.5, 3.5);
 bz -= 11; addPlatform(bx-3, by+1.4, bz, 3.5, 3.5);
+// eski final artık ara kontrol noktası (5. durak)
 bz -= 12;
-// FİNAL kule adası
-const finalP = addPlatform(bx, by+2.2, bz, 14, 14);
+addPlatform(bx, by+2.2, bz, 12, 12);
 addCheckpoint(bx, by+2.2, bz);
+
+// --- AŞAMA 5: zigzag küçük platformlar (sağ-sol çapraz atlamalar) ---
+let ex = bx, ey = by+2.2, ez = bz;
+for (let i=0;i<8;i++){
+  ez -= 7;
+  ex += (i%2===0 ? 6 : -6);
+  addPlatform(ex, ey, ez, 3.2, 3.2);
+}
+ez -= 8;
+addPlatform(ex, ey, ez, 9, 9);
+addCheckpoint(ex, ey, ez);
+
+// --- AŞAMA 6: hareketli platform koridoru (daha hızlı, iki eksen) ---
+ez -= 9;  addMovingPlatform(ex, ey, ez, 3.5, 3.5, 'x', 6, 1.2);
+ez -= 9;  addMovingPlatform(ex, ey, ez, 3.5, 3.5, 'x', 8, -1.5);
+ez -= 9;  addMovingPlatform(ex, ey, ez, 3.5, 3.5, 'z', 4, 1.8);
+ez -= 13; addPlatform(ex, ey, ez, 9, 9);
+addCheckpoint(ex, ey, ez);
+
+// --- AŞAMA 7: yükselen spiral merdiven ---
+{
+  const scx = ex, scz = ez - 16, R = 12;
+  let angStep = -Math.PI/2;   // güneyden başla (geldiğimiz yön)
+  for (let i=0;i<10;i++){
+    angStep += Math.PI/5.5;
+    ey += 0.85;
+    addPlatform(scx + Math.cos(angStep)*R, ey, scz + Math.sin(angStep)*R, 3.6, 3.6);
+  }
+  ex = scx + Math.cos(angStep)*R; ez = scz + Math.sin(angStep)*R;
+}
+addPlatform(ex, ey, ez - 0.1, 8, 8);
+addCheckpoint(ex, ey, ez);
+
+// --- AŞAMA 8: uzun rampa yukarı + dar S-kirişi ---
+{
+  const r2 = addRampPlatform(ex, ey, ez - 12, 180, 18, 4, 6);  // -Z yönünde tırmanış
+  ex = r2.endX; ez = r2.endZ; ey = r2.endY;
+}
+addPlatform(ex, ey, ez - 3, 6, 6);
+// dar S yolu (genişlik 2)
+let sx2 = ex, sz2 = ez - 6;
+const sPath = [[0,-6],[4,-5],[4,-6],[-4,-5],[-4,-6],[0,-5]];
+for (const [ddx, ddz] of sPath){
+  sx2 += ddx; sz2 += ddz;
+  addPlatform(sx2, ey, sz2, 2.0, 6);
+}
+sz2 -= 7;
+addPlatform(sx2, ey, sz2, 9, 9);
+addCheckpoint(sx2, ey, sz2);
+ex = sx2; ez = sz2;
+
+// --- AŞAMA 9: hassas mini platform serisi (en zor kısım) ---
+for (let i=0;i<9;i++){
+  ez -= 6.5;
+  ex += (i%3===0 ? 4 : (i%3===1 ? -4 : 0));
+  ey += (i%2===0 ? 0.6 : -0.4);
+  addPlatform(ex, ey, ez, 2.4, 2.4);
+}
+// aradan bir hareketli geçiş
+ez -= 9; addMovingPlatform(ex, ey, ez, 3, 3, 'x', 7, 2.0);
+ez -= 12;
+
+// --- FİNAL: büyük zafer adası + kupa ---
+const FINY = ey;
+addPlatform(ex, FINY, ez, 16, 16);
+addCheckpoint(ex, FINY, ez);
 // finalde altın kupa
-const CUPY = by + 2.2;
+const CUPY = FINY;
 const cup = new THREE.Group();
 const cupBowl = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 0.5, 1.4, 16),
   new THREE.MeshPhongMaterial({ color:0xffd700, shininess:140, emissive:0x332200 }));
@@ -367,9 +433,9 @@ const cupBase = new THREE.Mesh(new THREE.CylinderGeometry(0.7,0.7,0.25,14),
   new THREE.MeshPhongMaterial({ color:0xffd700, shininess:140 }));
 cupBase.position.y = CUPY+0.2;
 cup.add(cupBowl, cupStem, cupBase);
-cup.position.set(bx, 0, bz);
+cup.position.set(ex, 0, ez);
 scene.add(cup);
-window._cup = { x:bx, y:CUPY, z:bz };
+window._cup = { x:ex, y:CUPY, z:ez };
 
 // spawn yüksekliği (karakterler başlangıç adasında dursun)
 window._spawn = { x:0, y:0, z:0 };
