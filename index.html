@@ -46,6 +46,7 @@
   #tG{ right:20px; bottom:150px; } #tB{ right:20px; bottom:60px; }
   #tN{ right:110px; bottom:150px; font-size:12px; font-weight:700; }
   #tJ{ right:110px; bottom:60px; font-size:20px; }
+  #tE{ right:20px; bottom:230px; font-size:22px; }
   @media (pointer:coarse) { #touch{display:block;} #controls{display:none;} }
 
   /* Karakter seçim ekranı */
@@ -105,7 +106,8 @@
 </div>
 <div id="controls">
   <kbd>W</kbd>/<kbd>↑</kbd> koş &nbsp; <kbd>S</kbd>/<kbd>↓</kbd> geri &nbsp; <kbd>A</kbd><kbd>D</kbd>/<kbd>←</kbd><kbd>→</kbd> dön<br>
-  <kbd>Boşluk</kbd> zıpla &nbsp; <kbd>Shift</kbd> sprint (sınırsız) &nbsp; <kbd>R</kbd> sıfırla &nbsp; <kbd>C</kbd> kamera
+  <kbd>E</kbd> ata bin/in &nbsp; <kbd>Boşluk</kbd> zıpla &nbsp; <kbd>Shift</kbd> sprint (sınırsız) &nbsp; <kbd>R</kbd> sıfırla &nbsp; <kbd>C</kbd> kamera<br>
+  Dururken fareyle sürükleyerek karakterin etrafında dön
 </div>
 <div id="msg"></div>
 <div id="touch">
@@ -113,6 +115,7 @@
   <div class="tbtn" id="tG">▲</div><div class="tbtn" id="tB">▼</div>
   <div class="tbtn" id="tN">DAŞ</div>
   <div class="tbtn" id="tJ">⤒</div>
+  <div class="tbtn" id="tE">🐎</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -597,6 +600,83 @@ function buildCharacter(key) {
 buildCharacter('boy');   // varsayılan (seçimle değişecek)
 scene.add(player);
 
+// ---------- AT (ön = +Z) ----------
+const horse = new THREE.Group();
+const horseMat = new THREE.MeshLambertMaterial({ color:0x6b4a2f });   // kahverengi
+const horseDark = new THREE.MeshLambertMaterial({ color:0x4a3320 });
+const maneMat = new THREE.MeshLambertMaterial({ color:0x2a1c10 });    // yele/kuyruk
+const hoofMat = new THREE.MeshLambertMaterial({ color:0x1a1410 });
+
+// gövde
+const hBody = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.0, 2.2), horseMat);
+hBody.position.y = 1.5; hBody.castShadow = true;
+horse.add(hBody);
+// göğüs
+const hChest = new THREE.Mesh(new THREE.BoxGeometry(0.95, 1.05, 0.7), horseMat);
+hChest.position.set(0, 1.55, 0.85); hChest.castShadow = true;
+horse.add(hChest);
+// boyun
+const hNeck = new THREE.Mesh(new THREE.BoxGeometry(0.55, 1.0, 0.6), horseMat);
+hNeck.position.set(0, 2.15, 1.15);
+hNeck.rotation.x = -0.5; hNeck.castShadow = true;
+horse.add(hNeck);
+// kafa
+const hHead = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.5, 0.95), horseMat);
+hHead.position.set(0, 2.6, 1.6);
+hHead.rotation.x = 0.25; hHead.castShadow = true;
+horse.add(hHead);
+// burun
+const hMuzzle = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.38, 0.35), horseDark);
+hMuzzle.position.set(0, 2.5, 2.05); hMuzzle.rotation.x = 0.25;
+horse.add(hMuzzle);
+// kulaklar
+[-0.13, 0.13].forEach(x => {
+  const ear = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.28, 5), horseMat);
+  ear.position.set(x, 2.9, 1.5); ear.rotation.x = 0.1;
+  horse.add(ear);
+});
+// yele (boyun boyunca)
+const hMane = new THREE.Mesh(new THREE.BoxGeometry(0.16, 1.05, 0.62), maneMat);
+hMane.position.set(0, 2.2, 1.05); hMane.rotation.x = -0.5;
+horse.add(hMane);
+// kuyruk
+const hTail = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.9, 0.28), maneMat);
+hTail.position.set(0, 1.3, -1.15); hTail.rotation.x = 0.5; hTail.castShadow = true;
+horse.add(hTail);
+// eyer
+const hSaddle = new THREE.Mesh(new THREE.BoxGeometry(0.98, 0.22, 0.9), new THREE.MeshLambertMaterial({ color:0x3a2418 }));
+hSaddle.position.set(0, 2.08, 0.1);
+horse.add(hSaddle);
+
+// bacaklar (dörtnala animasyonu için pivotlu)
+function horseLeg(x, z) {
+  const g = new THREE.Group();
+  const upper = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.85, 0.28), horseMat);
+  upper.position.y = -0.42;
+  const hoof = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.2, 0.3), hoofMat);
+  hoof.position.y = -0.9;
+  upper.castShadow = true;
+  g.add(upper, hoof);
+  g.position.set(x, 1.0, z);
+  horse.add(g);
+  return g;
+}
+const hLegFL = horseLeg(-0.32,  0.75);
+const hLegFR = horseLeg( 0.32,  0.75);
+const hLegBL = horseLeg(-0.32, -0.7);
+const hLegBR = horseLeg( 0.32, -0.7);
+const horseLegs = [hLegFL, hLegFR, hLegBL, hLegBR];
+
+scene.add(horse);
+
+// at durumu
+const horseState = {
+  pos: new THREE.Vector3(3, 0, 0),   // yanımızda doğar
+  heading: 0, speed: 0, vy: 0, airborne: false, turn: 0,
+  gallopPhase: 0, airStart: 0
+};
+let mounted = false;   // ata binili miyiz?
+
 // ---------- Oyuncu durumu ----------
 const state = {
   pos: new THREE.Vector3(0, 0, 0),
@@ -609,26 +689,34 @@ function resetPlayer() {
   state.pos.set(0, 0, 0);
   state.heading = 0;
   state.speed = 0; state.vy = 0; state.airborne = false;
+  mounted = false;
+  if (typeof horseState !== 'undefined') {
+    horseState.pos.set(3, 0, 0);
+    horseState.heading = 0; horseState.speed = 0; horseState.vy = 0; horseState.airborne = false;
+    legL.rotation.z = 0; legR.rotation.z = 0;
+  }
 }
 
 // ---------- Girdi ----------
 const keys = {};
 let jumpQueued = false;
+let mountQueued = false;
 addEventListener('keydown', e => {
   if (e.code==='Space' && !keys['Space']) jumpQueued = true;
+  if (e.code==='KeyE' && !keys['KeyE']) mountQueued = true;
   keys[e.code]=true;
   if(e.code==='KeyR') resetPlayer();
   if(e.code==='KeyC') camMode=(camMode+1)%3;
   if(e.code==='Space' || e.code==='ShiftLeft' || e.code==='ShiftRight') e.preventDefault();
 });
 addEventListener('keyup', e => keys[e.code]=false);
-const bindT = (id, code, isJump) => {
+const bindT = (id, code, isJump, isMount) => {
   const el = document.getElementById(id);
-  el.addEventListener('touchstart', e=>{ e.preventDefault(); keys[code]=true; if(isJump) jumpQueued = true; }, {passive:false});
+  el.addEventListener('touchstart', e=>{ e.preventDefault(); keys[code]=true; if(isJump) jumpQueued = true; if(isMount) mountQueued = true; }, {passive:false});
   el.addEventListener('touchend',   e=>{ e.preventDefault(); keys[code]=false; }, {passive:false});
 };
 bindT('tG','KeyW'); bindT('tB','KeyS'); bindT('tL','KeyA'); bindT('tR','KeyD');
-bindT('tN','ShiftLeft'); bindT('tJ','Space', true);
+bindT('tN','ShiftLeft'); bindT('tJ','Space', true); bindT('tE','KeyE', false, true);
 
 // ---------- Mesaj ----------
 const msgEl = document.getElementById('msg');
@@ -641,6 +729,24 @@ function showMsg(txt) {
 
 // ---------- Kamera ----------
 let camMode = 0;
+// durunca fareyle karakter etrafında dönme
+const orbit = { yaw: Math.PI, pitch: 0.38, wasIdle: false };
+let dragging = false, lastPX = 0, lastPY = 0;
+addEventListener('pointerdown', e => {
+  // arayüz butonlarına basınca sürükleme başlatma
+  if (e.target.closest && (e.target.closest('#touch') || e.target.closest('#charSelect') || e.target.closest('#hud') || e.target.closest('#controls'))) return;
+  dragging = true; lastPX = e.clientX; lastPY = e.clientY;
+});
+addEventListener('pointermove', e => {
+  if (!dragging) return;
+  const dx = e.clientX - lastPX, dy = e.clientY - lastPY;
+  lastPX = e.clientX; lastPY = e.clientY;
+  orbit.yaw   -= dx * 0.006;
+  orbit.pitch += dy * 0.004;
+  orbit.pitch = Math.max(0.06, Math.min(1.25, orbit.pitch));
+});
+addEventListener('pointerup',     () => dragging = false);
+addEventListener('pointercancel', () => dragging = false);
 const camPos = new THREE.Vector3(0, 4, -7);
 
 // ---------- Ana döngü ----------
@@ -659,121 +765,279 @@ function animate() {
   const right = active && (keys['KeyD']||keys['ArrowRight'])? 1 : 0;
   const sprinting = (active && (keys['ShiftLeft']||keys['ShiftRight']) && run) ? true : false; // SINIRSIZ
 
-  // ileri/geri hız (insan ölçeği — sprint daha hızlı)
-  const MAX_F = sprinting ? 34 : 13;
-  const MAX_R = -5;
-  const ACC = sprinting ? 55 : 28;
-  if (run)  state.speed += ACC * dt;
-  if (back) state.speed -= 16 * dt;
-  state.speed -= state.speed * 4.5 * dt;   // insan çabuk durur
-  state.speed = Math.max(MAX_R, Math.min(MAX_F, state.speed));
-  if (!run && !back && Math.abs(state.speed) < 0.1) state.speed = 0;
-
-  // dönüş — insan yerinde de dönebilir
-  const turnTarget = (left - right);
-  state.turn += (turnTarget - state.turn) * Math.min(1, dt*10);
-  const turnRate = state.airborne ? 1.2 : 3.0;
-  state.heading += state.turn * turnRate * dt;
-
-  // konum
-  fwd.set(Math.sin(state.heading), 0, Math.cos(state.heading));
-  state.pos.x += fwd.x * state.speed * dt;
-  state.pos.z += fwd.z * state.speed * dt;
-
-  // ağaç çarpışmaları
-  for (const t of treeColliders) {
-    const dx = state.pos.x - t.x, dz = state.pos.z - t.z;
-    const d2 = dx*dx + dz*dz;
-    const minR = t.r + 0.4;
-    if (d2 < minR*minR && d2 > 0.001) {
-      const d = Math.sqrt(d2);
-      state.pos.x = t.x + dx/d*minR;
-      state.pos.z = t.z + dz/d*minR;
-      state.speed *= 0.5;
-    }
-  }
-
-  // ZIPLAMA
-  if (jumpQueued) {
-    jumpQueued = false;
-    if (active && !state.airborne) {
-      state.airborne = true;
-      state.airStart = elapsed;
-      state.vy = 6.5 + Math.abs(state.speed)*0.12;
-    }
-  }
-
-  // dikey
-  const gh = groundHeight(state.pos.x, state.pos.z);
-  if (state.airborne) {
-    state.vy -= 20 * dt;
-    state.pos.y += state.vy * dt;
-    if (state.pos.y <= gh && state.vy <= 0) {
-      state.pos.y = gh; state.airborne = false; state.vy = 0;
-      const airTime = elapsed - state.airStart;
-      if (airTime > 0.35) {
-        stats.jumps++;
-        if (airTime > stats.bestAir) {
-          stats.bestAir = airTime;
-          showMsg('✈️ Yeni rekor uçuş: ' + airTime.toFixed(1) + ' sn!');
+  // ---- Binme / inme (E) ----
+  if (mountQueued) {
+    mountQueued = false;
+    if (active) {
+      if (!mounted) {
+        // ata yeterince yakınsak bin
+        const dx = state.pos.x - horseState.pos.x, dz = state.pos.z - horseState.pos.z;
+        if (dx*dx + dz*dz < 9) {   // ~3 birim mesafe
+          mounted = true;
+          horseState.heading = state.heading;
+          showMsg('🐎 Ata bindin!');
+        } else {
+          showMsg('Ata yaklaş ve E’ye bas');
         }
-        document.getElementById('jumps').textContent = stats.jumps;
-        document.getElementById('air').textContent = stats.bestAir.toFixed(1) + ' sn';
+      } else {
+        // in: atın soluna in
+        mounted = false;
+        const sx = Math.cos(horseState.heading), sz = -Math.sin(horseState.heading);
+        state.pos.set(horseState.pos.x + sx*2.2, 0, horseState.pos.z + sz*2.2);
+        state.heading = horseState.heading;
+        state.speed = 0; state.airborne = false; state.vy = 0;
+        showMsg('İndin');
       }
     }
-  } else {
-    if (gh < state.pos.y - 0.3) {
-      state.airborne = true;
-      state.airStart = elapsed;
-      state.vy = Math.max(1.5, state.speed * 0.28);
+  }
+
+  // ileri/geri hız — binili değilken oyuncu, biniliyken at
+  const MAX_F = sprinting ? 19 : 10;
+  const MAX_R = -5;
+  const ACC = sprinting ? 34 : 22;
+  if (!mounted) {
+    if (run)  state.speed += ACC * dt;
+    if (back) state.speed -= 16 * dt;
+    state.speed -= state.speed * 4.5 * dt;
+    state.speed = Math.max(MAX_R, Math.min(MAX_F, state.speed));
+    if (!run && !back && Math.abs(state.speed) < 0.1) state.speed = 0;
+
+    const turnTarget = (left - right);
+    state.turn += (turnTarget - state.turn) * Math.min(1, dt*10);
+    const turnRate = state.airborne ? 1.2 : 3.0;
+    state.heading += state.turn * turnRate * dt;
+  }
+
+  // ============ YAYA (binili değilken) ============
+  if (!mounted) {
+    // konum
+    fwd.set(Math.sin(state.heading), 0, Math.cos(state.heading));
+    state.pos.x += fwd.x * state.speed * dt;
+    state.pos.z += fwd.z * state.speed * dt;
+
+    // ağaç çarpışmaları
+    for (const t of treeColliders) {
+      const dx = state.pos.x - t.x, dz = state.pos.z - t.z;
+      const d2 = dx*dx + dz*dz;
+      const minR = t.r + 0.4;
+      if (d2 < minR*minR && d2 > 0.001) {
+        const d = Math.sqrt(d2);
+        state.pos.x = t.x + dx/d*minR;
+        state.pos.z = t.z + dz/d*minR;
+        state.speed *= 0.5;
+      }
+    }
+
+    // ZIPLAMA
+    if (jumpQueued) {
+      jumpQueued = false;
+      if (active && !state.airborne) {
+        state.airborne = true;
+        state.airStart = elapsed;
+        state.vy = 5.8 + Math.abs(state.speed)*0.1;
+      }
+    }
+
+    // dikey
+    const gh = groundHeight(state.pos.x, state.pos.z);
+    if (state.airborne) {
+      state.vy -= 20 * dt;
+      state.pos.y += state.vy * dt;
+      if (state.pos.y <= gh && state.vy <= 0) {
+        state.pos.y = gh; state.airborne = false; state.vy = 0;
+        const airTime = elapsed - state.airStart;
+        if (airTime > 0.35) {
+          stats.jumps++;
+          if (airTime > stats.bestAir) {
+            stats.bestAir = airTime;
+            showMsg('✈️ Yeni rekor uçuş: ' + airTime.toFixed(1) + ' sn!');
+          }
+          document.getElementById('jumps').textContent = stats.jumps;
+          document.getElementById('air').textContent = stats.bestAir.toFixed(1) + ' sn';
+        }
+      }
     } else {
-      state.pos.y += (gh - state.pos.y) * Math.min(1, dt*14);
+      if (gh < state.pos.y - 0.3) {
+        state.airborne = true;
+        state.airStart = elapsed;
+        state.vy = Math.max(1.5, state.speed * 0.28);
+      } else {
+        state.pos.y += (gh - state.pos.y) * Math.min(1, dt*14);
+      }
+    }
+
+    const B = 720;
+    state.pos.x = Math.max(-B, Math.min(B, state.pos.x));
+    state.pos.z = Math.max(-B, Math.min(B, state.pos.z));
+
+    player.position.copy(state.pos);
+    player.rotation.y = state.heading;
+    player.rotation.x = state.airborne ? -0.1 : Math.min(0.18, Math.abs(state.speed)*0.014) * Math.sign(state.speed);
+
+    // koşu animasyonu
+    const moving = Math.abs(state.speed) > 0.3;
+    if (state.airborne) {
+      armL.rotation.x += (-2.4 - armL.rotation.x) * Math.min(1, dt*8);
+      armR.rotation.x += (-2.4 - armR.rotation.x) * Math.min(1, dt*8);
+      legL.rotation.x += (0.7 - legL.rotation.x) * Math.min(1, dt*8);
+      legR.rotation.x += (-0.3 - legR.rotation.x) * Math.min(1, dt*8);
+    } else if (moving) {
+      state.runPhase += Math.abs(state.speed) * dt * 1.7;
+      const sw = Math.min(1.0, Math.abs(state.speed)/9) * 0.95;
+      const s = Math.sin(state.runPhase);
+      legL.rotation.x = s * sw;
+      legR.rotation.x = -s * sw;
+      armL.rotation.x = -s * sw * 0.85;
+      armR.rotation.x = s * sw * 0.85;
+      player.position.y = state.pos.y + Math.abs(Math.cos(state.runPhase)) * 0.06;
+    } else {
+      [armL, armR, legL, legR].forEach(l => l.rotation.x += (0 - l.rotation.x) * Math.min(1, dt*6));
+      state.runPhase = 0;
     }
   }
 
-  const B = 720;
-  state.pos.x = Math.max(-B, Math.min(B, state.pos.x));
-  state.pos.z = Math.max(-B, Math.min(B, state.pos.z));
+  // ============ AT ============
+  {
+    const hFwd = new THREE.Vector3(Math.sin(horseState.heading), 0, Math.cos(horseState.heading));
+    if (mounted) {
+      // at hızlı ama kontrol edilebilir
+      const H_MAX = sprinting ? 38 : 20;
+      const H_ACC = sprinting ? 55 : 32;
+      if (run)  horseState.speed += H_ACC * dt;
+      if (back) horseState.speed -= 30 * dt;
+      horseState.speed -= horseState.speed * 1.6 * dt;
+      horseState.speed = Math.max(-10, Math.min(H_MAX, horseState.speed));
+      if (!run && !back && Math.abs(horseState.speed) < 0.15) horseState.speed = 0;
 
-  player.position.copy(state.pos);
-  player.rotation.y = state.heading;
-  // koşarken hafif öne eğil
-  player.rotation.x = state.airborne ? -0.1 : Math.min(0.18, Math.abs(state.speed)*0.014) * Math.sign(state.speed);
+      const turnTarget = (left - right);
+      horseState.turn += (turnTarget - horseState.turn) * Math.min(1, dt*8);
+      const turnRate = horseState.airborne ? 0.8 : 2.2;
+      horseState.heading += horseState.turn * turnRate * dt;
 
-  // ---- koşu animasyonu ----
-  const moving = Math.abs(state.speed) > 0.3;
-  if (state.airborne) {
-    // havada: kollar yukarı, bacaklar toplanmış
-    armL.rotation.x += (-2.4 - armL.rotation.x) * Math.min(1, dt*8);
-    armR.rotation.x += (-2.4 - armR.rotation.x) * Math.min(1, dt*8);
-    legL.rotation.x += (0.7 - legL.rotation.x) * Math.min(1, dt*8);
-    legR.rotation.x += (-0.3 - legR.rotation.x) * Math.min(1, dt*8);
-  } else if (moving) {
-    state.runPhase += Math.abs(state.speed) * dt * 1.7;
-    const sw = Math.min(1.0, Math.abs(state.speed)/9) * 0.95;
-    const s = Math.sin(state.runPhase);
-    legL.rotation.x = s * sw;
-    legR.rotation.x = -s * sw;
-    armL.rotation.x = -s * sw * 0.85;
-    armR.rotation.x = s * sw * 0.85;
-    // hafif dikey zıplama hissi
-    player.position.y = state.pos.y + Math.abs(Math.cos(state.runPhase)) * 0.06;
-  } else {
-    // dur: uzuvlar yavaşça sıfıra
-    [armL, armR, legL, legR].forEach(l => l.rotation.x += (0 - l.rotation.x) * Math.min(1, dt*6));
-    state.runPhase = 0;
+      // konum
+      horseState.pos.x += hFwd.x * horseState.speed * dt;
+      horseState.pos.z += hFwd.z * horseState.speed * dt;
+
+      // ağaç çarpışmaları (at daha büyük)
+      for (const t of treeColliders) {
+        const dx = horseState.pos.x - t.x, dz = horseState.pos.z - t.z;
+        const d2 = dx*dx + dz*dz;
+        const minR = t.r + 0.7;
+        if (d2 < minR*minR && d2 > 0.001) {
+          const d = Math.sqrt(d2);
+          horseState.pos.x = t.x + dx/d*minR;
+          horseState.pos.z = t.z + dz/d*minR;
+          horseState.speed *= 0.6;
+        }
+      }
+
+      // yüksek ama abartısız zıplama
+      if (jumpQueued) {
+        jumpQueued = false;
+        if (active && !horseState.airborne) {
+          horseState.airborne = true;
+          horseState.airStart = elapsed;
+          horseState.vy = 9.5 + Math.abs(horseState.speed)*0.1;
+        }
+      }
+    } else {
+      // binili değil: at yavaşça durur, jumpQueued'ı yaya kullandı
+      horseState.speed -= horseState.speed * 3 * dt;
+      if (Math.abs(horseState.speed) < 0.05) horseState.speed = 0;
+      horseState.pos.x += hFwd.x * horseState.speed * dt;
+      horseState.pos.z += hFwd.z * horseState.speed * dt;
+    }
+
+    // at dikey fizik (rampalar + zıplama)
+    const hgh = groundHeight(horseState.pos.x, horseState.pos.z);
+    if (horseState.airborne) {
+      horseState.vy -= 18 * dt;
+      horseState.pos.y += horseState.vy * dt;
+      if (horseState.pos.y <= hgh && horseState.vy <= 0) {
+        horseState.pos.y = hgh; horseState.airborne = false; horseState.vy = 0;
+        const airTime = elapsed - horseState.airStart;
+        if (mounted && airTime > 0.4) {
+          stats.jumps++;
+          if (airTime > stats.bestAir) {
+            stats.bestAir = airTime;
+            showMsg('🐎 Muhteşem uçuş: ' + airTime.toFixed(1) + ' sn!');
+          }
+          document.getElementById('jumps').textContent = stats.jumps;
+          document.getElementById('air').textContent = stats.bestAir.toFixed(1) + ' sn';
+        }
+      }
+    } else {
+      if (hgh < horseState.pos.y - 0.3) {
+        horseState.airborne = true;
+        horseState.airStart = elapsed;
+        horseState.vy = Math.max(2, horseState.speed * 0.3);
+      } else {
+        horseState.pos.y += (hgh - horseState.pos.y) * Math.min(1, dt*14);
+      }
+    }
+    const HB = 720;
+    horseState.pos.x = Math.max(-HB, Math.min(HB, horseState.pos.x));
+    horseState.pos.z = Math.max(-HB, Math.min(HB, horseState.pos.z));
+
+    // at yerleşimi
+    horse.position.copy(horseState.pos);
+    horse.rotation.y = horseState.heading;
+    horse.rotation.x = horseState.airborne ? -0.12 : 0;
+
+    // dörtnala bacak animasyonu
+    const hMoving = Math.abs(horseState.speed) > 0.3;
+    if (horseState.airborne) {
+      hLegFL.rotation.x = -0.9; hLegFR.rotation.x = -0.9;
+      hLegBL.rotation.x = 0.9;  hLegBR.rotation.x = 0.9;
+    } else if (hMoving) {
+      horseState.gallopPhase += Math.abs(horseState.speed) * dt * 1.1;
+      const sw = Math.min(1, Math.abs(horseState.speed)/18) * 1.1;
+      const s = Math.sin(horseState.gallopPhase);
+      const s2 = Math.sin(horseState.gallopPhase + Math.PI*0.5);
+      hLegFL.rotation.x = s * sw;   hLegFR.rotation.x = -s * sw;
+      hLegBL.rotation.x = -s2 * sw; hLegBR.rotation.x = s2 * sw;
+      horse.position.y = horseState.pos.y + Math.abs(Math.cos(horseState.gallopPhase)) * 0.12;
+      hTail.rotation.z = Math.sin(horseState.gallopPhase*0.5)*0.15;
+    } else {
+      horseLegs.forEach(l => l.rotation.x += (0 - l.rotation.x) * Math.min(1, dt*6));
+      horseState.gallopPhase = 0;
+    }
+
+    // binili isek oyuncuyu eyere oturt (kalça eyer üstünde)
+    if (mounted) {
+      state.heading = horseState.heading;
+      state.pos.copy(horseState.pos);
+      // eyer lokal (0, 2.19, 0.1) → dünya konumu; oyuncunun kalça pivotu ~0.78'de
+      const sy = 2.19 - 0.78;   // origin ofseti: kalça eyerin üstüne otursun
+      const sOff = 0.1;         // eyer hafif önde
+      player.position.set(
+        horseState.pos.x + Math.sin(horseState.heading)*sOff,
+        horse.position.y + sy,   // atın zıplama salınımını da takip etsin
+        horseState.pos.z + Math.cos(horseState.heading)*sOff
+      );
+      player.rotation.y = horseState.heading;
+      player.rotation.x = horse.rotation.x;   // havada atla birlikte eğilsin
+      // oturuş pozu: uyluklar öne, baldırlar aşağı hissi
+      legL.rotation.x = 1.35; legR.rotation.x = 1.35;
+      legL.rotation.z = 0.3; legR.rotation.z = -0.3;
+      armL.rotation.x = 0.5; armR.rotation.x = 0.5;   // eller dizgin tutar gibi önde
+    } else {
+      legL.rotation.z = 0; legR.rotation.z = 0;
+    }
   }
 
   if (window._torch) window._torch.intensity = sprinting ? 3.8 : 3.0;
 
-  // koniler (tekmelenebilir)
+  // koniler (yaya veya at tarafından tekmelenebilir)
+  const kickSpeed = mounted ? Math.abs(horseState.speed) : Math.abs(state.speed);
+  const kickR = mounted ? 2.0 : 1.0;
   for (const cn of cones) {
     if (!cn.hit) {
       const dx = cn.mesh.position.x - state.pos.x, dz = cn.mesh.position.z - state.pos.z;
-      if (dx*dx + dz*dz < 1.0 && Math.abs(state.speed) > 1.5 && state.pos.y < 1) {
+      if (dx*dx + dz*dz < kickR && kickSpeed > 1.5 && state.pos.y < (mounted ? 3 : 1)) {
         cn.hit = true;
-        cn.vel.set(dx, 1.5, dz).normalize().multiplyScalar(Math.abs(state.speed)*0.8);
-        cn.vel.y = 2.5 + Math.abs(state.speed)*0.2;
+        cn.vel.set(dx, 1.5, dz).normalize().multiplyScalar(kickSpeed*0.8);
+        cn.vel.y = 2.5 + kickSpeed*0.2;
         cn.spin = (Math.random()-0.5)*10;
       }
     } else if (cn.mesh.position.y > -1) {
@@ -800,6 +1064,9 @@ function animate() {
 
   // kamera (insan ölçeği: daha yakın)
   let targetCam;
+  const curSpeed = mounted ? Math.abs(horseState.speed) : Math.abs(state.speed);
+  const curAir = mounted ? horseState.airborne : state.airborne;
+  const idle = active && curSpeed < 0.4 && !curAir;
   if (!active) {
     // seçim ekranı: karakterin önünden hafif dönen vitrin açısı
     player.rotation.y = Math.sin(elapsed*0.6)*0.5;
@@ -808,20 +1075,45 @@ function animate() {
     camPos.lerp(targetCam, Math.min(1, dt*3));
     camera.position.copy(camPos);
     camera.lookAt(0, 1.4, 0);
-  } else {
-    if (camMode === 0) {
-      targetCam = new THREE.Vector3(state.pos.x - fwd.x*6, state.pos.y + 3.2, state.pos.z - fwd.z*6);
-    } else if (camMode === 1) {
-      targetCam = new THREE.Vector3(state.pos.x - fwd.x*3.2, state.pos.y + 2.1, state.pos.z - fwd.z*3.2);
-    } else {
-      targetCam = new THREE.Vector3(state.pos.x, state.pos.y + 35, state.pos.z + 0.1);
+  } else if (idle) {
+    // DURUNCA: fare ile karakterin etrafında serbest dönüş
+    if (!orbit.wasIdle) {
+      // takip kamerasından devral: mevcut açıdan başla
+      const dx = camPos.x - state.pos.x, dz = camPos.z - state.pos.z;
+      orbit.yaw = Math.atan2(dx, dz);
+      orbit.wasIdle = true;
     }
-    camPos.lerp(targetCam, Math.min(1, dt * 4));
+    const d = mounted ? 8 : 5.5;
+    const cp = Math.cos(orbit.pitch), sp = Math.sin(orbit.pitch);
+    targetCam = new THREE.Vector3(
+      state.pos.x + Math.sin(orbit.yaw)*cp*d,
+      state.pos.y + sp*d + 1.2,
+      state.pos.z + Math.cos(orbit.yaw)*cp*d
+    );
+    camPos.lerp(targetCam, Math.min(1, dt*8));
     camera.position.copy(camPos);
-    camera.lookAt(state.pos.x, state.pos.y + 1.5, state.pos.z);
+    camera.lookAt(state.pos.x, state.pos.y + (mounted ? 1.8 : 1.2), state.pos.z);
+  } else {
+    orbit.wasIdle = false;
+    // biniliyken kamera yönü at heading'ine göre
+    const cf = mounted
+      ? new THREE.Vector3(Math.sin(horseState.heading), 0, Math.cos(horseState.heading))
+      : fwd;
+    const dist = mounted ? 9 : 6;
+    const high = mounted ? 4.6 : 3.2;
+    if (camMode === 0) {
+      targetCam = new THREE.Vector3(state.pos.x - cf.x*dist, state.pos.y + high, state.pos.z - cf.z*dist);
+    } else if (camMode === 1) {
+      targetCam = new THREE.Vector3(state.pos.x - cf.x*(dist*0.55), state.pos.y + high*0.7, state.pos.z - cf.z*(dist*0.55));
+    } else {
+      targetCam = new THREE.Vector3(state.pos.x, state.pos.y + 42, state.pos.z + 0.1);
+    }
+    camPos.lerp(targetCam, Math.min(1, dt * (mounted ? 5 : 4)));
+    camera.position.copy(camPos);
+    camera.lookAt(state.pos.x, state.pos.y + (mounted ? 2.2 : 1.5), state.pos.z);
   }
 
-  const targetFov = sprinting ? 80 : 70;
+  const targetFov = mounted ? (sprinting ? 84 : 76) : (sprinting ? 78 : 70);
   camera.fov += (targetFov - camera.fov) * Math.min(1, dt*5);
   camera.updateProjectionMatrix();
 
@@ -829,7 +1121,8 @@ function animate() {
   moonLight.target.position.copy(state.pos);
   moonLight.target.updateMatrixWorld();
 
-  document.getElementById('spd').textContent = Math.round(Math.abs(state.speed) * 3.6);
+  const shownSpeed = mounted ? Math.abs(horseState.speed) : Math.abs(state.speed);
+  document.getElementById('spd').textContent = Math.round(shownSpeed * 3.6);
 
   renderer.render(scene, camera);
 }
