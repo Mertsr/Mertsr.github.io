@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Gece Ormanı — Koşucu</title>
+<title>Gökyüzü Parkuru</title>
 <style>
   * { margin:0; padding:0; box-sizing:border-box; }
   body { overflow:hidden; font-family:'Segoe UI', system-ui, sans-serif; background:#05070d; }
@@ -46,7 +46,6 @@
   #tG{ right:20px; bottom:150px; } #tB{ right:20px; bottom:60px; }
   #tN{ right:110px; bottom:150px; font-size:12px; font-weight:700; }
   #tJ{ right:110px; bottom:60px; font-size:20px; }
-  #tE{ right:20px; bottom:230px; font-size:22px; }
   @media (pointer:coarse) { #touch{display:block;} #controls{display:none;} }
 
   /* Karakter seçim ekranı */
@@ -97,17 +96,16 @@
       <div class="cname">Pembe Kazak</div>
     </button>
   </div>
-  <p class="hint">Ormanda gece koşusu · Shift ile sprint · Boşluk ile zıpla</p>
+  <p class="hint">Gökyüzü parkuru · Shift ile sprint · Boşluk ile zıpla · Boşluğa düşme!</p>
 </div>
 <div id="hud">
   <div class="speed"><span id="spd">0</span><span> km/s</span></div>
-  <div class="row"><span>En uzun uçuş</span><b id="air">0.0 sn</b></div>
-  <div class="row"><span>Zıplama</span><b id="jumps">0</b></div>
+  <div class="row"><span>Süre</span><b id="air">0.0 sn</b></div>
+  <div class="row"><span>Kontrol noktası</span><b id="jumps">1 / 5</b></div>
 </div>
 <div id="controls">
   <kbd>W</kbd>/<kbd>↑</kbd> koş &nbsp; <kbd>S</kbd>/<kbd>↓</kbd> geri &nbsp; <kbd>A</kbd><kbd>D</kbd>/<kbd>←</kbd><kbd>→</kbd> dön<br>
-  <kbd>E</kbd> ata bin/in &nbsp; <kbd>Boşluk</kbd> zıpla &nbsp; <kbd>Shift</kbd> sprint (sınırsız) &nbsp; <kbd>R</kbd> sıfırla &nbsp; <kbd>C</kbd> kamera<br>
-  Dururken fareyle sürükleyerek karakterin etrafında dön
+  <kbd>Boşluk</kbd> zıpla &nbsp; <kbd>Shift</kbd> sprint (sınırsız) &nbsp; <kbd>R</kbd> sıfırla &nbsp; <kbd>C</kbd> kamera
 </div>
 <div id="msg"></div>
 <div id="touch">
@@ -115,17 +113,16 @@
   <div class="tbtn" id="tG">▲</div><div class="tbtn" id="tB">▼</div>
   <div class="tbtn" id="tN">DAŞ</div>
   <div class="tbtn" id="tJ">⤒</div>
-  <div class="tbtn" id="tE">🐎</div>
 </div>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
 <script>
-// ---------- Sahne (gece ormanı) ----------
+// ---------- Sahne (gökyüzü parkuru) ----------
 const scene = new THREE.Scene();
-scene.background = new THREE.Color(0x070b16);
-scene.fog = new THREE.Fog(0x070b16, 40, 220);
+scene.background = new THREE.Color(0xbfe0f5);
+scene.fog = new THREE.Fog(0xbfe0f5, 120, 620);
 
-const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 1500);
+const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 3000);
 const renderer = new THREE.WebGLRenderer({ antialias:true });
 renderer.setSize(innerWidth, innerHeight);
 renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
@@ -133,72 +130,48 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 document.body.appendChild(renderer.domElement);
 
-const moonLight = new THREE.DirectionalLight(0x9db8e8, 0.45);
-moonLight.position.set(-120, 160, -80);
+// güneş
+const moonLight = new THREE.DirectionalLight(0xffffff, 1.05);
+moonLight.position.set(-120, 180, -60);
 moonLight.castShadow = true;
 moonLight.shadow.mapSize.set(2048, 2048);
-moonLight.shadow.camera.left = -120; moonLight.shadow.camera.right = 120;
-moonLight.shadow.camera.top = 120; moonLight.shadow.camera.bottom = -120;
-moonLight.shadow.camera.far = 500;
+moonLight.shadow.camera.left = -160; moonLight.shadow.camera.right = 160;
+moonLight.shadow.camera.top = 160; moonLight.shadow.camera.bottom = -160;
+moonLight.shadow.camera.far = 600;
 scene.add(moonLight);
-scene.add(new THREE.AmbientLight(0x24304a, 0.75));
+scene.add(new THREE.AmbientLight(0xcfe6ff, 0.75));
+scene.add(new THREE.HemisphereLight(0xdcefff, 0x9fc4dc, 0.5));
 
-// ---------- Dolunay + hale + yıldızlar ----------
-const moon = new THREE.Mesh(
-  new THREE.SphereGeometry(28, 32, 32),
-  new THREE.MeshBasicMaterial({ color:0xf2f0dc, fog:false })
+// ---------- Ayna gibi deniz (ölüm zemini) ----------
+const SEA_Y = -40;                       // deniz yüzeyi
+const sea = new THREE.Mesh(
+  new THREE.PlaneGeometry(6000, 6000),
+  new THREE.MeshPhongMaterial({ color:0x4a86b8, shininess:120, transparent:true, opacity:0.92 })
 );
-moon.position.set(-380, 320, -450);
-scene.add(moon);
-const haloTex = (() => {
-  const c = document.createElement('canvas'); c.width = c.height = 256;
+sea.rotation.x = -Math.PI/2;
+sea.position.y = SEA_Y;
+sea.receiveShadow = true;
+scene.add(sea);
+
+// bulutlar (yassı beyaz spriteler)
+const cloudTex = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 128;
   const g = c.getContext('2d');
-  const grad = g.createRadialGradient(128,128,30,128,128,128);
-  grad.addColorStop(0, 'rgba(240,238,215,0.55)');
-  grad.addColorStop(0.4, 'rgba(200,210,240,0.15)');
-  grad.addColorStop(1, 'rgba(200,210,240,0)');
-  g.fillStyle = grad; g.fillRect(0,0,256,256);
+  const grad = g.createRadialGradient(64,64,8,64,64,62);
+  grad.addColorStop(0,'rgba(255,255,255,0.9)');
+  grad.addColorStop(1,'rgba(255,255,255,0)');
+  g.fillStyle = grad; g.fillRect(0,0,128,128);
   return new THREE.CanvasTexture(c);
 })();
-const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map:haloTex, fog:false, transparent:true }));
-halo.scale.set(220,220,1);
-halo.position.copy(moon.position);
-scene.add(halo);
-(function stars(){
-  const n = 800, pos = new Float32Array(n*3);
-  for (let i=0;i<n;i++){
-    const a = Math.random()*Math.PI*2, e = Math.random()*Math.PI*0.45 + 0.08, r = 900;
-    pos[i*3]   = Math.cos(a)*Math.cos(e)*r;
-    pos[i*3+1] = Math.sin(e)*r;
-    pos[i*3+2] = Math.sin(a)*Math.cos(e)*r;
-  }
-  const g = new THREE.BufferGeometry();
-  g.setAttribute('position', new THREE.BufferAttribute(pos,3));
-  scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color:0xdfe8ff, size:1.6, fog:false, sizeAttenuation:false })));
-})();
-
-// ---------- Zemin ----------
-const ground = new THREE.Mesh(
-  new THREE.PlaneGeometry(1600, 1600),
-  new THREE.MeshLambertMaterial({ color:0x18241a })
-);
-ground.rotation.x = -Math.PI/2;
-ground.receiveShadow = true;
-scene.add(ground);
-const dirtMat = new THREE.MeshLambertMaterial({ color:0x241c12 });
-for (let i=0;i<26;i++){
-  const m = new THREE.Mesh(new THREE.CircleGeometry(6+Math.random()*14, 18), dirtMat);
-  m.rotation.x = -Math.PI/2;
-  m.position.set((Math.random()-0.5)*800, 0.01, (Math.random()-0.5)*800);
-  scene.add(m);
+for (let i=0;i<40;i++){
+  const s = new THREE.Sprite(new THREE.SpriteMaterial({ map:cloudTex, transparent:true, opacity:0.65, depthWrite:false }));
+  const sc = 40 + Math.random()*90;
+  s.scale.set(sc, sc*0.55, 1);
+  s.position.set((Math.random()-0.5)*1400, -10 + Math.random()*90, (Math.random()-0.5)*1400);
+  scene.add(s);
 }
 
 // ---------- Malzemeler ----------
-const stoneMat = new THREE.MeshLambertMaterial({ color:0x5a5f66 });
-const stoneDark = new THREE.MeshLambertMaterial({ color:0x44484f });
-const earthMat = new THREE.MeshLambertMaterial({ color:0x5c4630 });
-const earthDark = new THREE.MeshLambertMaterial({ color:0x4a3826 });
-const mossMat  = new THREE.MeshLambertMaterial({ color:0x2c4a2e });
 function roughen(geo, amt) {
   const p = geo.attributes.position;
   for (let i=0;i<p.count;i++){
@@ -211,283 +184,201 @@ function roughen(geo, amt) {
   return geo;
 }
 
-// ---------- Yükseklik alanı sistemi ----------
-const heightFields = [];
-const clearZones = [];
+// ---------- Yükseklik alanı sistemi (platform tabanlı) ----------
+// Her platform bir yükseklik döndürür; hiçbir platform yoksa VOID (çok aşağı) döner.
+const VOID = -9999;
+const platforms = [];   // { test(x,z)->h veya null }
+const clearZones = [];  // (dünyada dekor yok ama API uyumu için tutuluyor)
+const treeColliders = []; // (bu dünyada boş — ağaç yok)
+const checkpoints = [];   // { x, z, y, r, idx }
+
 function groundHeight(x, z) {
-  let h = 0;
-  for (const f of heightFields) {
-    const v = f(x, z);
-    if (v > h) h = v;
+  let h = VOID;
+  for (const p of platforms) {
+    const v = p(x, z);
+    if (v !== null && v > h) h = v;
   }
   return h;
 }
+// heightFields — eski API ile uyum (bazı yerlerde referans olabilir)
+const heightFields = [];
 
-// ---- Toprak rampa ----
-function addRamp(x, z, angleDeg, len, h, w, mat) {
+// ---- dikdörtgen platform ----
+const platMatA = new THREE.MeshLambertMaterial({ color:0x3fa66a });   // canlı yeşil
+const platMatB = new THREE.MeshLambertMaterial({ color:0x2e7d54 });   // koyu yeşil
+const edgeMat  = new THREE.MeshLambertMaterial({ color:0x1d3557 });   // koyu lacivert kenar
+let platIndex = 0;
+function addPlatform(x, y, z, w, d, opts) {
+  opts = opts || {};
+  const mat = (platIndex++ % 2 === 0) ? platMatA : platMatB;
+  const top = new THREE.Mesh(new THREE.BoxGeometry(w, 1.2, d), mat);
+  top.position.set(x, y - 0.6, z);
+  top.castShadow = true; top.receiveShadow = true;
+  scene.add(top);
+  // lacivert kenar şeridi (collision alanından taşmaz)
+  const edge = new THREE.Mesh(new THREE.BoxGeometry(w-0.15, 0.5, d-0.15), edgeMat);
+  edge.position.set(x, y - 1.3, z);
+  scene.add(edge);
+  const hw = w/2, hd = d/2;
+  platforms.push((px, pz) => {
+    if (px > x-hw && px < x+hw && pz > z-hd && pz < z+hd) return y;
+    return null;
+  });
+  return { x, y, z, w, d };
+}
+
+// ---- eğimli rampa platformu (görsel 2'deki eğik yol) ----
+function addRampPlatform(x, y, z, angleDeg, len, rise, w) {
   const ang = angleDeg * Math.PI/180;
   const dir = new THREE.Vector3(Math.sin(ang), 0, Math.cos(ang));
-  const slope = Math.atan2(h, len);
-  const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, 0.3, len/Math.cos(slope)), mat || earthMat);
-  mesh.position.set(x, h/2, z);
-  mesh.rotation.y = ang; mesh.rotation.x = -slope; // +Z (dir) ucu yüksekte
+  const slope = Math.atan2(rise, len);
+  // kutunun ÜST yüzü yürüme yüzeyi olsun: merkez, yüzeyin 0.4 altında
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, 0.8, len/Math.cos(slope)),
+    (platIndex++ % 2 === 0) ? platMatA : platMatB);
+  mesh.position.set(x, y + rise/2 - 0.4, z);
+  mesh.rotation.order = 'YXZ';   // önce yaw, sonra kendi ekseninde eğim
+  mesh.rotation.y = ang;
+  mesh.rotation.x = -slope;
   mesh.castShadow = true; mesh.receiveShadow = true;
   scene.add(mesh);
   [-w/2, w/2].forEach(off => {
-    const strip = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.36, len/Math.cos(slope)), stoneDark);
-    strip.position.set(x, h/2, z);
+    const strip = new THREE.Mesh(new THREE.BoxGeometry(0.25, 0.5, len/Math.cos(slope)), edgeMat);
+    strip.position.set(x, y + rise/2 - 0.35, z);
+    strip.rotation.order = 'YXZ';
     strip.rotation.y = ang; strip.rotation.x = -slope;
     strip.translateX(off);
     scene.add(strip);
   });
-  const halfW = w/2;
-  heightFields.push((px, pz) => {
+  const hw = w/2;
+  platforms.push((px, pz) => {
     const dx = px-x, dz = pz-z;
-    if (dx*dx+dz*dz > (len+6)**2) return 0;
     const along = dx*dir.x + dz*dir.z;
     const side  = dx*(-dir.z) + dz*(dir.x);
-    if (Math.abs(side) < halfW && along > -len/2 && along < len/2)
-      return ((along + len/2) / len) * h;
-    return 0;
+    if (Math.abs(side) < hw && along > -len/2 && along < len/2)
+      return y + ((along + len/2)/len) * rise;
+    return null;
   });
-  clearZones.push({ x: x + dir.x*(len/2 + h*3), z: z + dir.z*(len/2 + h*3), r: len + h*3 });
+  return { endX: x + dir.x*(len/2), endZ: z + dir.z*(len/2), endY: y + rise, dir };
 }
 
-// ---- Taş piramit / toprak tepe ----
-function addMound(x, z, R, H, mat, segments) {
-  const geo = roughen(new THREE.ConeGeometry(R, H, segments || 4, 3), R*0.06);
-  const mesh = new THREE.Mesh(geo, mat || stoneMat);
-  mesh.position.set(x, H/2 - 0.02, z);
-  mesh.rotation.y = Math.random()*Math.PI;
+// ---- hareketli platform (yatay gidip gelir) ----
+const movers = [];
+function addMovingPlatform(x, y, z, w, d, axis, amp, speed) {
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, 1.2, d),
+    new THREE.MeshLambertMaterial({ color:0xffd166 }));
+  mesh.position.set(x, y-0.6, z);
   mesh.castShadow = true; mesh.receiveShadow = true;
   scene.add(mesh);
-  heightFields.push((px, pz) => {
-    const dx = px-x, dz = pz-z;
-    const r = Math.sqrt(dx*dx+dz*dz);
-    if (r > R) return 0;
-    return H * (1 - r/R);
+  const state = { x, y, z, w, d, axis, amp, speed, base:{x,z}, mesh };
+  movers.push(state);
+  const hw = w/2, hd = d/2;
+  platforms.push((px, pz) => {
+    if (px > state.x-hw && px < state.x+hw && pz > state.z-hd && pz < state.z+hd) return state.y;
+    return null;
   });
-  clearZones.push({ x, z, r: R + 8 });
+  return state;
 }
 
-// ---- Toprak tümsek dizisi ----
-function addBumps(x, z, angleDeg, count, gap, R, H) {
-  const ang = angleDeg * Math.PI/180;
-  const dir = new THREE.Vector3(Math.sin(ang), 0, Math.cos(ang));
-  for (let i=0;i<count;i++){
-    const bx = x + dir.x*gap*i, bz = z + dir.z*gap*i;
-    const geo = roughen(new THREE.SphereGeometry(R, 10, 6, 0, Math.PI*2, 0, Math.PI/2), R*0.05);
-    const mesh = new THREE.Mesh(geo, earthDark);
-    mesh.scale.y = H/R;
-    mesh.position.set(bx, 0, bz);
-    mesh.castShadow = true; mesh.receiveShadow = true;
-    scene.add(mesh);
-    heightFields.push((px, pz) => {
-      const dx = px-bx, dz = pz-bz;
-      const r2 = dx*dx+dz*dz;
-      if (r2 > R*R) return 0;
-      return H * Math.sqrt(1 - r2/(R*R));
-    });
-  }
-  clearZones.push({ x: x + dir.x*gap*count/2, z: z + dir.z*gap*count/2, r: gap*count/2 + 10 });
+// ---- kontrol noktası bayrağı ----
+function addCheckpoint(x, y, z) {
+  const idx = checkpoints.length;
+  const pole = new THREE.Mesh(new THREE.CylinderGeometry(0.12,0.12,4,8),
+    new THREE.MeshLambertMaterial({ color:0xdddddd }));
+  pole.position.set(x, y+2, z); pole.castShadow = true;
+  const flag = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.0),
+    new THREE.MeshLambertMaterial({ color:0x37e884, side:THREE.DoubleSide }));
+  flag.position.set(x+0.8, y+3.3, z);
+  const g = new THREE.Group(); g.add(pole, flag); scene.add(g);
+  checkpoints.push({ x, y, z, r:3.2, idx, flag, reached:false });
 }
 
-// ---- Yükseltilmiş taş köprü (DÜZELTİLMİŞ uç rampaları) ----
-function addBridge(x, z, angleDeg, len, H, w, rampLen) {
-  const ang = angleDeg * Math.PI/180;
-  const dir = new THREE.Vector3(Math.sin(ang), 0, Math.cos(ang));
-  const flatLen = len - rampLen*2;
-  const plat = new THREE.Mesh(new THREE.BoxGeometry(w, 1.0, flatLen), stoneMat);
-  plat.position.set(x, H - 0.5, z);
-  plat.rotation.y = ang;
-  plat.castShadow = true; plat.receiveShadow = true;
-  scene.add(plat);
-  const nLegs = Math.max(2, Math.floor(flatLen/8));
-  for (let i=0;i<nLegs;i++){
-    const t = (i/(nLegs-1) - 0.5) * (flatLen - 3);
-    const leg = new THREE.Mesh(roughen(new THREE.BoxGeometry(1.4, H, 1.4), 0.1), stoneDark);
-    leg.position.set(x + dir.x*t, H/2 - 0.5, z + dir.z*t);
-    leg.castShadow = true;
-    scene.add(leg);
-  }
-  const slope = Math.atan2(H, rampLen);
-  [-1, 1].forEach(s => {
-    const off = flatLen/2 + rampLen/2;
-    const rp = new THREE.Mesh(new THREE.BoxGeometry(w, 0.3, rampLen/Math.cos(slope)), earthMat);
-    rp.position.set(x + dir.x*off*s, H/2, z + dir.z*off*s);
-    rp.rotation.y = ang;
-    rp.rotation.x = s * slope;   // dıştaki uç alçakta, köprüye doğru tırmanır
-    rp.castShadow = true; rp.receiveShadow = true;
-    scene.add(rp);
-  });
-  const halfW = w/2;
-  heightFields.push((px, pz) => {
-    const dx = px-x, dz = pz-z;
-    if (dx*dx+dz*dz > (len/2+8)**2) return 0;
-    const along = dx*dir.x + dz*dir.z;
-    const side  = dx*(-dir.z) + dz*(dir.x);
-    if (Math.abs(side) > halfW) return 0;
-    const a = Math.abs(along);
-    if (a <= flatLen/2) return H;
-    if (a <= len/2) return H * (1 - (a - flatLen/2)/rampLen);
-    return 0;
-  });
-  clearZones.push({ x, z, r: len/2 + 8 });
-}
+// ================= AŞAMALI PARKUR =================
+// Başlangıç adası
+addPlatform(0, 0, 0, 12, 12);
+addCheckpoint(0, 0, 4);
 
-// ---- Taş kemer ----
-function addArch(x, z, angleDeg, w, H) {
-  const ang = angleDeg * Math.PI/180;
-  const g = new THREE.Group();
-  const pillarG = roughen(new THREE.BoxGeometry(1.8, H, 1.8), 0.12);
-  const p1 = new THREE.Mesh(pillarG, stoneMat);
-  const p2 = new THREE.Mesh(pillarG.clone(), stoneMat);
-  p1.position.set(-w/2, H/2, 0); p2.position.set(w/2, H/2, 0);
-  const lintel = new THREE.Mesh(roughen(new THREE.BoxGeometry(w + 2.6, 1.6, 2.2), 0.1), stoneDark);
-  lintel.position.set(0, H + 0.8, 0);
-  const moss = new THREE.Mesh(new THREE.BoxGeometry(w + 2.0, 0.25, 1.8), mossMat);
-  moss.position.set(0, H + 1.7, 0);
-  g.add(p1, p2, lintel, moss);
-  g.position.set(x, 0, z);
-  g.rotation.y = ang;
-  g.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
-  scene.add(g);
-  clearZones.push({ x, z, r: w + 6 });
+// --- AŞAMA 1: düz zıplama taşları (görsel 1 gibi) ---
+let px = 0, pz = 8, py = 0;
+for (let i=0;i<6;i++){
+  pz += 6 + i*0.4;
+  addPlatform(px, py, pz, 4, 4);
 }
+pz += 7;
+addPlatform(px, py, pz, 10, 10);
+addCheckpoint(px, py, pz);
+const s1 = { x:px, z:pz, y:py };
 
-// ---- Taş halka ----
-function addRing(x, z, angleDeg, R, y) {
-  const ring = new THREE.Mesh(
-    roughen(new THREE.TorusGeometry(R, 0.9, 10, 24), 0.15),
-    stoneMat
-  );
-  ring.position.set(x, y, z);
-  ring.rotation.y = angleDeg * Math.PI/180;
-  ring.castShadow = true;
-  scene.add(ring);
-  for (let i=0;i<8;i++){
-    const a = i/8*Math.PI*2;
-    const s = new THREE.Mesh(new THREE.SphereGeometry(0.22, 6, 6),
-      new THREE.MeshBasicMaterial({ color:0xbfd8ff }));
-    s.position.set(
-      x + Math.cos(angleDeg*Math.PI/180 + Math.PI/2)*Math.cos(a)*(R-1.2),
-      y + Math.sin(a)*(R-1.2),
-      z + Math.sin(angleDeg*Math.PI/180 + Math.PI/2)*Math.cos(a)*(R-1.2)
-    );
-    scene.add(s);
-  }
-  clearZones.push({ x, z, r: R + 8 });
+// --- AŞAMA 2: yükselen merdiven + hareketli platformlar ---
+py = s1.y; pz = s1.z;
+for (let i=0;i<5;i++){
+  pz += 6; py += 0.9;   // zıplanabilir basamak yüksekliği
+  addPlatform(px, py, pz, 4.5, 4.5);
 }
+// iki hareketli platform (yana kayan)
+pz += 8;
+addMovingPlatform(px, py, pz, 4, 4, 'x', 7, 0.7);
+pz += 8;
+addMovingPlatform(px, py, pz, 4, 4, 'x', 7, -0.9);
+pz += 8;
+const s2 = addPlatform(px, py, pz, 10, 10);
+addCheckpoint(px, py, pz);
 
-// ---------- PARKUR YERLEŞİMİ (insan ölçeğine göre biraz küçültüldü) ----------
-addRamp(  22,  -20,   0, 7, 1.6, 5);
-addRamp( -28,   32,  90, 7, 1.8, 5);
-addBumps( 45,  38,  35, 5, 6, 3.5, 0.9);
-addBumps(-58, -42, 250, 6, 6, 3.5, 1.0);
-addMound(  85,  -50, 14, 6, stoneMat, 4);
-addMound(-100,   68, 17, 7.5, stoneMat, 4);
-addMound(   8,  110, 11, 4.5, earthMat, 5);
-addRamp( 110,   26, 300, 10, 2.8, 6);
-addRamp( -50,  100, 160, 10, 3.0, 6);
-addBridge(-125,  -34,  20, 40, 3.5, 6, 9);
-addBridge(  50, -120, 285, 48, 4.5, 6, 11);
-addArch( -18,  -58,  10, 7, 4);
-addArch( 125,   95, 240, 8, 4.5);
-addRamp(-170, 128, 135, 15, 4.5, 8);
-(function ringAfterRamp(){
-  const ang = 135*Math.PI/180;
-  const d = new THREE.Vector3(Math.sin(ang),0,Math.cos(ang));
-  addRing(-170 + d.x*24, 128 + d.z*24, 135, 4.5, 6);
-})();
-addRamp( 185, -170, 320, 22, 7.5, 10);
+// --- AŞAMA 3: dönen köşe + eğik rampa (görsel 2 gibi) ---
+// sağa 90° kıvrılan platformlar
+let cx = px + 8, cz = pz, cy = py;
+addPlatform(cx, cy, cz, 6, 6);
+for (let i=0;i<4;i++){
+  cx += 7;
+  addPlatform(cx, cy, cz, 4.5, 4.5);
+}
+// aşağı inen büyük eğik rampa
+cx += 6;
+const ramp = addRampPlatform(cx, cy, cz, 90, 26, -8, 7);
+// rampanın altında geniş iniş adası
+const landX = ramp.endX, landZ = ramp.endZ, landY = ramp.endY;
+addPlatform(landX + 4, landY, landZ, 12, 12);
+addCheckpoint(landX + 4, landY, landZ);
 
-// ---------- Koniler ----------
-const cones = [];
-function addCone(x, z) {
-  const g = new THREE.Group();
-  const body = new THREE.Mesh(new THREE.ConeGeometry(0.35, 0.9, 10),
-    new THREE.MeshPhongMaterial({ color:0xff6a1a, emissive:0x331200 }));
-  body.position.y = 0.45;
-  const stripe = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.28, 0.14, 10),
-    new THREE.MeshBasicMaterial({ color:0xffffff }));
-  stripe.position.y = 0.5;
-  const base = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.08, 0.7),
-    new THREE.MeshLambertMaterial({ color:0xcc5c20 }));
-  base.position.y = 0.04;
-  g.add(body, stripe, base);
-  g.position.set(x, 0, z);
-  g.castShadow = true;
-  scene.add(g);
-  cones.push({ mesh:g, vel:new THREE.Vector3(), spin:0, hit:false });
+// --- AŞAMA 4: dar köprü + boşluk atlamaları (görsel 2 uçurum hissi) ---
+let bx = landX + 4, bz = landZ, by = landY;
+// dar uzun köprü
+for (let i=0;i<5;i++){
+  bz -= 6;
+  addPlatform(bx, by, bz, 2.4, 5);   // dar
 }
-for (let i=0;i<18;i++) addCone((Math.random()-0.5)*380, (Math.random()-0.5)*380);
+// boşluk atlamaları — birbirinden uzak küçük adalar
+bz -= 10; addPlatform(bx, by, bz, 3.5, 3.5);
+bz -= 11; addPlatform(bx+3, by+0.8, bz, 3.5, 3.5);
+bz -= 11; addPlatform(bx-3, by+1.4, bz, 3.5, 3.5);
+bz -= 12;
+// FİNAL kule adası
+const finalP = addPlatform(bx, by+2.2, bz, 14, 14);
+addCheckpoint(bx, by+2.2, bz);
+// finalde altın kupa
+const CUPY = by + 2.2;
+const cup = new THREE.Group();
+const cupBowl = new THREE.Mesh(new THREE.CylinderGeometry(1.1, 0.5, 1.4, 16),
+  new THREE.MeshPhongMaterial({ color:0xffd700, shininess:140, emissive:0x332200 }));
+cupBowl.position.y = CUPY+1.6;
+const cupStem = new THREE.Mesh(new THREE.CylinderGeometry(0.2,0.2,0.9,10),
+  new THREE.MeshPhongMaterial({ color:0xffd700, shininess:140 }));
+cupStem.position.y = CUPY+0.6;
+const cupBase = new THREE.Mesh(new THREE.CylinderGeometry(0.7,0.7,0.25,14),
+  new THREE.MeshPhongMaterial({ color:0xffd700, shininess:140 }));
+cupBase.position.y = CUPY+0.2;
+cup.add(cupBowl, cupStem, cupBase);
+cup.position.set(bx, 0, bz);
+scene.add(cup);
+window._cup = { x:bx, y:CUPY, z:bz };
 
-// ---------- ÇOK sık orman ----------
-const crownMats = [0x14301c, 0x1a3a20, 0x0f2616, 0x1c4426].map(c => new THREE.MeshLambertMaterial({ color:c }));
-const trunkMat = new THREE.MeshLambertMaterial({ color:0x2e2118 });
-function inClearZone(x, z) {
-  for (const c of clearZones) {
-    const dx = x-c.x, dz = z-c.z;
-    if (dx*dx + dz*dz < c.r*c.r) return true;
-  }
-  return false;
-}
-const treeColliders = [];
-function addTree(x, z) {
-  const h = 4 + Math.random()*10;
-  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.42, h*0.45, 6), trunkMat);
-  trunk.position.set(x, h*0.22, z);
-  const crown = new THREE.Mesh(
-    new THREE.ConeGeometry(1.6 + Math.random()*1.8, h, 7),
-    crownMats[Math.floor(Math.random()*4)]
-  );
-  crown.position.set(x, h*0.45 + h*0.42, z);
-  trunk.castShadow = crown.castShadow = true;
-  scene.add(trunk, crown);
-  treeColliders.push({ x, z, r: 0.9 });
-}
-// 1000+ ağaç: hem genel serpme hem küçük korular
-for (let i=0;i<780;i++){
-  const x = (Math.random()-0.5)*1050;
-  const z = (Math.random()-0.5)*1050;
-  if (Math.abs(x) < 14 && Math.abs(z) < 14) continue;
-  if (inClearZone(x, z)) continue;
-  addTree(x, z);
-}
-for (let k=0;k<22;k++){  // yoğun koru kümeleri
-  const cx = (Math.random()-0.5)*900, cz = (Math.random()-0.5)*900;
-  if (inClearZone(cx, cz)) continue;
-  for (let i=0;i<14;i++){
-    const x = cx + (Math.random()-0.5)*26, z = cz + (Math.random()-0.5)*26;
-    if (Math.abs(x) < 14 && Math.abs(z) < 14) continue;
-    if (inClearZone(x, z)) continue;
-    addTree(x, z);
-  }
-}
-// yerde çalılar
-const bushMat = new THREE.MeshLambertMaterial({ color:0x1b3320 });
-for (let i=0;i<160;i++){
-  const x = (Math.random()-0.5)*900, z = (Math.random()-0.5)*900;
-  if (inClearZone(x, z)) continue;
-  const b = new THREE.Mesh(new THREE.SphereGeometry(0.5+Math.random()*0.7, 7, 5), bushMat);
-  b.position.set(x, 0.3, z);
-  b.scale.y = 0.7;
-  scene.add(b);
-}
+// spawn yüksekliği (karakterler başlangıç adasında dursun)
+window._spawn = { x:0, y:0, z:0 };
 
-// ateş böcekleri
+// fireflies boş bırakılır (bu dünyada yok) ama döngü referansı için var
 const fireflies = [];
-(function makeFireflies(){
-  for (let i=0;i<70;i++){
-    const s = new THREE.Sprite(new THREE.SpriteMaterial({ color:0xc8ff7a, transparent:true, opacity:0.8 }));
-    s.scale.set(0.35,0.35,1);
-    const x = (Math.random()-0.5)*500, z = (Math.random()-0.5)*500;
-    s.position.set(x, 0.8+Math.random()*2.2, z);
-    s.userData = { bx:x, bz:z, ph:Math.random()*Math.PI*2, sp:0.4+Math.random()*0.8 };
-    scene.add(s);
-    fireflies.push(s);
-  }
-})();
+// koniler bu dünyada yok — döngü referansı için boş dizi
+const cones = [];
+
 
 // ---------- İNSAN FİGÜRÜ (ön = +Z) — seçilebilir iki karakter ----------
 const player = new THREE.Group();
@@ -600,82 +491,6 @@ function buildCharacter(key) {
 buildCharacter('boy');   // varsayılan (seçimle değişecek)
 scene.add(player);
 
-// ---------- AT (ön = +Z) ----------
-const horse = new THREE.Group();
-const horseMat = new THREE.MeshLambertMaterial({ color:0x6b4a2f });   // kahverengi
-const horseDark = new THREE.MeshLambertMaterial({ color:0x4a3320 });
-const maneMat = new THREE.MeshLambertMaterial({ color:0x2a1c10 });    // yele/kuyruk
-const hoofMat = new THREE.MeshLambertMaterial({ color:0x1a1410 });
-
-// gövde
-const hBody = new THREE.Mesh(new THREE.BoxGeometry(0.9, 1.0, 2.2), horseMat);
-hBody.position.y = 1.5; hBody.castShadow = true;
-horse.add(hBody);
-// göğüs
-const hChest = new THREE.Mesh(new THREE.BoxGeometry(0.95, 1.05, 0.7), horseMat);
-hChest.position.set(0, 1.55, 0.85); hChest.castShadow = true;
-horse.add(hChest);
-// boyun
-const hNeck = new THREE.Mesh(new THREE.BoxGeometry(0.55, 1.0, 0.6), horseMat);
-hNeck.position.set(0, 2.15, 1.15);
-hNeck.rotation.x = -0.5; hNeck.castShadow = true;
-horse.add(hNeck);
-// kafa
-const hHead = new THREE.Mesh(new THREE.BoxGeometry(0.45, 0.5, 0.95), horseMat);
-hHead.position.set(0, 2.6, 1.6);
-hHead.rotation.x = 0.25; hHead.castShadow = true;
-horse.add(hHead);
-// burun
-const hMuzzle = new THREE.Mesh(new THREE.BoxGeometry(0.38, 0.38, 0.35), horseDark);
-hMuzzle.position.set(0, 2.5, 2.05); hMuzzle.rotation.x = 0.25;
-horse.add(hMuzzle);
-// kulaklar
-[-0.13, 0.13].forEach(x => {
-  const ear = new THREE.Mesh(new THREE.ConeGeometry(0.09, 0.28, 5), horseMat);
-  ear.position.set(x, 2.9, 1.5); ear.rotation.x = 0.1;
-  horse.add(ear);
-});
-// yele (boyun boyunca)
-const hMane = new THREE.Mesh(new THREE.BoxGeometry(0.16, 1.05, 0.62), maneMat);
-hMane.position.set(0, 2.2, 1.05); hMane.rotation.x = -0.5;
-horse.add(hMane);
-// kuyruk
-const hTail = new THREE.Mesh(new THREE.BoxGeometry(0.18, 0.9, 0.28), maneMat);
-hTail.position.set(0, 1.3, -1.15); hTail.rotation.x = 0.5; hTail.castShadow = true;
-horse.add(hTail);
-// eyer
-const hSaddle = new THREE.Mesh(new THREE.BoxGeometry(0.98, 0.22, 0.9), new THREE.MeshLambertMaterial({ color:0x3a2418 }));
-hSaddle.position.set(0, 2.08, 0.1);
-horse.add(hSaddle);
-
-// bacaklar (dörtnala animasyonu için pivotlu)
-function horseLeg(x, z) {
-  const g = new THREE.Group();
-  const upper = new THREE.Mesh(new THREE.BoxGeometry(0.24, 0.85, 0.28), horseMat);
-  upper.position.y = -0.42;
-  const hoof = new THREE.Mesh(new THREE.BoxGeometry(0.26, 0.2, 0.3), hoofMat);
-  hoof.position.y = -0.9;
-  upper.castShadow = true;
-  g.add(upper, hoof);
-  g.position.set(x, 1.0, z);
-  horse.add(g);
-  return g;
-}
-const hLegFL = horseLeg(-0.32,  0.75);
-const hLegFR = horseLeg( 0.32,  0.75);
-const hLegBL = horseLeg(-0.32, -0.7);
-const hLegBR = horseLeg( 0.32, -0.7);
-const horseLegs = [hLegFL, hLegFR, hLegBL, hLegBR];
-
-scene.add(horse);
-
-// at durumu
-const horseState = {
-  pos: new THREE.Vector3(3, 0, 0),   // yanımızda doğar
-  heading: 0, speed: 0, vy: 0, airborne: false, turn: 0,
-  gallopPhase: 0, airStart: 0
-};
-let mounted = false;   // ata binili miyiz?
 
 // ---------- Oyuncu durumu ----------
 const state = {
@@ -685,38 +500,41 @@ const state = {
   airStart: 0, runPhase: 0
 };
 const stats = { bestAir: 0, jumps: 0 };
+// parkur ilerleme durumu
+const prog = { activeCP: 0, startTime: 0, started: false, finished: false };
+function respawnAt(cp) {
+  // en son ulaşılan kontrol noktasında yeniden doğ
+  state.pos.set(cp.x, cp.y, cp.z);
+  state.heading = 0; state.speed = 0; state.vy = 0; state.airborne = false;
+}
 function resetPlayer() {
-  state.pos.set(0, 0, 0);
+  const sp = window._spawn || { x:0, y:0, z:0 };
+  state.pos.set(sp.x, sp.y, sp.z);
   state.heading = 0;
   state.speed = 0; state.vy = 0; state.airborne = false;
-  mounted = false;
-  if (typeof horseState !== 'undefined') {
-    horseState.pos.set(3, 0, 0);
-    horseState.heading = 0; horseState.speed = 0; horseState.vy = 0; horseState.airborne = false;
-    legL.rotation.z = 0; legR.rotation.z = 0;
-  }
+  prog.activeCP = 0; prog.started = false; prog.finished = false;
+  checkpoints.forEach((c,i) => { c.reached = i===0; if (c.flag) c.flag.material.color.set(i===0 ? 0xffd166 : 0x37e884); });
+  document.getElementById('jumps').textContent = '1 / ' + checkpoints.length;
 }
 
 // ---------- Girdi ----------
 const keys = {};
 let jumpQueued = false;
-let mountQueued = false;
 addEventListener('keydown', e => {
   if (e.code==='Space' && !keys['Space']) jumpQueued = true;
-  if (e.code==='KeyE' && !keys['KeyE']) mountQueued = true;
   keys[e.code]=true;
   if(e.code==='KeyR') resetPlayer();
   if(e.code==='KeyC') camMode=(camMode+1)%3;
   if(e.code==='Space' || e.code==='ShiftLeft' || e.code==='ShiftRight') e.preventDefault();
 });
 addEventListener('keyup', e => keys[e.code]=false);
-const bindT = (id, code, isJump, isMount) => {
+const bindT = (id, code, isJump) => {
   const el = document.getElementById(id);
-  el.addEventListener('touchstart', e=>{ e.preventDefault(); keys[code]=true; if(isJump) jumpQueued = true; if(isMount) mountQueued = true; }, {passive:false});
+  el.addEventListener('touchstart', e=>{ e.preventDefault(); keys[code]=true; if(isJump) jumpQueued = true; }, {passive:false});
   el.addEventListener('touchend',   e=>{ e.preventDefault(); keys[code]=false; }, {passive:false});
 };
 bindT('tG','KeyW'); bindT('tB','KeyS'); bindT('tL','KeyA'); bindT('tR','KeyD');
-bindT('tN','ShiftLeft'); bindT('tJ','Space', true); bindT('tE','KeyE', false, true);
+bindT('tN','ShiftLeft'); bindT('tJ','Space', true);
 
 // ---------- Mesaj ----------
 const msgEl = document.getElementById('msg');
@@ -729,24 +547,6 @@ function showMsg(txt) {
 
 // ---------- Kamera ----------
 let camMode = 0;
-// durunca fareyle karakter etrafında dönme
-const orbit = { yaw: Math.PI, pitch: 0.38, wasIdle: false };
-let dragging = false, lastPX = 0, lastPY = 0;
-addEventListener('pointerdown', e => {
-  // arayüz butonlarına basınca sürükleme başlatma
-  if (e.target.closest && (e.target.closest('#touch') || e.target.closest('#charSelect') || e.target.closest('#hud') || e.target.closest('#controls'))) return;
-  dragging = true; lastPX = e.clientX; lastPY = e.clientY;
-});
-addEventListener('pointermove', e => {
-  if (!dragging) return;
-  const dx = e.clientX - lastPX, dy = e.clientY - lastPY;
-  lastPX = e.clientX; lastPY = e.clientY;
-  orbit.yaw   -= dx * 0.006;
-  orbit.pitch += dy * 0.004;
-  orbit.pitch = Math.max(0.06, Math.min(1.25, orbit.pitch));
-});
-addEventListener('pointerup',     () => dragging = false);
-addEventListener('pointercancel', () => dragging = false);
 const camPos = new THREE.Vector3(0, 4, -7);
 
 // ---------- Ana döngü ----------
@@ -765,55 +565,55 @@ function animate() {
   const right = active && (keys['KeyD']||keys['ArrowRight'])? 1 : 0;
   const sprinting = (active && (keys['ShiftLeft']||keys['ShiftRight']) && run) ? true : false; // SINIRSIZ
 
-  // ---- Binme / inme (E) ----
-  if (mountQueued) {
-    mountQueued = false;
-    if (active) {
-      if (!mounted) {
-        // ata yeterince yakınsak bin
-        const dx = state.pos.x - horseState.pos.x, dz = state.pos.z - horseState.pos.z;
-        if (dx*dx + dz*dz < 9) {   // ~3 birim mesafe
-          mounted = true;
-          horseState.heading = state.heading;
-          showMsg('🐎 Ata bindin!');
-        } else {
-          showMsg('Ata yaklaş ve E’ye bas');
-        }
-      } else {
-        // in: atın soluna in
-        mounted = false;
-        const sx = Math.cos(horseState.heading), sz = -Math.sin(horseState.heading);
-        state.pos.set(horseState.pos.x + sx*2.2, 0, horseState.pos.z + sz*2.2);
-        state.heading = horseState.heading;
-        state.speed = 0; state.airborne = false; state.vy = 0;
-        showMsg('İndin');
-      }
+  // ileri/geri hız
+  const MAX_F = sprinting ? 38 : 20;
+  const MAX_R = -8;
+  const ACC = sprinting ? 68 : 44;
+  if (run)  state.speed += ACC * dt;
+  if (back) state.speed -= 16 * dt;
+  state.speed -= state.speed * 4.5 * dt;
+  state.speed = Math.max(MAX_R, Math.min(MAX_F, state.speed));
+  if (!run && !back && Math.abs(state.speed) < 0.1) state.speed = 0;
+
+  const turnTarget = (left - right);
+  state.turn += (turnTarget - state.turn) * Math.min(1, dt*10);
+  const turnRate = state.airborne ? 1.2 : 3.0;
+  state.heading += state.turn * turnRate * dt;
+
+  // ---- hareketli platformlar (fizikten ÖNCE: üstündekini birlikte taşır) ----
+  for (const m of movers) {
+    const off = Math.sin(elapsed * m.speed) * m.amp;
+    const nx = (m.axis === 'x') ? m.base.x + off : m.x;
+    const nz = (m.axis === 'z') ? m.base.z + off : m.z;
+    const ddx = nx - m.x, ddz = nz - m.z;
+    // platformun üstünde duran yaya/at platformla birlikte kayar
+    const hw = m.w/2 + 0.3, hd = m.d/2 + 0.3;
+    if (!state.airborne &&
+        state.pos.x > m.x-hw && state.pos.x < m.x+hw &&
+        state.pos.z > m.z-hd && state.pos.z < m.z+hd &&
+        Math.abs(state.pos.y - m.y) < 0.6) {
+      state.pos.x += ddx; state.pos.z += ddz;
     }
+    m.x = nx; m.z = nz;
+    m.mesh.position.set(m.x, m.y - 0.6, m.z);
   }
 
-  // ileri/geri hız — binili değilken oyuncu, biniliyken at
-  const MAX_F = sprinting ? 19 : 10;
-  const MAX_R = -5;
-  const ACC = sprinting ? 34 : 22;
-  if (!mounted) {
-    if (run)  state.speed += ACC * dt;
-    if (back) state.speed -= 16 * dt;
-    state.speed -= state.speed * 4.5 * dt;
-    state.speed = Math.max(MAX_R, Math.min(MAX_F, state.speed));
-    if (!run && !back && Math.abs(state.speed) < 0.1) state.speed = 0;
-
-    const turnTarget = (left - right);
-    state.turn += (turnTarget - state.turn) * Math.min(1, dt*10);
-    const turnRate = state.airborne ? 1.2 : 3.0;
-    state.heading += state.turn * turnRate * dt;
-  }
-
-  // ============ YAYA (binili değilken) ============
-  if (!mounted) {
-    // konum
+  // ============ YAYA ============
+  {
+    // konum (duvar kontrolü ile: yandan platforma girilmez)
+    const STEP = 1.1;   // adımla çıkılabilir maks. yükseklik farkı
     fwd.set(Math.sin(state.heading), 0, Math.cos(state.heading));
+    const oldX = state.pos.x, oldZ = state.pos.z;
     state.pos.x += fwd.x * state.speed * dt;
     state.pos.z += fwd.z * state.speed * dt;
+    {
+      const ghNew = groundHeight(state.pos.x, state.pos.z);
+      if (ghNew > VOID + 1 && ghNew > state.pos.y + STEP) {
+        // hedef zemin, karakterin çok üstünde → bu bir DUVAR: hareketi geri al
+        state.pos.x = oldX; state.pos.z = oldZ;
+        state.speed *= 0.2;
+      }
+    }
 
     // ağaç çarpışmaları
     for (const t of treeColliders) {
@@ -834,39 +634,39 @@ function animate() {
       if (active && !state.airborne) {
         state.airborne = true;
         state.airStart = elapsed;
-        state.vy = 5.8 + Math.abs(state.speed)*0.1;
+        state.vy = 6.8 + Math.abs(state.speed)*0.1;
       }
     }
 
-    // dikey
+    // dikey (platform tabanlı — boşlukta serbest düşüş)
     const gh = groundHeight(state.pos.x, state.pos.z);
-    if (state.airborne) {
+    const onPlatform = gh > VOID + 1;
+    if (state.airborne || !onPlatform) {
+      state.airborne = true;
+      const prevY = state.pos.y;
       state.vy -= 20 * dt;
       state.pos.y += state.vy * dt;
-      if (state.pos.y <= gh && state.vy <= 0) {
+      // iniş: yalnızca ÜSTTEN düşerken (önceki kare zeminin üstündeyse)
+      if (onPlatform && state.vy <= 0 && state.pos.y <= gh && prevY >= gh - 0.05) {
         state.pos.y = gh; state.airborne = false; state.vy = 0;
-        const airTime = elapsed - state.airStart;
-        if (airTime > 0.35) {
-          stats.jumps++;
-          if (airTime > stats.bestAir) {
-            stats.bestAir = airTime;
-            showMsg('✈️ Yeni rekor uçuş: ' + airTime.toFixed(1) + ' sn!');
-          }
-          document.getElementById('jumps').textContent = stats.jumps;
-          document.getElementById('air').textContent = stats.bestAir.toFixed(1) + ' sn';
-        }
       }
     } else {
-      if (gh < state.pos.y - 0.3) {
-        state.airborne = true;
-        state.airStart = elapsed;
-        state.vy = Math.max(1.5, state.speed * 0.28);
-      } else {
+      // yerde: sadece küçük yükseklik farklarını takip et (basamak); duvar zaten engellendi
+      if (Math.abs(gh - state.pos.y) <= STEP + 0.2) {
         state.pos.y += (gh - state.pos.y) * Math.min(1, dt*14);
+      } else if (gh < state.pos.y) {
+        // altımızdaki zemin çok aşağıda → kenardan çıktık, düşmeye başla
+        state.airborne = true;
+        state.vy = 0;
       }
     }
+    // boşluğa düştüyse kontrol noktasında yeniden doğ
+    if (state.pos.y < SEA_Y + 3) {
+      respawnAt(checkpoints[prog.activeCP]);
+      showMsg('💦 Düştün! Kontrol noktasına dönüldü');
+    }
 
-    const B = 720;
+    const B = 900;
     state.pos.x = Math.max(-B, Math.min(B, state.pos.x));
     state.pos.z = Math.max(-B, Math.min(B, state.pos.z));
 
@@ -882,8 +682,8 @@ function animate() {
       legL.rotation.x += (0.7 - legL.rotation.x) * Math.min(1, dt*8);
       legR.rotation.x += (-0.3 - legR.rotation.x) * Math.min(1, dt*8);
     } else if (moving) {
-      state.runPhase += Math.abs(state.speed) * dt * 1.7;
-      const sw = Math.min(1.0, Math.abs(state.speed)/9) * 0.95;
+      state.runPhase += Math.abs(state.speed) * dt * 1.0;
+      const sw = Math.min(1.0, Math.abs(state.speed)/16) * 0.95;
       const s = Math.sin(state.runPhase);
       legL.rotation.x = s * sw;
       legR.rotation.x = -s * sw;
@@ -896,145 +696,15 @@ function animate() {
     }
   }
 
-  // ============ AT ============
-  {
-    const hFwd = new THREE.Vector3(Math.sin(horseState.heading), 0, Math.cos(horseState.heading));
-    if (mounted) {
-      // at hızlı ama kontrol edilebilir
-      const H_MAX = sprinting ? 38 : 20;
-      const H_ACC = sprinting ? 55 : 32;
-      if (run)  horseState.speed += H_ACC * dt;
-      if (back) horseState.speed -= 30 * dt;
-      horseState.speed -= horseState.speed * 1.6 * dt;
-      horseState.speed = Math.max(-10, Math.min(H_MAX, horseState.speed));
-      if (!run && !back && Math.abs(horseState.speed) < 0.15) horseState.speed = 0;
-
-      const turnTarget = (left - right);
-      horseState.turn += (turnTarget - horseState.turn) * Math.min(1, dt*8);
-      const turnRate = horseState.airborne ? 0.8 : 2.2;
-      horseState.heading += horseState.turn * turnRate * dt;
-
-      // konum
-      horseState.pos.x += hFwd.x * horseState.speed * dt;
-      horseState.pos.z += hFwd.z * horseState.speed * dt;
-
-      // ağaç çarpışmaları (at daha büyük)
-      for (const t of treeColliders) {
-        const dx = horseState.pos.x - t.x, dz = horseState.pos.z - t.z;
-        const d2 = dx*dx + dz*dz;
-        const minR = t.r + 0.7;
-        if (d2 < minR*minR && d2 > 0.001) {
-          const d = Math.sqrt(d2);
-          horseState.pos.x = t.x + dx/d*minR;
-          horseState.pos.z = t.z + dz/d*minR;
-          horseState.speed *= 0.6;
-        }
-      }
-
-      // yüksek ama abartısız zıplama
-      if (jumpQueued) {
-        jumpQueued = false;
-        if (active && !horseState.airborne) {
-          horseState.airborne = true;
-          horseState.airStart = elapsed;
-          horseState.vy = 9.5 + Math.abs(horseState.speed)*0.1;
-        }
-      }
-    } else {
-      // binili değil: at yavaşça durur, jumpQueued'ı yaya kullandı
-      horseState.speed -= horseState.speed * 3 * dt;
-      if (Math.abs(horseState.speed) < 0.05) horseState.speed = 0;
-      horseState.pos.x += hFwd.x * horseState.speed * dt;
-      horseState.pos.z += hFwd.z * horseState.speed * dt;
-    }
-
-    // at dikey fizik (rampalar + zıplama)
-    const hgh = groundHeight(horseState.pos.x, horseState.pos.z);
-    if (horseState.airborne) {
-      horseState.vy -= 18 * dt;
-      horseState.pos.y += horseState.vy * dt;
-      if (horseState.pos.y <= hgh && horseState.vy <= 0) {
-        horseState.pos.y = hgh; horseState.airborne = false; horseState.vy = 0;
-        const airTime = elapsed - horseState.airStart;
-        if (mounted && airTime > 0.4) {
-          stats.jumps++;
-          if (airTime > stats.bestAir) {
-            stats.bestAir = airTime;
-            showMsg('🐎 Muhteşem uçuş: ' + airTime.toFixed(1) + ' sn!');
-          }
-          document.getElementById('jumps').textContent = stats.jumps;
-          document.getElementById('air').textContent = stats.bestAir.toFixed(1) + ' sn';
-        }
-      }
-    } else {
-      if (hgh < horseState.pos.y - 0.3) {
-        horseState.airborne = true;
-        horseState.airStart = elapsed;
-        horseState.vy = Math.max(2, horseState.speed * 0.3);
-      } else {
-        horseState.pos.y += (hgh - horseState.pos.y) * Math.min(1, dt*14);
-      }
-    }
-    const HB = 720;
-    horseState.pos.x = Math.max(-HB, Math.min(HB, horseState.pos.x));
-    horseState.pos.z = Math.max(-HB, Math.min(HB, horseState.pos.z));
-
-    // at yerleşimi
-    horse.position.copy(horseState.pos);
-    horse.rotation.y = horseState.heading;
-    horse.rotation.x = horseState.airborne ? -0.12 : 0;
-
-    // dörtnala bacak animasyonu
-    const hMoving = Math.abs(horseState.speed) > 0.3;
-    if (horseState.airborne) {
-      hLegFL.rotation.x = -0.9; hLegFR.rotation.x = -0.9;
-      hLegBL.rotation.x = 0.9;  hLegBR.rotation.x = 0.9;
-    } else if (hMoving) {
-      horseState.gallopPhase += Math.abs(horseState.speed) * dt * 1.1;
-      const sw = Math.min(1, Math.abs(horseState.speed)/18) * 1.1;
-      const s = Math.sin(horseState.gallopPhase);
-      const s2 = Math.sin(horseState.gallopPhase + Math.PI*0.5);
-      hLegFL.rotation.x = s * sw;   hLegFR.rotation.x = -s * sw;
-      hLegBL.rotation.x = -s2 * sw; hLegBR.rotation.x = s2 * sw;
-      horse.position.y = horseState.pos.y + Math.abs(Math.cos(horseState.gallopPhase)) * 0.12;
-      hTail.rotation.z = Math.sin(horseState.gallopPhase*0.5)*0.15;
-    } else {
-      horseLegs.forEach(l => l.rotation.x += (0 - l.rotation.x) * Math.min(1, dt*6));
-      horseState.gallopPhase = 0;
-    }
-
-    // binili isek oyuncuyu eyere oturt (kalça eyer üstünde)
-    if (mounted) {
-      state.heading = horseState.heading;
-      state.pos.copy(horseState.pos);
-      // eyer lokal (0, 2.19, 0.1) → dünya konumu; oyuncunun kalça pivotu ~0.78'de
-      const sy = 2.19 - 0.78;   // origin ofseti: kalça eyerin üstüne otursun
-      const sOff = 0.1;         // eyer hafif önde
-      player.position.set(
-        horseState.pos.x + Math.sin(horseState.heading)*sOff,
-        horse.position.y + sy,   // atın zıplama salınımını da takip etsin
-        horseState.pos.z + Math.cos(horseState.heading)*sOff
-      );
-      player.rotation.y = horseState.heading;
-      player.rotation.x = horse.rotation.x;   // havada atla birlikte eğilsin
-      // oturuş pozu: uyluklar öne, baldırlar aşağı hissi
-      legL.rotation.x = 1.35; legR.rotation.x = 1.35;
-      legL.rotation.z = 0.3; legR.rotation.z = -0.3;
-      armL.rotation.x = 0.5; armR.rotation.x = 0.5;   // eller dizgin tutar gibi önde
-    } else {
-      legL.rotation.z = 0; legR.rotation.z = 0;
-    }
-  }
-
   if (window._torch) window._torch.intensity = sprinting ? 3.8 : 3.0;
 
-  // koniler (yaya veya at tarafından tekmelenebilir)
-  const kickSpeed = mounted ? Math.abs(horseState.speed) : Math.abs(state.speed);
-  const kickR = mounted ? 2.0 : 1.0;
+  // koniler
+  const kickSpeed = Math.abs(state.speed);
+  const kickR = 1.0;
   for (const cn of cones) {
     if (!cn.hit) {
       const dx = cn.mesh.position.x - state.pos.x, dz = cn.mesh.position.z - state.pos.z;
-      if (dx*dx + dz*dz < kickR && kickSpeed > 1.5 && state.pos.y < (mounted ? 3 : 1)) {
+      if (dx*dx + dz*dz < kickR && kickSpeed > 1.5 && state.pos.y < 1) {
         cn.hit = true;
         cn.vel.set(dx, 1.5, dz).normalize().multiplyScalar(kickSpeed*0.8);
         cn.vel.y = 2.5 + kickSpeed*0.2;
@@ -1053,20 +723,45 @@ function animate() {
     }
   }
 
-  // ateş böcekleri
-  for (const f of fireflies) {
-    const u = f.userData;
-    f.position.x = u.bx + Math.sin(elapsed*u.sp + u.ph)*2.5;
-    f.position.z = u.bz + Math.cos(elapsed*u.sp*0.8 + u.ph)*2.5;
-    f.position.y = 1.2 + Math.sin(elapsed*u.sp*1.3 + u.ph)*0.8;
-    f.material.opacity = 0.3 + 0.5*(0.5 + 0.5*Math.sin(elapsed*2.2 + u.ph*3));
+  // ---- kontrol noktaları ----
+  const activePos = state.pos;
+  if (active) {
+    for (const cp of checkpoints) {
+      if (!cp.reached) {
+        const dx = cp.x - activePos.x, dz = cp.z - activePos.z;
+        if (dx*dx + dz*dz < cp.r*cp.r && Math.abs(activePos.y - cp.y) < 4) {
+          cp.reached = true;
+          if (cp.flag) cp.flag.material.color.set(0xffd166);
+          if (cp.idx > prog.activeCP) prog.activeCP = cp.idx;
+          if (!prog.started) { prog.started = true; prog.startTime = elapsed; }
+          document.getElementById('jumps').textContent = (prog.activeCP+1) + ' / ' + checkpoints.length;
+          if (cp.idx > 0) showMsg('✅ Kontrol noktası ' + (cp.idx+1));
+        }
+      }
+    }
+    // süre
+    if (prog.started && !prog.finished) {
+      document.getElementById('air').textContent = (elapsed - prog.startTime).toFixed(1) + ' sn';
+    }
+    // kupa / bitiş
+    if (window._cup && !prog.finished) {
+      const dx = window._cup.x - activePos.x, dz = window._cup.z - activePos.z;
+      if (dx*dx + dz*dz < 9 && Math.abs(activePos.y - window._cup.y) < 4) {
+        prog.finished = true;
+        const t = (elapsed - prog.startTime).toFixed(1);
+        showMsg('🏆 Parkuru bitirdin! Süre: ' + t + ' sn');
+      }
+    }
   }
+  // kupa döner ve hafif süzülür
+  cup.rotation.y += dt * 1.2;
+  cup.position.y = Math.sin(elapsed*1.5)*0.25;
+
+  // deniz hafif dalgalanma
+  sea.material.opacity = 0.85 + Math.sin(elapsed*0.8)*0.05;
 
   // kamera (insan ölçeği: daha yakın)
   let targetCam;
-  const curSpeed = mounted ? Math.abs(horseState.speed) : Math.abs(state.speed);
-  const curAir = mounted ? horseState.airborne : state.airborne;
-  const idle = active && curSpeed < 0.4 && !curAir;
   if (!active) {
     // seçim ekranı: karakterin önünden hafif dönen vitrin açısı
     player.rotation.y = Math.sin(elapsed*0.6)*0.5;
@@ -1075,32 +770,10 @@ function animate() {
     camPos.lerp(targetCam, Math.min(1, dt*3));
     camera.position.copy(camPos);
     camera.lookAt(0, 1.4, 0);
-  } else if (idle) {
-    // DURUNCA: fare ile karakterin etrafında serbest dönüş
-    if (!orbit.wasIdle) {
-      // takip kamerasından devral: mevcut açıdan başla
-      const dx = camPos.x - state.pos.x, dz = camPos.z - state.pos.z;
-      orbit.yaw = Math.atan2(dx, dz);
-      orbit.wasIdle = true;
-    }
-    const d = mounted ? 8 : 5.5;
-    const cp = Math.cos(orbit.pitch), sp = Math.sin(orbit.pitch);
-    targetCam = new THREE.Vector3(
-      state.pos.x + Math.sin(orbit.yaw)*cp*d,
-      state.pos.y + sp*d + 1.2,
-      state.pos.z + Math.cos(orbit.yaw)*cp*d
-    );
-    camPos.lerp(targetCam, Math.min(1, dt*8));
-    camera.position.copy(camPos);
-    camera.lookAt(state.pos.x, state.pos.y + (mounted ? 1.8 : 1.2), state.pos.z);
   } else {
-    orbit.wasIdle = false;
-    // biniliyken kamera yönü at heading'ine göre
-    const cf = mounted
-      ? new THREE.Vector3(Math.sin(horseState.heading), 0, Math.cos(horseState.heading))
-      : fwd;
-    const dist = mounted ? 9 : 6;
-    const high = mounted ? 4.6 : 3.2;
+    const cf = fwd;
+    const dist = 6;
+    const high = 3.2;
     if (camMode === 0) {
       targetCam = new THREE.Vector3(state.pos.x - cf.x*dist, state.pos.y + high, state.pos.z - cf.z*dist);
     } else if (camMode === 1) {
@@ -1108,21 +781,20 @@ function animate() {
     } else {
       targetCam = new THREE.Vector3(state.pos.x, state.pos.y + 42, state.pos.z + 0.1);
     }
-    camPos.lerp(targetCam, Math.min(1, dt * (mounted ? 5 : 4)));
+    camPos.lerp(targetCam, Math.min(1, dt * 4));
     camera.position.copy(camPos);
-    camera.lookAt(state.pos.x, state.pos.y + (mounted ? 2.2 : 1.5), state.pos.z);
+    camera.lookAt(state.pos.x, state.pos.y + 1.5, state.pos.z);
   }
 
-  const targetFov = mounted ? (sprinting ? 84 : 76) : (sprinting ? 78 : 70);
+  const targetFov = sprinting ? 78 : 70;
   camera.fov += (targetFov - camera.fov) * Math.min(1, dt*5);
   camera.updateProjectionMatrix();
 
-  moonLight.position.set(state.pos.x - 120, 160, state.pos.z - 80);
+  moonLight.position.set(state.pos.x - 120, 190, state.pos.z - 60);
   moonLight.target.position.copy(state.pos);
   moonLight.target.updateMatrixWorld();
 
-  const shownSpeed = mounted ? Math.abs(horseState.speed) : Math.abs(state.speed);
-  document.getElementById('spd').textContent = Math.round(shownSpeed * 3.6);
+  document.getElementById('spd').textContent = Math.round(Math.abs(state.speed) * 3.6);
 
   renderer.render(scene, camera);
 }
