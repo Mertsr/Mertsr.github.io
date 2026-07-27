@@ -1,12 +1,863 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="tr">
 <head>
-  <meta charset="UTF-8">
-  <meta http-equiv="refresh" content="0; url=chester0/">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>index</title>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Gece Ormanı — Koşucu</title>
+<style>
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { overflow:hidden; font-family:'Segoe UI', system-ui, sans-serif; background:#05070d; }
+  #hud {
+    position:fixed; top:16px; left:16px; color:#e8eef7; z-index:10;
+    background:rgba(8,12,22,.6); backdrop-filter:blur(8px);
+    border:1px solid rgba(150,180,255,.25); border-radius:12px;
+    padding:14px 18px; min-width:170px; user-select:none;
+  }
+  #hud .speed { font-size:34px; font-weight:700; letter-spacing:1px; }
+  #hud .speed span { font-size:14px; font-weight:400; opacity:.7; }
+  #hud .row { font-size:13px; margin-top:6px; opacity:.9; display:flex; justify-content:space-between; gap:16px; }
+  #hud .row b { font-variant-numeric:tabular-nums; }
+  #controls {
+    position:fixed; bottom:16px; left:16px; color:#aebdd2; z-index:10;
+    background:rgba(8,12,22,.55); backdrop-filter:blur(8px);
+    border:1px solid rgba(150,180,255,.18); border-radius:10px;
+    padding:10px 14px; font-size:12px; line-height:1.7; user-select:none;
+  }
+  #controls kbd {
+    background:#1c2635; border:1px solid #33455e; border-radius:4px;
+    padding:1px 6px; font-size:11px; color:#dfe9f5;
+  }
+  #msg {
+    position:fixed; top:20px; left:50%; transform:translateX(-50%);
+    color:#ffd66b; font-size:22px; font-weight:700; z-index:10;
+    text-shadow:0 2px 8px rgba(0,0,0,.8); opacity:0; transition:opacity .4s;
+    pointer-events:none; text-align:center;
+  }
+  #msg.show { opacity:1; }
+  #touch { position:fixed; inset:0; z-index:9; display:none; pointer-events:none; }
+  .tbtn {
+    position:absolute; width:64px; height:64px; border-radius:50%;
+    background:rgba(150,180,255,.12); border:2px solid rgba(150,180,255,.4);
+    color:#e8eef7; font-size:22px; display:flex; align-items:center; justify-content:center;
+    pointer-events:auto; user-select:none; -webkit-user-select:none; touch-action:none;
+  }
+  .tbtn:active { background:rgba(150,180,255,.35); }
+  #tL{ left:20px; bottom:90px; } #tR{ left:110px; bottom:90px; }
+  #tG{ right:20px; bottom:150px; } #tB{ right:20px; bottom:60px; }
+  #tN{ right:110px; bottom:150px; font-size:12px; font-weight:700; }
+  #tJ{ right:110px; bottom:60px; font-size:20px; }
+  @media (pointer:coarse) { #touch{display:block;} #controls{display:none;} }
+
+  /* Karakter seçim ekranı */
+  #charSelect {
+    position:fixed; inset:0; z-index:50;
+    background:radial-gradient(circle at 30% 20%, #101a2e, #05070d 70%);
+    display:flex; flex-direction:column; align-items:center; justify-content:center;
+    gap:28px; color:#e8eef7;
+  }
+  #charSelect h1 {
+    font-size:clamp(26px,5vw,44px); font-weight:800; letter-spacing:1px;
+    text-shadow:0 4px 24px rgba(120,160,255,.4);
+  }
+  #charSelect .cards { display:flex; gap:26px; flex-wrap:wrap; justify-content:center; }
+  #charSelect .card {
+    width:180px; padding:22px 18px 18px; border-radius:18px; cursor:pointer;
+    background:rgba(20,28,44,.75); border:2px solid rgba(150,180,255,.22);
+    display:flex; flex-direction:column; align-items:center; gap:14px;
+    transition:transform .15s, border-color .15s, box-shadow .15s;
+  }
+  #charSelect .card:hover, #charSelect .card:focus-visible {
+    transform:translateY(-6px); border-color:#7aa8ff;
+    box-shadow:0 12px 40px rgba(90,140,255,.35); outline:none;
+  }
+  #charSelect .cname { font-size:16px; font-weight:600; }
+  /* basit avatar önizleme (CSS bloklar) */
+  .avatar { position:relative; width:70px; height:120px; }
+  .avatar .hair, .avatar .face, .avatar .body { position:absolute; left:50%; transform:translateX(-50%); border-radius:6px; }
+  .avatar .face { top:22px; width:34px; height:34px; background:#e8b48c; z-index:2; }
+  .avatar .body { top:58px; width:46px; height:56px; z-index:1; }
+  .boy .hair { top:10px; width:40px; height:20px; background:#3a2a1a; z-index:3; }
+  .boy .body { background:#3a6ea5; }
+  .girl .hair { top:12px; width:44px; height:70px; background:#6b3d1f; z-index:1; border-radius:8px 8px 12px 12px; }
+  .girl .body { background:#ff5fa8; }
+  #charSelect .hint { font-size:13px; opacity:.65; }
+</style>
 </head>
 <body>
-  <p>Redirecting... <a href="chester0/">Go to the Chester home page</a>.</p>
+<div id="charSelect">
+  <h1>Karakterini seç</h1>
+  <div class="cards">
+    <button class="card" data-char="boy">
+      <div class="avatar boy"><span class="hair"></span><span class="face"></span><span class="body"></span></div>
+      <div class="cname">Mavi Kazak</div>
+    </button>
+    <button class="card" data-char="girl">
+      <div class="avatar girl"><span class="hair"></span><span class="face"></span><span class="body"></span></div>
+      <div class="cname">Pembe Kazak</div>
+    </button>
+  </div>
+  <p class="hint">Ormanda gece koşusu · Shift ile sprint · Boşluk ile zıpla</p>
+</div>
+<div id="hud">
+  <div class="speed"><span id="spd">0</span><span> km/s</span></div>
+  <div class="row"><span>En uzun uçuş</span><b id="air">0.0 sn</b></div>
+  <div class="row"><span>Zıplama</span><b id="jumps">0</b></div>
+</div>
+<div id="controls">
+  <kbd>W</kbd>/<kbd>↑</kbd> koş &nbsp; <kbd>S</kbd>/<kbd>↓</kbd> geri &nbsp; <kbd>A</kbd><kbd>D</kbd>/<kbd>←</kbd><kbd>→</kbd> dön<br>
+  <kbd>Boşluk</kbd> zıpla &nbsp; <kbd>Shift</kbd> sprint (sınırsız) &nbsp; <kbd>R</kbd> sıfırla &nbsp; <kbd>C</kbd> kamera
+</div>
+<div id="msg"></div>
+<div id="touch">
+  <div class="tbtn" id="tL">◀</div><div class="tbtn" id="tR">▶</div>
+  <div class="tbtn" id="tG">▲</div><div class="tbtn" id="tB">▼</div>
+  <div class="tbtn" id="tN">DAŞ</div>
+  <div class="tbtn" id="tJ">⤒</div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+<script>
+// ---------- Sahne (gece ormanı) ----------
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x070b16);
+scene.fog = new THREE.Fog(0x070b16, 40, 220);
+
+const camera = new THREE.PerspectiveCamera(70, innerWidth/innerHeight, 0.1, 1500);
+const renderer = new THREE.WebGLRenderer({ antialias:true });
+renderer.setSize(innerWidth, innerHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+document.body.appendChild(renderer.domElement);
+
+const moonLight = new THREE.DirectionalLight(0x9db8e8, 0.45);
+moonLight.position.set(-120, 160, -80);
+moonLight.castShadow = true;
+moonLight.shadow.mapSize.set(2048, 2048);
+moonLight.shadow.camera.left = -120; moonLight.shadow.camera.right = 120;
+moonLight.shadow.camera.top = 120; moonLight.shadow.camera.bottom = -120;
+moonLight.shadow.camera.far = 500;
+scene.add(moonLight);
+scene.add(new THREE.AmbientLight(0x24304a, 0.75));
+
+// ---------- Dolunay + hale + yıldızlar ----------
+const moon = new THREE.Mesh(
+  new THREE.SphereGeometry(28, 32, 32),
+  new THREE.MeshBasicMaterial({ color:0xf2f0dc, fog:false })
+);
+moon.position.set(-380, 320, -450);
+scene.add(moon);
+const haloTex = (() => {
+  const c = document.createElement('canvas'); c.width = c.height = 256;
+  const g = c.getContext('2d');
+  const grad = g.createRadialGradient(128,128,30,128,128,128);
+  grad.addColorStop(0, 'rgba(240,238,215,0.55)');
+  grad.addColorStop(0.4, 'rgba(200,210,240,0.15)');
+  grad.addColorStop(1, 'rgba(200,210,240,0)');
+  g.fillStyle = grad; g.fillRect(0,0,256,256);
+  return new THREE.CanvasTexture(c);
+})();
+const halo = new THREE.Sprite(new THREE.SpriteMaterial({ map:haloTex, fog:false, transparent:true }));
+halo.scale.set(220,220,1);
+halo.position.copy(moon.position);
+scene.add(halo);
+(function stars(){
+  const n = 800, pos = new Float32Array(n*3);
+  for (let i=0;i<n;i++){
+    const a = Math.random()*Math.PI*2, e = Math.random()*Math.PI*0.45 + 0.08, r = 900;
+    pos[i*3]   = Math.cos(a)*Math.cos(e)*r;
+    pos[i*3+1] = Math.sin(e)*r;
+    pos[i*3+2] = Math.sin(a)*Math.cos(e)*r;
+  }
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(pos,3));
+  scene.add(new THREE.Points(g, new THREE.PointsMaterial({ color:0xdfe8ff, size:1.6, fog:false, sizeAttenuation:false })));
+})();
+
+// ---------- Zemin ----------
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(1600, 1600),
+  new THREE.MeshLambertMaterial({ color:0x18241a })
+);
+ground.rotation.x = -Math.PI/2;
+ground.receiveShadow = true;
+scene.add(ground);
+const dirtMat = new THREE.MeshLambertMaterial({ color:0x241c12 });
+for (let i=0;i<26;i++){
+  const m = new THREE.Mesh(new THREE.CircleGeometry(6+Math.random()*14, 18), dirtMat);
+  m.rotation.x = -Math.PI/2;
+  m.position.set((Math.random()-0.5)*800, 0.01, (Math.random()-0.5)*800);
+  scene.add(m);
+}
+
+// ---------- Malzemeler ----------
+const stoneMat = new THREE.MeshLambertMaterial({ color:0x5a5f66 });
+const stoneDark = new THREE.MeshLambertMaterial({ color:0x44484f });
+const earthMat = new THREE.MeshLambertMaterial({ color:0x5c4630 });
+const earthDark = new THREE.MeshLambertMaterial({ color:0x4a3826 });
+const mossMat  = new THREE.MeshLambertMaterial({ color:0x2c4a2e });
+function roughen(geo, amt) {
+  const p = geo.attributes.position;
+  for (let i=0;i<p.count;i++){
+    if (p.getY(i) > 0.05) {
+      p.setX(i, p.getX(i) + (Math.random()-0.5)*amt);
+      p.setZ(i, p.getZ(i) + (Math.random()-0.5)*amt);
+    }
+  }
+  geo.computeVertexNormals();
+  return geo;
+}
+
+// ---------- Yükseklik alanı sistemi ----------
+const heightFields = [];
+const clearZones = [];
+function groundHeight(x, z) {
+  let h = 0;
+  for (const f of heightFields) {
+    const v = f(x, z);
+    if (v > h) h = v;
+  }
+  return h;
+}
+
+// ---- Toprak rampa ----
+function addRamp(x, z, angleDeg, len, h, w, mat) {
+  const ang = angleDeg * Math.PI/180;
+  const dir = new THREE.Vector3(Math.sin(ang), 0, Math.cos(ang));
+  const slope = Math.atan2(h, len);
+  const mesh = new THREE.Mesh(new THREE.BoxGeometry(w, 0.3, len/Math.cos(slope)), mat || earthMat);
+  mesh.position.set(x, h/2, z);
+  mesh.rotation.y = ang; mesh.rotation.x = -slope; // +Z (dir) ucu yüksekte
+  mesh.castShadow = true; mesh.receiveShadow = true;
+  scene.add(mesh);
+  [-w/2, w/2].forEach(off => {
+    const strip = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.36, len/Math.cos(slope)), stoneDark);
+    strip.position.set(x, h/2, z);
+    strip.rotation.y = ang; strip.rotation.x = -slope;
+    strip.translateX(off);
+    scene.add(strip);
+  });
+  const halfW = w/2;
+  heightFields.push((px, pz) => {
+    const dx = px-x, dz = pz-z;
+    if (dx*dx+dz*dz > (len+6)**2) return 0;
+    const along = dx*dir.x + dz*dir.z;
+    const side  = dx*(-dir.z) + dz*(dir.x);
+    if (Math.abs(side) < halfW && along > -len/2 && along < len/2)
+      return ((along + len/2) / len) * h;
+    return 0;
+  });
+  clearZones.push({ x: x + dir.x*(len/2 + h*3), z: z + dir.z*(len/2 + h*3), r: len + h*3 });
+}
+
+// ---- Taş piramit / toprak tepe ----
+function addMound(x, z, R, H, mat, segments) {
+  const geo = roughen(new THREE.ConeGeometry(R, H, segments || 4, 3), R*0.06);
+  const mesh = new THREE.Mesh(geo, mat || stoneMat);
+  mesh.position.set(x, H/2 - 0.02, z);
+  mesh.rotation.y = Math.random()*Math.PI;
+  mesh.castShadow = true; mesh.receiveShadow = true;
+  scene.add(mesh);
+  heightFields.push((px, pz) => {
+    const dx = px-x, dz = pz-z;
+    const r = Math.sqrt(dx*dx+dz*dz);
+    if (r > R) return 0;
+    return H * (1 - r/R);
+  });
+  clearZones.push({ x, z, r: R + 8 });
+}
+
+// ---- Toprak tümsek dizisi ----
+function addBumps(x, z, angleDeg, count, gap, R, H) {
+  const ang = angleDeg * Math.PI/180;
+  const dir = new THREE.Vector3(Math.sin(ang), 0, Math.cos(ang));
+  for (let i=0;i<count;i++){
+    const bx = x + dir.x*gap*i, bz = z + dir.z*gap*i;
+    const geo = roughen(new THREE.SphereGeometry(R, 10, 6, 0, Math.PI*2, 0, Math.PI/2), R*0.05);
+    const mesh = new THREE.Mesh(geo, earthDark);
+    mesh.scale.y = H/R;
+    mesh.position.set(bx, 0, bz);
+    mesh.castShadow = true; mesh.receiveShadow = true;
+    scene.add(mesh);
+    heightFields.push((px, pz) => {
+      const dx = px-bx, dz = pz-bz;
+      const r2 = dx*dx+dz*dz;
+      if (r2 > R*R) return 0;
+      return H * Math.sqrt(1 - r2/(R*R));
+    });
+  }
+  clearZones.push({ x: x + dir.x*gap*count/2, z: z + dir.z*gap*count/2, r: gap*count/2 + 10 });
+}
+
+// ---- Yükseltilmiş taş köprü (DÜZELTİLMİŞ uç rampaları) ----
+function addBridge(x, z, angleDeg, len, H, w, rampLen) {
+  const ang = angleDeg * Math.PI/180;
+  const dir = new THREE.Vector3(Math.sin(ang), 0, Math.cos(ang));
+  const flatLen = len - rampLen*2;
+  const plat = new THREE.Mesh(new THREE.BoxGeometry(w, 1.0, flatLen), stoneMat);
+  plat.position.set(x, H - 0.5, z);
+  plat.rotation.y = ang;
+  plat.castShadow = true; plat.receiveShadow = true;
+  scene.add(plat);
+  const nLegs = Math.max(2, Math.floor(flatLen/8));
+  for (let i=0;i<nLegs;i++){
+    const t = (i/(nLegs-1) - 0.5) * (flatLen - 3);
+    const leg = new THREE.Mesh(roughen(new THREE.BoxGeometry(1.4, H, 1.4), 0.1), stoneDark);
+    leg.position.set(x + dir.x*t, H/2 - 0.5, z + dir.z*t);
+    leg.castShadow = true;
+    scene.add(leg);
+  }
+  const slope = Math.atan2(H, rampLen);
+  [-1, 1].forEach(s => {
+    const off = flatLen/2 + rampLen/2;
+    const rp = new THREE.Mesh(new THREE.BoxGeometry(w, 0.3, rampLen/Math.cos(slope)), earthMat);
+    rp.position.set(x + dir.x*off*s, H/2, z + dir.z*off*s);
+    rp.rotation.y = ang;
+    rp.rotation.x = s * slope;   // dıştaki uç alçakta, köprüye doğru tırmanır
+    rp.castShadow = true; rp.receiveShadow = true;
+    scene.add(rp);
+  });
+  const halfW = w/2;
+  heightFields.push((px, pz) => {
+    const dx = px-x, dz = pz-z;
+    if (dx*dx+dz*dz > (len/2+8)**2) return 0;
+    const along = dx*dir.x + dz*dir.z;
+    const side  = dx*(-dir.z) + dz*(dir.x);
+    if (Math.abs(side) > halfW) return 0;
+    const a = Math.abs(along);
+    if (a <= flatLen/2) return H;
+    if (a <= len/2) return H * (1 - (a - flatLen/2)/rampLen);
+    return 0;
+  });
+  clearZones.push({ x, z, r: len/2 + 8 });
+}
+
+// ---- Taş kemer ----
+function addArch(x, z, angleDeg, w, H) {
+  const ang = angleDeg * Math.PI/180;
+  const g = new THREE.Group();
+  const pillarG = roughen(new THREE.BoxGeometry(1.8, H, 1.8), 0.12);
+  const p1 = new THREE.Mesh(pillarG, stoneMat);
+  const p2 = new THREE.Mesh(pillarG.clone(), stoneMat);
+  p1.position.set(-w/2, H/2, 0); p2.position.set(w/2, H/2, 0);
+  const lintel = new THREE.Mesh(roughen(new THREE.BoxGeometry(w + 2.6, 1.6, 2.2), 0.1), stoneDark);
+  lintel.position.set(0, H + 0.8, 0);
+  const moss = new THREE.Mesh(new THREE.BoxGeometry(w + 2.0, 0.25, 1.8), mossMat);
+  moss.position.set(0, H + 1.7, 0);
+  g.add(p1, p2, lintel, moss);
+  g.position.set(x, 0, z);
+  g.rotation.y = ang;
+  g.traverse(o => { if (o.isMesh) { o.castShadow = true; o.receiveShadow = true; } });
+  scene.add(g);
+  clearZones.push({ x, z, r: w + 6 });
+}
+
+// ---- Taş halka ----
+function addRing(x, z, angleDeg, R, y) {
+  const ring = new THREE.Mesh(
+    roughen(new THREE.TorusGeometry(R, 0.9, 10, 24), 0.15),
+    stoneMat
+  );
+  ring.position.set(x, y, z);
+  ring.rotation.y = angleDeg * Math.PI/180;
+  ring.castShadow = true;
+  scene.add(ring);
+  for (let i=0;i<8;i++){
+    const a = i/8*Math.PI*2;
+    const s = new THREE.Mesh(new THREE.SphereGeometry(0.22, 6, 6),
+      new THREE.MeshBasicMaterial({ color:0xbfd8ff }));
+    s.position.set(
+      x + Math.cos(angleDeg*Math.PI/180 + Math.PI/2)*Math.cos(a)*(R-1.2),
+      y + Math.sin(a)*(R-1.2),
+      z + Math.sin(angleDeg*Math.PI/180 + Math.PI/2)*Math.cos(a)*(R-1.2)
+    );
+    scene.add(s);
+  }
+  clearZones.push({ x, z, r: R + 8 });
+}
+
+// ---------- PARKUR YERLEŞİMİ (insan ölçeğine göre biraz küçültüldü) ----------
+addRamp(  22,  -20,   0, 7, 1.6, 5);
+addRamp( -28,   32,  90, 7, 1.8, 5);
+addBumps( 45,  38,  35, 5, 6, 3.5, 0.9);
+addBumps(-58, -42, 250, 6, 6, 3.5, 1.0);
+addMound(  85,  -50, 14, 6, stoneMat, 4);
+addMound(-100,   68, 17, 7.5, stoneMat, 4);
+addMound(   8,  110, 11, 4.5, earthMat, 5);
+addRamp( 110,   26, 300, 10, 2.8, 6);
+addRamp( -50,  100, 160, 10, 3.0, 6);
+addBridge(-125,  -34,  20, 40, 3.5, 6, 9);
+addBridge(  50, -120, 285, 48, 4.5, 6, 11);
+addArch( -18,  -58,  10, 7, 4);
+addArch( 125,   95, 240, 8, 4.5);
+addRamp(-170, 128, 135, 15, 4.5, 8);
+(function ringAfterRamp(){
+  const ang = 135*Math.PI/180;
+  const d = new THREE.Vector3(Math.sin(ang),0,Math.cos(ang));
+  addRing(-170 + d.x*24, 128 + d.z*24, 135, 4.5, 6);
+})();
+addRamp( 185, -170, 320, 22, 7.5, 10);
+
+// ---------- Koniler ----------
+const cones = [];
+function addCone(x, z) {
+  const g = new THREE.Group();
+  const body = new THREE.Mesh(new THREE.ConeGeometry(0.35, 0.9, 10),
+    new THREE.MeshPhongMaterial({ color:0xff6a1a, emissive:0x331200 }));
+  body.position.y = 0.45;
+  const stripe = new THREE.Mesh(new THREE.CylinderGeometry(0.24, 0.28, 0.14, 10),
+    new THREE.MeshBasicMaterial({ color:0xffffff }));
+  stripe.position.y = 0.5;
+  const base = new THREE.Mesh(new THREE.BoxGeometry(0.7, 0.08, 0.7),
+    new THREE.MeshLambertMaterial({ color:0xcc5c20 }));
+  base.position.y = 0.04;
+  g.add(body, stripe, base);
+  g.position.set(x, 0, z);
+  g.castShadow = true;
+  scene.add(g);
+  cones.push({ mesh:g, vel:new THREE.Vector3(), spin:0, hit:false });
+}
+for (let i=0;i<18;i++) addCone((Math.random()-0.5)*380, (Math.random()-0.5)*380);
+
+// ---------- ÇOK sık orman ----------
+const crownMats = [0x14301c, 0x1a3a20, 0x0f2616, 0x1c4426].map(c => new THREE.MeshLambertMaterial({ color:c }));
+const trunkMat = new THREE.MeshLambertMaterial({ color:0x2e2118 });
+function inClearZone(x, z) {
+  for (const c of clearZones) {
+    const dx = x-c.x, dz = z-c.z;
+    if (dx*dx + dz*dz < c.r*c.r) return true;
+  }
+  return false;
+}
+const treeColliders = [];
+function addTree(x, z) {
+  const h = 4 + Math.random()*10;
+  const trunk = new THREE.Mesh(new THREE.CylinderGeometry(0.25, 0.42, h*0.45, 6), trunkMat);
+  trunk.position.set(x, h*0.22, z);
+  const crown = new THREE.Mesh(
+    new THREE.ConeGeometry(1.6 + Math.random()*1.8, h, 7),
+    crownMats[Math.floor(Math.random()*4)]
+  );
+  crown.position.set(x, h*0.45 + h*0.42, z);
+  trunk.castShadow = crown.castShadow = true;
+  scene.add(trunk, crown);
+  treeColliders.push({ x, z, r: 0.9 });
+}
+// 1000+ ağaç: hem genel serpme hem küçük korular
+for (let i=0;i<780;i++){
+  const x = (Math.random()-0.5)*1050;
+  const z = (Math.random()-0.5)*1050;
+  if (Math.abs(x) < 14 && Math.abs(z) < 14) continue;
+  if (inClearZone(x, z)) continue;
+  addTree(x, z);
+}
+for (let k=0;k<22;k++){  // yoğun koru kümeleri
+  const cx = (Math.random()-0.5)*900, cz = (Math.random()-0.5)*900;
+  if (inClearZone(cx, cz)) continue;
+  for (let i=0;i<14;i++){
+    const x = cx + (Math.random()-0.5)*26, z = cz + (Math.random()-0.5)*26;
+    if (Math.abs(x) < 14 && Math.abs(z) < 14) continue;
+    if (inClearZone(x, z)) continue;
+    addTree(x, z);
+  }
+}
+// yerde çalılar
+const bushMat = new THREE.MeshLambertMaterial({ color:0x1b3320 });
+for (let i=0;i<160;i++){
+  const x = (Math.random()-0.5)*900, z = (Math.random()-0.5)*900;
+  if (inClearZone(x, z)) continue;
+  const b = new THREE.Mesh(new THREE.SphereGeometry(0.5+Math.random()*0.7, 7, 5), bushMat);
+  b.position.set(x, 0.3, z);
+  b.scale.y = 0.7;
+  scene.add(b);
+}
+
+// ateş böcekleri
+const fireflies = [];
+(function makeFireflies(){
+  for (let i=0;i<70;i++){
+    const s = new THREE.Sprite(new THREE.SpriteMaterial({ color:0xc8ff7a, transparent:true, opacity:0.8 }));
+    s.scale.set(0.35,0.35,1);
+    const x = (Math.random()-0.5)*500, z = (Math.random()-0.5)*500;
+    s.position.set(x, 0.8+Math.random()*2.2, z);
+    s.userData = { bx:x, bz:z, ph:Math.random()*Math.PI*2, sp:0.4+Math.random()*0.8 };
+    scene.add(s);
+    fireflies.push(s);
+  }
+})();
+
+// ---------- İNSAN FİGÜRÜ (ön = +Z) — seçilebilir iki karakter ----------
+const player = new THREE.Group();
+const skinMat  = new THREE.MeshLambertMaterial({ color:0xe8b48c });
+const shoeMat  = new THREE.MeshLambertMaterial({ color:0xe8e8e8 });
+
+// hareketli uzuv (üst mat + alt mat2)
+function limb(w, h, d, mat, mat2, splitY) {
+  const g = new THREE.Group();
+  const upper = new THREE.Mesh(new THREE.BoxGeometry(w, h*splitY, d), mat);
+  upper.position.y = -h*splitY/2;
+  const lower = new THREE.Mesh(new THREE.BoxGeometry(w*0.9, h*(1-splitY), d*0.9), mat2);
+  lower.position.y = -h*splitY - h*(1-splitY)/2;
+  upper.castShadow = lower.castShadow = true;
+  g.add(upper, lower);
+  return g;
+}
+
+// iki karakter tanımı
+const CHARACTERS = {
+  boy: {
+    shirt: 0x3a6ea5,   // mavi tişört
+    pants: 0x2a3550,
+    hair:  0x3a2a1a,
+    longHair: false
+  },
+  girl: {
+    shirt: 0xff5fa8,   // pembe kazak
+    pants: 0x6a3a86,   // mor tayt
+    hair:  0x6b3d1f,   // kahverengi uzun saç
+    longHair: true
+  }
+};
+
+let armL, armR, legL, legR;   // animasyon için global
+function buildCharacter(key) {
+  // önceki figürü temizle
+  while (player.children.length) player.remove(player.children[0]);
+  const cfg = CHARACTERS[key];
+  const shirtMat = new THREE.MeshLambertMaterial({ color:cfg.shirt });
+  const pantsMat = new THREE.MeshLambertMaterial({ color:cfg.pants });
+  const hairMat  = new THREE.MeshLambertMaterial({ color:cfg.hair });
+
+  // gövde
+  const torso = new THREE.Mesh(new THREE.BoxGeometry(0.62, 0.72, 0.34), shirtMat);
+  torso.position.y = 1.12; torso.castShadow = true;
+  player.add(torso);
+
+  // kafa
+  const head = new THREE.Mesh(new THREE.BoxGeometry(0.4, 0.42, 0.38), skinMat);
+  head.position.y = 1.72; head.castShadow = true;
+  player.add(head);
+
+  // saç
+  const hairTop = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.16, 0.42), hairMat);
+  hairTop.position.y = 1.92; hairTop.castShadow = true;
+  player.add(hairTop);
+  if (cfg.longHair) {
+    // uzun saç: sırta inen uzun blok + yanlar
+    const back = new THREE.Mesh(new THREE.BoxGeometry(0.46, 0.95, 0.14), hairMat);
+    back.position.set(0, 1.42, -0.2); back.castShadow = true;
+    const sideL = new THREE.Mesh(new THREE.BoxGeometry(0.1, 0.55, 0.42), hairMat);
+    sideL.position.set(-0.25, 1.62, 0);
+    const sideR = sideL.clone(); sideR.position.x = 0.25;
+    // saç bandı / fiyonk
+    const bow = new THREE.Mesh(new THREE.BoxGeometry(0.16, 0.1, 0.1),
+      new THREE.MeshLambertMaterial({ color:0xffffff }));
+    bow.position.set(0.22, 1.98, 0.05);
+    player.add(back, sideL, sideR, bow);
+  } else {
+    const back = new THREE.Mesh(new THREE.BoxGeometry(0.44, 0.3, 0.1), hairMat);
+    back.position.set(0, 1.78, -0.17);
+    player.add(back);
+  }
+
+  // kollar
+  armL = limb(0.18, 0.66, 0.18, shirtMat, skinMat, 0.4);
+  armL.position.set(-0.41, 1.44, 0);
+  armR = limb(0.18, 0.66, 0.18, shirtMat, skinMat, 0.4);
+  armR.position.set(0.41, 1.44, 0);
+  player.add(armL, armR);
+
+  // bacaklar
+  legL = limb(0.22, 0.78, 0.24, pantsMat, pantsMat, 0.6);
+  legL.position.set(-0.16, 0.78, 0);
+  legR = limb(0.22, 0.78, 0.24, pantsMat, pantsMat, 0.6);
+  legR.position.set(0.16, 0.78, 0);
+  const shoeL = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.12, 0.34), shoeMat);
+  shoeL.position.set(0, -0.78, 0.05); legL.add(shoeL);
+  const shoeR = new THREE.Mesh(new THREE.BoxGeometry(0.22, 0.12, 0.34), shoeMat);
+  shoeR.position.set(0, -0.78, 0.05); legR.add(shoeR);
+  player.add(legL, legR);
+
+  // el feneri (sağ elde)
+  const torch = new THREE.SpotLight(0xfff1c4, 3.0, 45, Math.PI/5.5, 0.5, 1.1);
+  torch.position.set(0.35, 1.1, 0.2);
+  const torchTgt = new THREE.Object3D();
+  torchTgt.position.set(0.1, 0.4, 20);
+  player.add(torchTgt);
+  torch.target = torchTgt;
+  player.add(torch);
+  const torchBody = new THREE.Mesh(new THREE.CylinderGeometry(0.05, 0.06, 0.22, 8),
+    new THREE.MeshLambertMaterial({ color:0x333a44 }));
+  torchBody.rotation.x = Math.PI/2;
+  torchBody.position.set(0.35, 1.08, 0.18);
+  player.add(torchBody);
+
+  window._torch = torch;  // parlaklık ayarı için
+}
+buildCharacter('boy');   // varsayılan (seçimle değişecek)
+scene.add(player);
+
+// ---------- Oyuncu durumu ----------
+const state = {
+  pos: new THREE.Vector3(0, 0, 0),
+  heading: 0,
+  speed: 0, vy: 0, airborne: false, turn: 0,
+  airStart: 0, runPhase: 0
+};
+const stats = { bestAir: 0, jumps: 0 };
+function resetPlayer() {
+  state.pos.set(0, 0, 0);
+  state.heading = 0;
+  state.speed = 0; state.vy = 0; state.airborne = false;
+}
+
+// ---------- Girdi ----------
+const keys = {};
+let jumpQueued = false;
+addEventListener('keydown', e => {
+  if (e.code==='Space' && !keys['Space']) jumpQueued = true;
+  keys[e.code]=true;
+  if(e.code==='KeyR') resetPlayer();
+  if(e.code==='KeyC') camMode=(camMode+1)%3;
+  if(e.code==='Space' || e.code==='ShiftLeft' || e.code==='ShiftRight') e.preventDefault();
+});
+addEventListener('keyup', e => keys[e.code]=false);
+const bindT = (id, code, isJump) => {
+  const el = document.getElementById(id);
+  el.addEventListener('touchstart', e=>{ e.preventDefault(); keys[code]=true; if(isJump) jumpQueued = true; }, {passive:false});
+  el.addEventListener('touchend',   e=>{ e.preventDefault(); keys[code]=false; }, {passive:false});
+};
+bindT('tG','KeyW'); bindT('tB','KeyS'); bindT('tL','KeyA'); bindT('tR','KeyD');
+bindT('tN','ShiftLeft'); bindT('tJ','Space', true);
+
+// ---------- Mesaj ----------
+const msgEl = document.getElementById('msg');
+let msgTimer = null;
+function showMsg(txt) {
+  msgEl.textContent = txt; msgEl.classList.add('show');
+  clearTimeout(msgTimer);
+  msgTimer = setTimeout(()=>msgEl.classList.remove('show'), 2200);
+}
+
+// ---------- Kamera ----------
+let camMode = 0;
+const camPos = new THREE.Vector3(0, 4, -7);
+
+// ---------- Ana döngü ----------
+const clock = new THREE.Clock();
+const fwd = new THREE.Vector3();
+let elapsed = 0;
+function animate() {
+  requestAnimationFrame(animate);
+  const dt = Math.min(clock.getDelta(), 0.05);
+  elapsed += dt;
+
+  const active = window._started === true;
+  const run   = active && (keys['KeyW']||keys['ArrowUp'])   ? 1 : 0;
+  const back  = active && (keys['KeyS']||keys['ArrowDown']) ? 1 : 0;
+  const left  = active && (keys['KeyA']||keys['ArrowLeft']) ? 1 : 0;
+  const right = active && (keys['KeyD']||keys['ArrowRight'])? 1 : 0;
+  const sprinting = (active && (keys['ShiftLeft']||keys['ShiftRight']) && run) ? true : false; // SINIRSIZ
+
+  // ileri/geri hız (insan ölçeği — sprint daha hızlı)
+  const MAX_F = sprinting ? 34 : 13;
+  const MAX_R = -5;
+  const ACC = sprinting ? 55 : 28;
+  if (run)  state.speed += ACC * dt;
+  if (back) state.speed -= 16 * dt;
+  state.speed -= state.speed * 4.5 * dt;   // insan çabuk durur
+  state.speed = Math.max(MAX_R, Math.min(MAX_F, state.speed));
+  if (!run && !back && Math.abs(state.speed) < 0.1) state.speed = 0;
+
+  // dönüş — insan yerinde de dönebilir
+  const turnTarget = (left - right);
+  state.turn += (turnTarget - state.turn) * Math.min(1, dt*10);
+  const turnRate = state.airborne ? 1.2 : 3.0;
+  state.heading += state.turn * turnRate * dt;
+
+  // konum
+  fwd.set(Math.sin(state.heading), 0, Math.cos(state.heading));
+  state.pos.x += fwd.x * state.speed * dt;
+  state.pos.z += fwd.z * state.speed * dt;
+
+  // ağaç çarpışmaları
+  for (const t of treeColliders) {
+    const dx = state.pos.x - t.x, dz = state.pos.z - t.z;
+    const d2 = dx*dx + dz*dz;
+    const minR = t.r + 0.4;
+    if (d2 < minR*minR && d2 > 0.001) {
+      const d = Math.sqrt(d2);
+      state.pos.x = t.x + dx/d*minR;
+      state.pos.z = t.z + dz/d*minR;
+      state.speed *= 0.5;
+    }
+  }
+
+  // ZIPLAMA
+  if (jumpQueued) {
+    jumpQueued = false;
+    if (active && !state.airborne) {
+      state.airborne = true;
+      state.airStart = elapsed;
+      state.vy = 6.5 + Math.abs(state.speed)*0.12;
+    }
+  }
+
+  // dikey
+  const gh = groundHeight(state.pos.x, state.pos.z);
+  if (state.airborne) {
+    state.vy -= 20 * dt;
+    state.pos.y += state.vy * dt;
+    if (state.pos.y <= gh && state.vy <= 0) {
+      state.pos.y = gh; state.airborne = false; state.vy = 0;
+      const airTime = elapsed - state.airStart;
+      if (airTime > 0.35) {
+        stats.jumps++;
+        if (airTime > stats.bestAir) {
+          stats.bestAir = airTime;
+          showMsg('✈️ Yeni rekor uçuş: ' + airTime.toFixed(1) + ' sn!');
+        }
+        document.getElementById('jumps').textContent = stats.jumps;
+        document.getElementById('air').textContent = stats.bestAir.toFixed(1) + ' sn';
+      }
+    }
+  } else {
+    if (gh < state.pos.y - 0.3) {
+      state.airborne = true;
+      state.airStart = elapsed;
+      state.vy = Math.max(1.5, state.speed * 0.28);
+    } else {
+      state.pos.y += (gh - state.pos.y) * Math.min(1, dt*14);
+    }
+  }
+
+  const B = 720;
+  state.pos.x = Math.max(-B, Math.min(B, state.pos.x));
+  state.pos.z = Math.max(-B, Math.min(B, state.pos.z));
+
+  player.position.copy(state.pos);
+  player.rotation.y = state.heading;
+  // koşarken hafif öne eğil
+  player.rotation.x = state.airborne ? -0.1 : Math.min(0.18, Math.abs(state.speed)*0.014) * Math.sign(state.speed);
+
+  // ---- koşu animasyonu ----
+  const moving = Math.abs(state.speed) > 0.3;
+  if (state.airborne) {
+    // havada: kollar yukarı, bacaklar toplanmış
+    armL.rotation.x += (-2.4 - armL.rotation.x) * Math.min(1, dt*8);
+    armR.rotation.x += (-2.4 - armR.rotation.x) * Math.min(1, dt*8);
+    legL.rotation.x += (0.7 - legL.rotation.x) * Math.min(1, dt*8);
+    legR.rotation.x += (-0.3 - legR.rotation.x) * Math.min(1, dt*8);
+  } else if (moving) {
+    state.runPhase += Math.abs(state.speed) * dt * 1.7;
+    const sw = Math.min(1.0, Math.abs(state.speed)/9) * 0.95;
+    const s = Math.sin(state.runPhase);
+    legL.rotation.x = s * sw;
+    legR.rotation.x = -s * sw;
+    armL.rotation.x = -s * sw * 0.85;
+    armR.rotation.x = s * sw * 0.85;
+    // hafif dikey zıplama hissi
+    player.position.y = state.pos.y + Math.abs(Math.cos(state.runPhase)) * 0.06;
+  } else {
+    // dur: uzuvlar yavaşça sıfıra
+    [armL, armR, legL, legR].forEach(l => l.rotation.x += (0 - l.rotation.x) * Math.min(1, dt*6));
+    state.runPhase = 0;
+  }
+
+  if (window._torch) window._torch.intensity = sprinting ? 3.8 : 3.0;
+
+  // koniler (tekmelenebilir)
+  for (const cn of cones) {
+    if (!cn.hit) {
+      const dx = cn.mesh.position.x - state.pos.x, dz = cn.mesh.position.z - state.pos.z;
+      if (dx*dx + dz*dz < 1.0 && Math.abs(state.speed) > 1.5 && state.pos.y < 1) {
+        cn.hit = true;
+        cn.vel.set(dx, 1.5, dz).normalize().multiplyScalar(Math.abs(state.speed)*0.8);
+        cn.vel.y = 2.5 + Math.abs(state.speed)*0.2;
+        cn.spin = (Math.random()-0.5)*10;
+      }
+    } else if (cn.mesh.position.y > -1) {
+      cn.vel.y -= 18*dt;
+      cn.mesh.position.addScaledVector(cn.vel, dt);
+      cn.mesh.rotation.x += cn.spin*dt;
+      cn.mesh.rotation.z += cn.spin*dt*0.7;
+      if (cn.mesh.position.y < 0 && cn.vel.y < 0) {
+        cn.mesh.position.y = 0; cn.vel.y *= -0.35;
+        cn.vel.x *= 0.7; cn.vel.z *= 0.7;
+        if (Math.abs(cn.vel.y) < 0.5) cn.vel.set(0,0,0);
+      }
+    }
+  }
+
+  // ateş böcekleri
+  for (const f of fireflies) {
+    const u = f.userData;
+    f.position.x = u.bx + Math.sin(elapsed*u.sp + u.ph)*2.5;
+    f.position.z = u.bz + Math.cos(elapsed*u.sp*0.8 + u.ph)*2.5;
+    f.position.y = 1.2 + Math.sin(elapsed*u.sp*1.3 + u.ph)*0.8;
+    f.material.opacity = 0.3 + 0.5*(0.5 + 0.5*Math.sin(elapsed*2.2 + u.ph*3));
+  }
+
+  // kamera (insan ölçeği: daha yakın)
+  let targetCam;
+  if (!active) {
+    // seçim ekranı: karakterin önünden hafif dönen vitrin açısı
+    player.rotation.y = Math.sin(elapsed*0.6)*0.5;
+    const a = elapsed*0.25;
+    targetCam = new THREE.Vector3(Math.sin(a)*4.5, 2.6, Math.cos(a)*4.5 + 1);
+    camPos.lerp(targetCam, Math.min(1, dt*3));
+    camera.position.copy(camPos);
+    camera.lookAt(0, 1.4, 0);
+  } else {
+    if (camMode === 0) {
+      targetCam = new THREE.Vector3(state.pos.x - fwd.x*6, state.pos.y + 3.2, state.pos.z - fwd.z*6);
+    } else if (camMode === 1) {
+      targetCam = new THREE.Vector3(state.pos.x - fwd.x*3.2, state.pos.y + 2.1, state.pos.z - fwd.z*3.2);
+    } else {
+      targetCam = new THREE.Vector3(state.pos.x, state.pos.y + 35, state.pos.z + 0.1);
+    }
+    camPos.lerp(targetCam, Math.min(1, dt * 4));
+    camera.position.copy(camPos);
+    camera.lookAt(state.pos.x, state.pos.y + 1.5, state.pos.z);
+  }
+
+  const targetFov = sprinting ? 80 : 70;
+  camera.fov += (targetFov - camera.fov) * Math.min(1, dt*5);
+  camera.updateProjectionMatrix();
+
+  moonLight.position.set(state.pos.x - 120, 160, state.pos.z - 80);
+  moonLight.target.position.copy(state.pos);
+  moonLight.target.updateMatrixWorld();
+
+  document.getElementById('spd').textContent = Math.round(Math.abs(state.speed) * 3.6);
+
+  renderer.render(scene, camera);
+}
+// ---------- Karakter seçimi ----------
+window._started = false;
+document.querySelectorAll('#charSelect .card').forEach(btn => {
+  // fare ile üzerine gelince vitrindeki figür değişsin
+  btn.addEventListener('mouseenter', () => {
+    if (!window._started) buildCharacter(btn.dataset.char);
+  });
+  btn.addEventListener('click', () => {
+    buildCharacter(btn.dataset.char);
+    player.rotation.y = 0;
+    const overlay = document.getElementById('charSelect');
+    overlay.style.transition = 'opacity .4s';
+    overlay.style.opacity = '0';
+    setTimeout(() => { overlay.style.display = 'none'; }, 400);
+    window._started = true;
+  });
+});
+
+animate();
+
+addEventListener('resize', () => {
+  camera.aspect = innerWidth/innerHeight;
+  camera.updateProjectionMatrix();
+  renderer.setSize(innerWidth, innerHeight);
+});
+</script>
 </body>
 </html>
