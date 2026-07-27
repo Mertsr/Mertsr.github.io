@@ -557,6 +557,86 @@ function buildCharacter(key) {
 buildCharacter('boy');   // varsayılan (seçimle değişecek)
 scene.add(player);
 
+// ---------- 🐦 GİZLİ KUŞ (B+M ile aktifleşir) ----------
+const bird = new THREE.Group();
+const birdMat = new THREE.MeshLambertMaterial({ color:0x4a7fc9 });    // mavi kuş
+const birdLight = new THREE.MeshLambertMaterial({ color:0x8fb8e8 });
+const beakMat = new THREE.MeshLambertMaterial({ color:0xf2a935 });
+
+// gövde (yassı elips)
+const bBody = new THREE.Mesh(new THREE.SphereGeometry(1.1, 12, 10), birdMat);
+bBody.scale.set(1.0, 0.75, 1.7);
+bBody.position.y = 0; bBody.castShadow = true;
+bird.add(bBody);
+// göğüs (açık renk)
+const bChest = new THREE.Mesh(new THREE.SphereGeometry(0.85, 10, 8), birdLight);
+bChest.scale.set(0.9, 0.7, 1.1);
+bChest.position.set(0, -0.25, 0.7);
+bird.add(bChest);
+// kafa
+const bHead = new THREE.Mesh(new THREE.SphereGeometry(0.62, 10, 8), birdMat);
+bHead.position.set(0, 0.55, 1.85); bHead.castShadow = true;
+bird.add(bHead);
+// gaga
+const bBeak = new THREE.Mesh(new THREE.ConeGeometry(0.22, 0.7, 6), beakMat);
+bBeak.rotation.x = Math.PI/2;
+bBeak.position.set(0, 0.5, 2.6);
+bird.add(bBeak);
+// gözler
+[-0.28, 0.28].forEach(x => {
+  const eye = new THREE.Mesh(new THREE.SphereGeometry(0.1, 6, 6),
+    new THREE.MeshBasicMaterial({ color:0x111111 }));
+  eye.position.set(x, 0.72, 2.25);
+  bird.add(eye);
+});
+// kuyruk
+const bTail = new THREE.Mesh(new THREE.BoxGeometry(0.8, 0.12, 1.1), birdMat);
+bTail.position.set(0, 0.1, -1.9);
+bTail.rotation.x = 0.25;
+bird.add(bTail);
+// kanatlar (omuzdan çırpar)
+function makeWing(side) {
+  const g = new THREE.Group();
+  const w1 = new THREE.Mesh(new THREE.BoxGeometry(2.2, 0.12, 1.5), birdMat);
+  w1.position.x = side * 1.1;
+  const w2 = new THREE.Mesh(new THREE.BoxGeometry(1.6, 0.1, 1.1), birdLight);
+  w2.position.x = side * 2.7;
+  w1.castShadow = w2.castShadow = true;
+  g.add(w1, w2);
+  g.position.set(side * 0.6, 0.25, 0.2);
+  bird.add(g);
+  return g;
+}
+const wingL = makeWing(-1);
+const wingR = makeWing(1);
+bird.visible = false;
+scene.add(bird);
+
+// uçuş durumu
+let flying = false;
+const birdState = { pos:new THREE.Vector3(), heading:0, speed:0, vy:0, turn:0, flapKick:0 };
+let birdToggleCooldown = 0;
+function toggleBird() {
+  if (birdToggleCooldown > 0) return;
+  birdToggleCooldown = 0.6;
+  if (!flying) {
+    flying = true;
+    birdState.pos.copy(state.pos); birdState.pos.y += 1.5;
+    birdState.heading = state.heading;
+    birdState.speed = Math.abs(state.speed); birdState.vy = 2;
+    bird.visible = true;
+    showMsg('🐦 Gizli kuş! Space: kanat çırp · B+M: in');
+  } else {
+    flying = false;
+    bird.visible = false;
+    // parkurda en son ulaşılan kontrol noktasına dön
+    respawnAt(checkpoints[prog.activeCP]);
+    legL.rotation.z = 0; legR.rotation.z = 0;
+    player.rotation.z = 0;
+    showMsg('🐦 Kontrol noktasına dönüldü');
+  }
+}
+
 
 // ---------- Oyuncu durumu ----------
 const state = {
@@ -578,6 +658,10 @@ function resetPlayer() {
   state.pos.set(sp.x, sp.y, sp.z);
   state.heading = 0;
   state.speed = 0; state.vy = 0; state.airborne = false;
+  if (typeof flying !== 'undefined' && flying) {
+    flying = false; bird.visible = false;
+    legL.rotation.z = 0; legR.rotation.z = 0;
+  }
   prog.activeCP = 0; prog.started = false; prog.finished = false;
   checkpoints.forEach((c,i) => { c.reached = i===0; if (c.flag) c.flag.material.color.set(i===0 ? 0xffd166 : 0x37e884); });
   document.getElementById('jumps').textContent = '1 / ' + checkpoints.length;
@@ -588,6 +672,10 @@ const keys = {};
 let jumpQueued = false;
 addEventListener('keydown', e => {
   if (e.code==='Space' && !keys['Space']) jumpQueued = true;
+  // 🐦 gizli: B+M birlikte
+  if ((e.code==='KeyB' && keys['KeyM']) || (e.code==='KeyM' && keys['KeyB'])) {
+    if (window._started) toggleBird();
+  }
   keys[e.code]=true;
   if(e.code==='KeyR') resetPlayer();
   if(e.code==='KeyC') camMode=(camMode+1)%3;
@@ -631,6 +719,78 @@ function animate() {
   const right = active && (keys['KeyD']||keys['ArrowRight'])? 1 : 0;
   const sprinting = (active && (keys['ShiftLeft']||keys['ShiftRight']) && run) ? true : false; // SINIRSIZ
 
+  // toggle bekleme süresi
+  if (birdToggleCooldown > 0) birdToggleCooldown -= dt;
+
+  // ============ 🐦 KUŞ UÇUŞU ============
+  if (flying) {
+    // ileri hız (W ile hızlan, S ile yavaşla/geri)
+    const F_MAX = sprinting ? 55 : 32;
+    if (run)  birdState.speed += 30 * dt;
+    if (back) birdState.speed -= 24 * dt;
+    birdState.speed -= birdState.speed * 0.8 * dt;
+    birdState.speed = Math.max(-8, Math.min(F_MAX, birdState.speed));
+
+    // dönüş
+    const bTurnTarget = (left - right);
+    birdState.turn += (bTurnTarget - birdState.turn) * Math.min(1, dt*7);
+    birdState.heading += birdState.turn * 1.8 * dt;
+
+    // kanat çırpma: her Space basışı yukarı itiş
+    if (jumpQueued) {
+      jumpQueued = false;
+      birdState.vy = Math.min(birdState.vy + 6.5, 10);
+      birdState.flapKick = 1;   // güçlü çırpış animasyonu
+    }
+    // yavaş süzülme: hafif yerçekimi, sınırlı düşüş hızı
+    birdState.vy -= 4.5 * dt;
+    birdState.vy = Math.max(-6, birdState.vy);
+
+    // konum
+    const bf = new THREE.Vector3(Math.sin(birdState.heading), 0, Math.cos(birdState.heading));
+    birdState.pos.x += bf.x * birdState.speed * dt;
+    birdState.pos.z += bf.z * birdState.speed * dt;
+    birdState.pos.y += birdState.vy * dt;
+    // sınırlar: denize değme, çok yükseğe çıkma
+    birdState.pos.y = Math.max(SEA_Y + 6, Math.min(180, birdState.pos.y));
+    if (birdState.pos.y <= SEA_Y + 6 && birdState.vy < 0) birdState.vy = 0;
+    const FB = 900;
+    birdState.pos.x = Math.max(-FB, Math.min(FB, birdState.pos.x));
+    birdState.pos.z = Math.max(-FB, Math.min(FB, birdState.pos.z));
+
+    // kuş yerleşimi
+    bird.position.copy(birdState.pos);
+    bird.rotation.y = birdState.heading;
+    bird.rotation.x = -birdState.vy * 0.04 + birdState.speed * 0.004;  // yükselirken burun yukarı
+    bird.rotation.z = -birdState.turn * 0.35;                          // dönüşte yatış
+
+    // kanat animasyonu: sürekli süzülme + Space'te güçlü çırpış
+    birdState.flapKick = Math.max(0, birdState.flapKick - dt * 2.2);
+    const glide = Math.sin(elapsed * 5) * 0.18;
+    const kick = Math.sin(birdState.flapKick * Math.PI) * 0.9;
+    wingL.rotation.z =  (glide + kick);
+    wingR.rotation.z = -(glide + kick);
+    bTail.rotation.x = 0.25 + Math.sin(elapsed*3)*0.06;
+
+    // biniciyi kuşun sırtına OTURT (kalça sırt hizasında, hafif geride)
+    state.pos.copy(birdState.pos);
+    state.heading = birdState.heading;
+    state.speed = birdState.speed;   // HUD için
+    const seatBack = 0.35;   // kafanın gerisine otursun
+    player.position.set(
+      birdState.pos.x - bf.x * seatBack,
+      birdState.pos.y + 0.05,          // kalça (pivot 0.78) sırt üstüne (~0.82) gelir
+      birdState.pos.z - bf.z * seatBack
+    );
+    player.rotation.y = birdState.heading;
+    player.rotation.x = bird.rotation.x;
+    player.rotation.z = bird.rotation.z * 0.6;
+    // oturuş pozu: uyluklar öne kırık, bacaklar kuşu sarar, gövde hafif öne eğik
+    legL.rotation.x = 1.45; legR.rotation.x = 1.45;
+    legL.rotation.z = 0.4; legR.rotation.z = -0.4;
+    armL.rotation.x = 0.8; armR.rotation.x = 0.8;   // kuşun boynuna tutunur gibi
+  } else {
+
   // ileri/geri hız
   const MAX_F = sprinting ? 38 : 20;
   const MAX_R = -8;
@@ -652,7 +812,7 @@ function animate() {
     const nx = (m.axis === 'x') ? m.base.x + off : m.x;
     const nz = (m.axis === 'z') ? m.base.z + off : m.z;
     const ddx = nx - m.x, ddz = nz - m.z;
-    // platformun üstünde duran yaya/at platformla birlikte kayar
+    // platformun üstünde duran yaya platformla birlikte kayar
     const hw = m.w/2 + 0.3, hd = m.d/2 + 0.3;
     if (!state.airborne &&
         state.pos.x > m.x-hw && state.pos.x < m.x+hw &&
@@ -761,6 +921,7 @@ function animate() {
       state.runPhase = 0;
     }
   }
+  }  // uçuş/yaya ayrımının sonu
 
   if (window._torch) window._torch.intensity = sprinting ? 3.8 : 3.0;
 
@@ -791,7 +952,7 @@ function animate() {
 
   // ---- kontrol noktaları ----
   const activePos = state.pos;
-  if (active) {
+  if (active && !flying) {
     for (const cp of checkpoints) {
       if (!cp.reached) {
         const dx = cp.x - activePos.x, dz = cp.z - activePos.z;
@@ -838,8 +999,9 @@ function animate() {
     camera.lookAt(0, 1.4, 0);
   } else {
     const cf = fwd;
-    const dist = 6;
-    const high = 3.2;
+    if (flying) cf.set(Math.sin(birdState.heading), 0, Math.cos(birdState.heading));
+    const dist = flying ? 11 : 6;
+    const high = flying ? 4.5 : 3.2;
     if (camMode === 0) {
       targetCam = new THREE.Vector3(state.pos.x - cf.x*dist, state.pos.y + high, state.pos.z - cf.z*dist);
     } else if (camMode === 1) {
